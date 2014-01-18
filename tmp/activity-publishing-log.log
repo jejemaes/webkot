@@ -1,0 +1,17 @@
+INFOS
+	1966
+	photos_hd/2013-11-25_test_jerome/
+	photos/2013-11-25_test_jerome/
+	
+RENAME
+     Rename HD Picture photos_hd/2013-11-25_test_jerome/0001.JPG --> photos_hd/2013-11-25_test_jerome/0001.JPG
+     Rename HD Picture photos_hd/2013-11-25_test_jerome/0002.JPG --> photos_hd/2013-11-25_test_jerome/0002.JPG
+     Rename HD Picture photos_hd/2013-11-25_test_jerome/0004.JPG --> photos_hd/2013-11-25_test_jerome/0003.JPG
+RESIZE and COPY
+     Creation Medium Picture 0001.JPG
+     Creation Thumbnail Picture 0001.JPG
+     Creation Medium Picture 0002.JPG
+     Creation Thumbnail Picture 0002.JPG
+     Creation Medium Picture 0003.JPG
+     Creation Thumbnail Picture 0003.JPG
+FINISHED ! photos_hd/2013-11-25_test_jerome/thumbnail/ removed !
