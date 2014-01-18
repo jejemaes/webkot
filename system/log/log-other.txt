@@ -1,0 +1,32 @@
+
+#################### NullObjectException ##################
+DATE : 2014-01-16 16:01
+CODE : 0
+MESSAGE : L'Option <i>site-footer</i> demand&eacute;e est inexistante.
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/OptionManager.class.php
+LINE : 49
+
+#################### NullObjectException ##################
+DATE : 2014-01-16 16:02
+CODE : 0
+MESSAGE : L'Option <i>site-footer</i> demand&eacute;e est inexistante.
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/OptionManager.class.php
+LINE : 49
+
+#################### NullObjectException ##################
+DATE : 2014-01-16 16:02
+CODE : 0
+MESSAGE : L'Option <i>site-footer</i> demand&eacute;e est inexistante.
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/OptionManager.class.php
+LINE : 49
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(83): OptionManager->getOption('site-footer')
+#1 {main}
+
+#################### NullObjectException ##################
+DATE : 2014-01-16 16:03
+CODE : 0
+MESSAGE : L'Option <i>site-footer</i> demand&eacute;e est inexistante.
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/OptionManager.class.php
+LINE : 49
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(83): OptionManager->getOption('site-footer')
+#1 {main}

@@ -1,0 +1,380 @@
+
+#################### SQLException ##################
+DATE : 2013-10-04 16:50
+CODE : 42
+MESSAGE : Unknown column 'W.allpage' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 299
+QUERY : SELECT W.id as id, W.name as name, W.allpage as allpage, M.name as ModuleName, M.location as ModuleLocation , W.is_active as isActive, W.classname as classname, W.in_footer as infooter FROM module M, widget W WHERE W.module_id = M.id  AND W.id = :wid ORDER BY W.allpage DESC
+DESCRIPTION : Impossible d'obtenir un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(247): WidgetManager->getGenericWidget('3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-04 16:51
+CODE : 42000
+MESSAGE : You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DESC' at line 1
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 299
+QUERY : SELECT W.id as id, W.name as name, W.allpage as allpage, M.name as ModuleName, M.location as ModuleLocation , W.is_active as isActive, W.classname as classname, W.in_footer as infooter FROM module M, widget W WHERE W.module_id = M.id  AND W.id = :wid DESC
+DESCRIPTION : Impossible d'obtenir un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(247): WidgetManager->getGenericWidget('3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-04 21:15
+CODE : 42
+MESSAGE : Unknown column 'moduleidid' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 46
+QUERY : INSERT INTO widget_place(moduleidid,widgetid,place) VALUES (:mid, :wid, :place)
+DESCRIPTION : Impossible d'ajouter un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(288): WidgetManager->addWidgetPlace('4', ''3'', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-04 21:16
+CODE : 23000
+MESSAGE : Cannot add or update a child row: a foreign key constraint fails (`webkot4`.`widget_place`, CONSTRAINT `fk_widgetid` FOREIGN KEY (`widgetid`) REFERENCES `widget` (`id`))
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 46
+QUERY : INSERT INTO widget_place(moduleid,widgetid,place) VALUES (:mid, :wid, :place)
+DESCRIPTION : Impossible d'ajouter un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(288): WidgetManager->addWidgetPlace('4', ''3'', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-04 21:16
+CODE : 23000
+MESSAGE : Cannot add or update a child row: a foreign key constraint fails (`webkot4`.`widget_place`, CONSTRAINT `fk_widgetid` FOREIGN KEY (`widgetid`) REFERENCES `widget` (`id`))
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 47
+QUERY : INSERT INTO widget_place(moduleid,widgetid,place) VALUES (:mid, :wid, :place)
+DESCRIPTION : Impossible d'ajouter un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(288): WidgetManager->addWidgetPlace('4', ''3'', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-04 21:17
+CODE : 23000
+MESSAGE : Cannot add or update a child row: a foreign key constraint fails (`webkot4`.`widget_place`, CONSTRAINT `fk_widgetid` FOREIGN KEY (`widgetid`) REFERENCES `widget` (`id`))
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 49
+QUERY : INSERT INTO widget_place(moduleid,widgetid,place) VALUES (:mid, :wid, :place)
+DESCRIPTION : Impossible d'ajouter un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(288): WidgetManager->addWidgetPlace('4', ''3'', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-04 21:18
+CODE : 23000
+MESSAGE : Cannot add or update a child row: a foreign key constraint fails (`webkot4`.`widget_place`, CONSTRAINT `fk_widgetid` FOREIGN KEY (`widgetid`) REFERENCES `widget` (`id`))
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/WidgetManager.class.php
+LINE : 49
+QUERY : INSERT INTO widget_place(moduleid,widgetid,place) VALUES (:mid, :wid, :place)
+DESCRIPTION : Impossible d'ajouter un widget
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/system/controller/admin.mod.php(290): WidgetManager->addWidgetPlace('4', ''3'', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(138): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-24 13:14
+CODE : 42
+MESSAGE : Table 'webkot4.potins_comments' doesn't exist
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/model/GossipManager.class.php
+LINE : 158
+QUERY : SELECT U.id as userid, U.username as username FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type =1)
+DESCRIPTION : Impossible d'obtenir la liste des Liker
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/model/GossipManager.class.php(131): GossipManager->getLikerList('57')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/server.inc.php(23): GossipManager->getListGossip(15, 15)
+#2 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/server.php(61): include('/Users/jeromema...')
+#3 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-24 13:14
+CODE : 42
+MESSAGE : Table 'webkot4.potins_comments' doesn't exist
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/model/GossipManager.class.php
+LINE : 158
+QUERY : SELECT U.id as userid, U.username as username FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type =1)
+DESCRIPTION : Impossible d'obtenir la liste des Liker
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/model/GossipManager.class.php(131): GossipManager->getLikerList('72')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/server.inc.php(23): GossipManager->getListGossip(0, 15)
+#2 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/server.php(61): include('/Users/jeromema...')
+#3 {main}
+
+#################### SQLException ##################
+DATE : 2013-10-24 13:14
+CODE : 42
+MESSAGE : Table 'webkot4.potins_comments' doesn't exist
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/model/GossipManager.class.php
+LINE : 158
+QUERY : SELECT U.id as userid, U.username as username FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type =1)
+DESCRIPTION : Impossible d'obtenir la liste des Liker
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/model/GossipManager.class.php(131): GossipManager->getLikerList('57')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/gossip/server.inc.php(23): GossipManager->getListGossip(15, 15)
+#2 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/server.php(61): include('/Users/jeromema...')
+#3 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-18 17:07
+CODE : 23000
+MESSAGE : Duplicate entry '3' for key 'userid'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/model/WebkotteurManager.class.php
+LINE : 106
+QUERY : INSERT INTO webkot_webkotteur (name,firstname,nickname,mail,userid) VALUES ('test', 'test','test','test@webkot.be',3)
+DESCRIPTION : Impossible d'ajouter un membre a une equipe
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/controller/admin.mod.php(192): WebkotteurManager->addWebkotteur('test', 'test', 'test', 'test@webkot.be', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-18 17:07
+CODE : 23000
+MESSAGE : Duplicate entry '3' for key 'userid'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/model/WebkotteurManager.class.php
+LINE : 106
+QUERY : INSERT INTO webkot_webkotteur (name,firstname,nickname,mail,userid) VALUES ('test', 'test','test','test@webkot.be',3)
+DESCRIPTION : Impossible d'ajouter un membre a une equipe
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/controller/admin.mod.php(193): WebkotteurManager->addWebkotteur('test', 'test', 'test', 'test@webkot.be', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-18 17:08
+CODE : 23000
+MESSAGE : Duplicate entry '3' for key 'userid'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/model/WebkotteurManager.class.php
+LINE : 106
+QUERY : INSERT INTO webkot_webkotteur (name,firstname,nickname,mail,userid) VALUES ('test', 'test','test','test@webkot.be',3)
+DESCRIPTION : Impossible d'ajouter un membre a une equipe
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/controller/admin.mod.php(193): WebkotteurManager->addWebkotteur('test', 'test', 'test', 'test@webkot.be', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-18 17:26
+CODE : 23000
+MESSAGE : Duplicate entry '3' for key 'userid'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/model/WebkotteurManager.class.php
+LINE : 105
+QUERY : INSERT INTO webkot_webkotteur (name,firstname,nickname,mail,userid) VALUES ('test', 'test','test','test@webkot.be',3)
+DESCRIPTION : Impossible d'ajouter un membre a une equipe
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/controller/admin.mod.php(193): WebkotteurManager->addWebkotteur('test', 'test', 'test', 'test@webkot.be', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-18 17:26
+CODE : 23000
+MESSAGE : Duplicate entry '3' for key 'userid'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/model/WebkotteurManager.class.php
+LINE : 106
+QUERY : INSERT INTO webkot_webkotteur (name,firstname,nickname,mail,userid) VALUES ('test', 'test','test','test@webkot.be',3)
+DESCRIPTION : Impossible d'ajouter un membre a une equipe
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/webkot/controller/admin.mod.php(193): WebkotteurManager->addWebkotteur('test', 'test', 'test', 'test@webkot.be', '3')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-19 20:41
+CODE : 42000
+MESSAGE : You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''>=' '5'' at line 2
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/UserManager.class.php
+LINE : 339
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as fistname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role FROM user U, privilege P 
+    				WHERE U.level = P.id AND P.level :op :minLevel
+DESCRIPTION : Impossible d'obtenir la liste des User
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/activity/controller/admin.mod.php(52): UserManager->getListUserLevel(5, '>=')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-19 20:41
+CODE : 42000
+MESSAGE : You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''>=' '5'' at line 2
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/UserManager.class.php
+LINE : 339
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as fistname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role FROM user U, privilege P 
+    				WHERE U.level = P.id AND P.level :op :minLevel
+DESCRIPTION : Impossible d'obtenir la liste des User
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/activity/controller/admin.mod.php(52): UserManager->getListUserLevel(5, '>=')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-21 18:54
+CODE : 42
+MESSAGE : Unknown column 'descri' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/model/LinkCategoryManager.class.php
+LINE : 136
+QUERY : UPDATE link_category SET name = :name, descri = :descri, place = :place  WHERE name=:name
+DESCRIPTION : Impossible d'effectuer la mise a jour de la categorie
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/controller/admin.mod.php(177): LinkCategoryManager->updateCategory('test', 'Voici le test C...', '9')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-21 18:55
+CODE : 42
+MESSAGE : Unknown column 'descri' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/model/LinkCategoryManager.class.php
+LINE : 136
+QUERY : UPDATE link_category SET descri = :descri, place = :place  WHERE name=:name
+DESCRIPTION : Impossible d'effectuer la mise a jour de la categorie
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/controller/admin.mod.php(177): LinkCategoryManager->updateCategory('test', 'Voici le test C...', '9')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-21 18:56
+CODE : 42
+MESSAGE : Unknown column 'descri' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/model/LinkCategoryManager.class.php
+LINE : 136
+QUERY : UPDATE link_category SET descri = :descri, place = :place  WHERE name=:name
+DESCRIPTION : Impossible d'effectuer la mise a jour de la categorie 33
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/controller/admin.mod.php(177): LinkCategoryManager->updateCategory('test', 'Voici le test C...', '9')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-21 18:56
+CODE : 42
+MESSAGE : Unknown column 'descri' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/model/LinkCategoryManager.class.php
+LINE : 137
+QUERY : UPDATE link_category SET descri = :descri, place = :place  WHERE name=:name
+DESCRIPTION : Impossible d'effectuer la mise a jour de la categorie 33
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/link/controller/admin.mod.php(177): LinkCategoryManager->updateCategory('test', 'Voici le test C...', '9')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(135): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-24 21:54
+CODE : 8
+MESSAGE : Server shutdown in progress
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/activity/model/ActivityManager.class.php
+LINE : 311
+QUERY : SELECT A.*, GROUP_CONCAT(concat(U.firstname,' ', U.name,' (',U.username,')')) as authors FROM activity A,isauthor I, user U WHERE U.id = I.userid AND ispublished = '1' GROUP BY A.id ORDER BY date DESC
+DESCRIPTION : Impossible d'obtenir la liste des activites publiees
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/activity/controller/admin.mod.php(155): ActivityManager->getListActivityAuthors()
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(139): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-11-24 22:09
+CODE : 42
+MESSAGE : Unknown column 'U.firstname' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/activity/model/ActivityManager.class.php
+LINE : 403
+QUERY : SELECT A.id as id, A.title as title, A.description as description, A.date as date, A.directory as directory, P.level as level, A.viewed as viewed, A.ispublished as ispublished, GROUP_CONCAT(concat(U.firstname,' ', U.name,' (',U.username,')')) as authors FROM activity A, privilege P WHERE A.privilege = P.id AND P.level <= :level AND A.id = I.activityid AND U.id = I.userid GROUP BY A.id ORDER BY date DESC LIMIT 0, 10
+DESCRIPTION : Impossible d'obtenir les dernieres activites
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/module/activity/controller/admin.mod.php(207): ActivityManager->getSelectionActivity(0, 10, '7')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/admin/index.php(139): include('/Users/jeromema...')
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-12-06 22:10
+CODE : 42
+MESSAGE : Unknown column 'U.facebookid' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/functions.inc.php(153): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/index.php(68): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-12-06 22:11
+CODE : 42
+MESSAGE : Unknown column 'U.facebookid' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/functions.inc.php(153): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/index.php(68): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-12-06 22:12
+CODE : 42
+MESSAGE : Unknown column 'U.facebookid' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/functions.inc.php(153): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/index.php(68): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2013-12-06 22:13
+CODE : 42
+MESSAGE : Unknown column 'U.facebookid' in 'field list'
+FILE : /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User par son username
+TRACE : #0 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/system/functions.inc.php(153): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Sites/PHPEclipse_workspace/webkot4dev4/index.php(68): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2014-01-16 15:51
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/RoleManager.class.php
+LINE : 106
+QUERY : SELECT id as id, role as role, min(level) as level FROM privilege ORDER BY level ASC
+DESCRIPTION : Impossible d'obtenir le min role
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/functions.inc.php(241): RoleManager->getMinRole()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(70): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2014-01-16 15:57
+CODE : 42
+MESSAGE : Unknown column 'isbackend' in 'field list'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/ModuleManager.class.php
+LINE : 188
+QUERY : SELECT id as id, name as name, displayed_name as displayedName, location as location, is_active as isActive, in_menu as inMenu, config as config, place as place, loader as loader, isbackend as isbackend, isfrontend as isfrontend FROM module ORDER BY place ASC
+DESCRIPTION : Impossible d'obtenir la liste des modules
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/ModuleManager.class.php(212): ModuleManager->getAllModule()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/functions.inc.php(316): ModuleManager->getUserRoleCapabilities('Visitor')
+#2 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(70): system_session_login()
+#3 {main}
+
+#################### SQLException ##################
+DATE : 2014-01-16 15:58
+CODE : 42
+MESSAGE : Unknown column 'isbackend' in 'field list'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/ModuleManager.class.php
+LINE : 188
+QUERY : SELECT id as id, name as name, displayed_name as displayedName, location as location, is_active as isActive, in_menu as inMenu, config as config, place as place, loader as loader, isbackend as isbackend, isfrontend as isfrontend FROM module ORDER BY place ASC
+DESCRIPTION : Impossible d'obtenir la liste des modules
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/ModuleManager.class.php(212): ModuleManager->getAllModule()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/functions.inc.php(316): ModuleManager->getUserRoleCapabilities('Visitor')
+#2 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(70): system_session_login()
+#3 {main}
+
+#################### SQLException ##################
+DATE : 2014-01-16 15:59
+CODE : 42
+MESSAGE : Unknown column 'isbackend' in 'field list'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/ModuleManager.class.php
+LINE : 189
+QUERY : SELECT id as id, name as name, displayed_name as displayedName, location as location, is_active as isActive, in_menu as inMenu, config as config, place as place, loader as loader, isbackend as isbackend, isfrontend as isfrontend FROM module ORDER BY place ASC
+DESCRIPTION : Impossible d'obtenir la liste des modules
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/lib/ModuleManager.class.php(213): ModuleManager->getAllModule()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/functions.inc.php(316): ModuleManager->getUserRoleCapabilities('Visitor')
+#2 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(70): system_session_login()
+#3 {main}
