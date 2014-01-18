@@ -1,0 +1,17 @@
+
+.img_button{
+	width:20px;
+	margin-left:auto;
+	margin-right:auto;	
+}
+.img_button:hover{
+	width:20px;
+	align:center;
+	opacity:0.4;
+	filter:alpha(opacity=40);	
+}
+
+.challenge-img{
+	margin-top : 20px;
+	margin-bottom: 20px;
+}

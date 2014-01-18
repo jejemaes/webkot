@@ -1,0 +1,29 @@
+
+
+.blog-post-content-ellipsis{
+    position: relative;
+    overflow: hidden;
+    max-height: 100px;
+    margin:0;
+     
+   white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+}
+
+
+.blog-comment{
+	background-image:url('../img/background-white.png');
+	margin:10px;
+	padding:5px;
+}
+
+
+.blog-invisible{
+	visibility:hidden;
+}
+.blog-visible{
+	visibility:visible;
+}

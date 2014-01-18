@@ -1,0 +1,153 @@
+@CHARSET "UTF-8";
+
+
+/*###### Style #####*/
+
+#activity-modal-message{
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.activity-picture-inner-content{
+	display: inline-block;
+	position : relative;
+}
+
+.activity-picture-content{
+	margin:auto; 
+	position:relative; 
+	text-align:center;
+}
+
+.activity-content-box{
+	/*background-image:url('../img/background-white.png');
+	//background-color:white;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:10px;
+	padding-right:10px;*/
+    margin-bottom:15px;
+}
+
+.activity-content-shadow{
+ -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+/*####### Text #####*/
+
+
+.activity-small-date{ 
+	font-size:80%;
+	font-weight:bold;
+}
+.activity-list-item{
+}
+
+
+/*####### Media ########*/
+.activity-media{
+	padding-bottom:20px;
+}
+
+.activity-media-heading{
+	padding-bottom:4px;
+}
+
+/*######## Table ########*/
+.activity-table-twocol{
+    width:100%;
+}
+.activity-table-twocol td{
+   text-align: left; 
+    valign: middle;	
+    margin-left:1%;
+    width:47%;
+    padding-right:1%;
+}
+
+.activity-table-center{
+    width:100%;
+}
+.activity-table-center td{
+    align: center; 
+    text-align: center; 
+	valign: middle;	
+}
+
+
+/*######## Modal content ######*/
+.cell-picture{
+	position:relative;
+    overflow: hidden;
+    
+}
+
+.activity-hr-style{
+	border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 	
+}
+
+.activity-modal-infos{
+	overflow-y:auto;
+	overflow-x:hidden;
+	max-height:550px;
+}
+
+.activity-comment-textarea{
+	//width:96%;
+	resize: none;
+}
+	
+
+/*######## Image ########*/
+img.center{
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center
+}
+
+.activity-img-hover:hover{
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
+
+.activity-img-center{
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center
+}
+
+.activity-img-commented {
+  padding: 1px;
+  background-color: yellow;
+  border: 1px solid yellow;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.activity-img-censured {
+  padding: 1px;
+  background-color: red;
+  border: 1px solid red;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.activity-invisible{
+	visibility:hidden;
+}
+.activity-visible{
+	visibility:visible;
+}
