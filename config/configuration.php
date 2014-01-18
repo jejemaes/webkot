@@ -1,0 +1,41 @@
+<?php
+
+
+
+// DB config for "webkot"
+define('DB_LOGIN','webkot4');
+define('DB_PASS','coubertin');
+define('DB_HOST','localhost');
+define('DB_NAME','webkot4-dev');
+//define('DB_NAME','migration');
+
+// Date constant : a academic year start on the 15 July
+define('BEGINYEAR_MONTH', '07');
+define('BEGINYEAR_DAY','15');
+
+// Constant for the Captcha
+define('CAPTCHA_PUBLIC_KEY','6LfMM9kSAAAAAOPzslrU6R4II02TU3L3SnHwLX_s');
+define('CAPTCHA_PRIVATE_KEY','6LfMM9kSAAAAAJVGJfV5Thxt9sKUzSO0x0fycNuQ');
+
+define('URL', 'http://localhost/Web Developpement/Workspace/webkot4dev5/');
+
+define('SENDMAIL_ACTIVE', false);
+
+define('LOGGING_FILE',false);
+define('LOGGING_LIVE',false);
+// Indicate the PHP constant for the error log 0, E_ALL, E_ERROR || E_PARSE, ... (without quote)
+define('DEBUG_MODE',E_ALL);
+// Timezone
+define('TIMEZONE','Europe/Paris');
+
+define('NBR_DEFAULT',10);
+
+define('RSS_FILE','rss.xml');
+
+define('CHMOD', 0777);
+
+
+
+define('FACEBOOK_APPID','516806348339496');
+define('FACEBOOK_SECRET','1163e8dcd6af2e9ed3632b5202bb6d2f');
+
