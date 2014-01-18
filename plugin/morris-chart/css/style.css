@@ -1,0 +1,43 @@
+@CHARSET "UTF-8";
+
+.social-ring-facebook-share-button {
+	background: url("../img/facebook-link.png") no-repeat scroll 4px 3px #ECEEF5 ;
+	border: 1px solid #CAD4E7;
+	width:30px;
+	border-radius: 3px 3px 3px 3px;
+	color: #3B5998 !important;
+	padding: 2px 4px 2px 22px !important;
+	text-decoration: none;	
+	font-size:11px;
+	line-height: 12px !important;
+}
+
+
+.social-ring{
+    position:relative;
+   	height:30px;
+    z-index:98;
+    margin-left:auto;
+    margin-right:auto;
+    display:inline;
+}
+.social-ring-button{
+   position:relative;
+   margin-left:0px;
+   float: left; 
+   z-index:98;
+}
+
+
+.twitter-share-button{
+	background: url("../img/social_twitter.png") no-repeat scroll 4px 3px;
+	border-radius: 3px 3px 3px 3px;
+	padding: 2px 4px 2px 22px !important;
+	text-decoration: none;	
+	font-size:11px;
+	font-weight:bold;
+	line-height: 12px !important;
+	color:#086A87;
+	margin-right:20px;
+}
+
