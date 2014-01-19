@@ -1,0 +1,4 @@
+{
+	"files" : ["PluginBootstrapFileUploader.class.php","UploadHandler.php"],
+	"class" : "PluginBootstrapFileUploader"
+}

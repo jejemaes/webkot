@@ -19,7 +19,7 @@ class BlogModuleLoader implements iModuleLoader{
 	}
 
 	public static function getController($relativePath){
-		return $relativePath . 'controller/blog.mod.php';
+		return $relativePath . 'controller/frontend.inc.php';
 	}
 
 	public static function loadModule($relativePath){
@@ -29,7 +29,7 @@ class BlogModuleLoader implements iModuleLoader{
 		return BlogModuleLoader::getController($relativePath);
 	}
 
-	public static function loadJsCode(iTemplate $template){
+	public static function loadJsCode(iTemplate $template, $relativePath){
 	
 	}
 	
@@ -50,7 +50,7 @@ class BlogModuleLoader implements iModuleLoader{
 	}
 
 	public static function getAdminController($relativePath){
-		return $relativePath . 'controller/admin.mod.php';
+		return $relativePath . 'controller/backend.inc.php';
 	}
 
 	public static function loadAdminModule($relativePath){
@@ -58,6 +58,32 @@ class BlogModuleLoader implements iModuleLoader{
 		BlogModuleLoader::loadAdminModel($relativePath);
 		BlogModuleLoader::loadAdminView($relativePath);
 		return BlogModuleLoader::getAdminController($relativePath);
+	}
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+		system_include_file($relativePath . 'model/BlogComment.class.php');
+		system_include_file($relativePath . 'model/BlogPost.class.php');
+		system_include_file($relativePath . 'model/BlogManager.class.php');
+	}
+	
+	public static function loadServerFunctions($relativePath){
+		system_include_file($relativePath . "functions.inc.php");
+	}
+	
+	public static function getServerController($relativePath){
+		return $relativePath . 'controller/server.inc.php';
+	}
+	
+	public static function loadServerModule($relativePath){
+		BlogModuleLoader::loadServerFunctions($relativePath);
+		BlogModuleLoader::loadServerModel($relativePath);
+		return BlogModuleLoader::getServerController($relativePath);
 	}
 	
 		

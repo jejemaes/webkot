@@ -1,10 +1,5 @@
 <?php
 
-include DIR_MODULE . $module->getLocation() . 'functions.inc.php';
-
-include DIR_MODULE . $module->getLocation() . 'controller/UserController.class.php';
-
-
 
 
 //######################

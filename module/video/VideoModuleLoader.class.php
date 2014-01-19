@@ -28,7 +28,7 @@ class VideoModuleLoader implements iModuleLoader{
 		return VideoModuleLoader::getController($relativePath);
 	}
 
-	public static function loadJsCode(iTemplate $template){
+	public static function loadJsCode(iTemplate $template, $relativePath){
 	
 	}
 	
@@ -57,6 +57,28 @@ class VideoModuleLoader implements iModuleLoader{
 		VideoModuleLoader::loadAdminView($relativePath);
 		return VideoModuleLoader::getAdminController($relativePath);
 	}
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+	
+	}
+	
+	public static function loadServerFunctions($relativePath){
+	
+	}
+	
+	public static function getServerController($relativePath){
+	
+	}
+	
+	public static function loadServerModule($relativePath){
+	
+	}
+	
 	
 		
 }

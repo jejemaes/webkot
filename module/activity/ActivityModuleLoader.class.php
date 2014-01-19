@@ -7,6 +7,10 @@ define('ACTIVITY_PUBLISHING_FILE_BACKUP', DIR_TMP . "activity-publishing-backup.
 define('ACTIVITY_JS_CLASS_CALL_ANCHOR','activity-js-anchor');
 define('ACTIVITY_DIR_ARCHIVE2002','archive2002/');
 
+
+define('ACTIVITY_FONT_PATH', (dirname(__FILE__)."/fonts/Harabara.ttf"));
+
+
 class ActivityModuleLoader implements iModuleLoader{
 	
 	// FRONTEND
@@ -36,7 +40,7 @@ class ActivityModuleLoader implements iModuleLoader{
 	public static function getController($relativePath){
 		system_include_file($relativePath . 'controller/ActivityController.class.php');
 		system_include_file($relativePath . 'controller/PictureController.class.php');
-		return $relativePath . 'controller/activity.mod.php';
+		return $relativePath . 'controller/frontend.inc.php';
 	}
 	
 	public static function loadModule($relativePath){
@@ -46,8 +50,8 @@ class ActivityModuleLoader implements iModuleLoader{
 		return ActivityModuleLoader::getController($relativePath);
 	}
 	
-	public static function loadJsCode(iTemplate $template){
-		$template->addJSFooter('<script type="text/javascript" src="' . DIR_MODULE.'activity/view/js/script.js"></script>');
+	public static function loadJsCode(iTemplate $template, $relativePath){
+		$template->addJSFooter('<script type="text/javascript" src="'.$relativePath.'view/js/script.js"></script>');
 	}
 	
 	
@@ -68,7 +72,6 @@ class ActivityModuleLoader implements iModuleLoader{
 		system_include_file($relativePath . 'model/CensureManager.class.php');
 		
 		system_include_file($relativePath . 'model/Publisher.class.php');
-		//system_include_file($relativePath . 'model/PublisherHandler.class.php');
 		
 		system_include_file($relativePath . 'model/StatActivity.class.php');
 		system_include_file($relativePath . 'model/StatUser.class.php');
@@ -85,7 +88,8 @@ class ActivityModuleLoader implements iModuleLoader{
 	
 	public static function getAdminController($relativePath){
 		system_include_file($relativePath . 'controller/ActivityController.class.php');
-		return $relativePath . 'controller/admin.mod.php';
+		system_include_file($relativePath . 'controller/PictureController.class.php');
+		return $relativePath . 'controller/backend.inc.php';
 	}
 	
 	public static function loadAdminModule($relativePath){
@@ -94,5 +98,51 @@ class ActivityModuleLoader implements iModuleLoader{
 		ActivityModuleLoader::loadAdminView($relativePath);
 		return ActivityModuleLoader::getAdminController($relativePath);
 	}
+	
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+		system_include_file($relativePath . 'model/ImgUtils.class.php');
+		system_include_file($relativePath . 'model/Activity.class.php');
+		system_include_file($relativePath . 'model/ActivityManager.class.php');
+		system_include_file($relativePath . 'model/AbstractPicture.class.php');
+		system_include_file($relativePath . 'model/Picture.class.php');
+		system_include_file($relativePath . 'model/PictureManager.class.php');
+		system_include_file($relativePath . 'model/MyPicture.class.php');
+		system_include_file($relativePath . 'model/MyPictureManager.class.php');
+		system_include_file($relativePath . 'model/Comment.class.php');
+		system_include_file($relativePath . 'model/CommentManager.class.php');
+		
+		system_include_file($relativePath . 'model/Censure.class.php');
+		system_include_file($relativePath . 'model/CensureManager.class.php');
+		
+		// don't load this here because it exstends a class loaded after --> fatal error php
+		//system_include_file($relativePath . 'model/PictureUploadHandler.class.php');
+		
+		system_include_file($relativePath . 'model/StatActivity.class.php');
+		system_include_file($relativePath . 'model/StatUser.class.php');
+		system_include_file($relativePath . 'model/StatManager.class.php');
+	}
+	
+	public static function loadServerFunctions($relativePath){
+		system_include_file($relativePath . 'functions.inc.php');
+	}
+	
+	public static function getServerController($relativePath){
+		system_include_file($relativePath . 'controller/ActivityController.class.php');
+		system_include_file($relativePath . 'controller/PictureController.class.php');
+		return $relativePath . 'controller/server.inc.php';
+	}
+	
+	public static function loadServerModule($relativePath){
+		ActivityModuleLoader::loadServerFunctions($relativePath);
+		ActivityModuleLoader::loadServerModel($relativePath);
+		return ActivityModuleLoader::getServerController($relativePath);
+	}
+	
 	
 }

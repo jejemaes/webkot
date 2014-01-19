@@ -17,7 +17,7 @@ define('BEGINYEAR_DAY','15');
 define('CAPTCHA_PUBLIC_KEY','6LfMM9kSAAAAAOPzslrU6R4II02TU3L3SnHwLX_s');
 define('CAPTCHA_PRIVATE_KEY','6LfMM9kSAAAAAJVGJfV5Thxt9sKUzSO0x0fycNuQ');
 
-define('URL', 'http://localhost/Web Developpement/Workspace/webkot4dev5/');
+define('URL', 'http://localhost/Web Developpement/Workspace/webkot4/');
 
 define('SENDMAIL_ACTIVE', false);
 

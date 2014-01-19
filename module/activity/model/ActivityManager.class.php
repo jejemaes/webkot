@@ -59,12 +59,12 @@ class ActivityManager {
         	$stmt->execute(array( 'title' => $title, 'descri' => $descri, 'date' => $date, 'directory' => $directory, 'level' => $level));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une activite");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une activit&eacute;");
 	        }
 	        $this->apcDeleteActivityLists();
 	        return $this->_db->getPDOInstance()->lastInsertId();     
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une activite");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une activit&eacute;");
         	return false;
         }
     }
@@ -140,11 +140,11 @@ class ActivityManager {
     		$stmt->execute(array( 'aid' => $aid));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activite");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activit&eacute;");
     		}
     		return true;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activite");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activit&eacute;");
     		return false;
     	}
     }
@@ -167,7 +167,7 @@ class ActivityManager {
         	$stmt->execute(array( 'id' => $aid));
         	if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activite");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activit&eacute;");
 	        }
 	        if($this->_apc){
 	        	apc_delete(self::APC_ACTIVITY_ACTIVITY . $aid);
@@ -175,7 +175,7 @@ class ActivityManager {
 	        }
 	        return true;       
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activite");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activit&eacute;");
         	return false;
         }
     }
@@ -201,11 +201,11 @@ class ActivityManager {
 		        $stmt->execute(array( 'id' => $id, 'level' => $level));
 				if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une activite specifiee");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une activit&eacute; specifiee");
 			    }
 				$data = $stmt->fetch(PDO::FETCH_ASSOC);
 				if(empty($data)){
-					throw new NullObjectException();
+					throw new NullObjectException("Aucune activit&eacute; n'as &eacute;t&eacute; trouv&eacute;e avec l'identifiant ".$id);
 				}
 		        $activity = new Activity($data);
 		        if($this->_apc){
@@ -220,7 +220,7 @@ class ActivityManager {
 	        $activity->setAuthors($this->getAuthors($id));     
 	     	return $activity;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir une activite specifiee");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir une activit&eacute; specifiee");
         }	
     
     }
@@ -239,7 +239,7 @@ class ActivityManager {
 	    	$stmt->execute(array('level' => $level));  
 	    	if($stmt->errorCode() != 0){
 		    	$error = $stmt->errorInfo();
-		    	throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les dernieres activites");
+		    	throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les dernieres activit&eacute;s");
 	    	} 
 	    	$manager = PictureManager::getInstance();
 	    	$activi = array();
@@ -251,7 +251,7 @@ class ActivityManager {
 	    	}   
 	    	return $activi;	
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les dernieres activites");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les dernieres activit&eacute;s");
         }
     }
     
@@ -274,7 +274,7 @@ class ActivityManager {
 		         $stmt->execute(array('level' => $level));
 		         if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activites publiees");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s publiees");
 			     }    
 		         $i = 0;
 		    	 $activi = array();
@@ -286,7 +286,7 @@ class ActivityManager {
 		         }  
 		         return $activi;
 	      	}catch(PDOException $e){
-	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activites publiees");
+	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s publiees");
 	        }
     	}
     }
@@ -307,7 +307,7 @@ class ActivityManager {
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activites non publi�es");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s non publi�es");
     		}
     		$i = 0;
     		$activi = array();
@@ -316,7 +316,7 @@ class ActivityManager {
     		}
     		return $activi;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activites non publi�es");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s non publi�es");
     	}
     }
     
@@ -335,7 +335,7 @@ class ActivityManager {
 	        $stmt->execute(array('year' => $year."-".BEGINYEAR_MONTH."-".BEGINYEAR_DAY , 'year2' => ($year+1)."-".BEGINYEAR_MONTH."-".BEGINYEAR_DAY , 'level' => $level));   
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activites par annee");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s par annee");
 		    }
 	        $manager = PictureManager::getInstance();
 	    	$activi = array();
@@ -347,7 +347,7 @@ class ActivityManager {
 	        }   
 	        return $activi;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activites par annee");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s par annee");
         }
     }
     
@@ -366,7 +366,7 @@ class ActivityManager {
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les dernieres activites");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les dernieres activit&eacute;s");
     		}
     		$activi = array();
     		while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -374,7 +374,7 @@ class ActivityManager {
     		}
     		return $activi;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les dernieres activites");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les dernieres activit&eacute;s");
     	}
     }
     
@@ -394,12 +394,12 @@ class ActivityManager {
 	    	$stmt->execute(array('begin' => $begin, 'end' => $end, 'level' => $level));
 	    	if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activite");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute;");
 		    }  
 	        $data = (int) $stmt->fetchColumn();
 	        return $data;
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activite");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute;");
         }
     }
     
@@ -416,12 +416,12 @@ class ActivityManager {
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activite");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute;");
     		}
     		$data = (int) $stmt->fetchColumn();
     		return $data;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activite");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute;");
     	}
     }
     
@@ -555,12 +555,12 @@ class ActivityManager {
 	        $stmt->execute(array('begin' => $begin, 'end' => $end));
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activite pendant la periode donnee");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute; pendant la periode donnee");
 		    }
 			$nb = (int) $stmt->rowCount();   
 	        return $nb;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activite pendant la periode donnee");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute; pendant la periode donnee");
         }
     }
    
@@ -628,14 +628,13 @@ class ActivityManager {
  	/**
  	 * Update the the status of the Activity (published or not)
  	 * @param int $aid : the identifier of the Activity
- 	 * @param int $publish : the new status of the Activity (0 or 1)
+ 	 * @param int $publish : the new status of the Activity ('0' or '1')
  	 * @return boolean $b : true if the update is a success, false otherwise
  	 * @throws SQLException : this exception is raised if the Query is refused
  	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
  	 */
  	public function updatePublish($aid, $publish){
  		try{
- 			$activity = $this->getActivity($aid);
  			$sql = "UPDATE activity SET ispublished=:publish WHERE id=:id";
  			$stmt = $this->_db->prepare($sql);
  			$n = $stmt->execute(array('publish' => $publish, 'id' => $aid));

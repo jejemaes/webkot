@@ -42,7 +42,11 @@ class PictureManager {
     
     
     /** add a Picture in th DB
-     * @param array $data : key-array containing all the information to complete the user Object
+     * @param int $idactivity : the identifier of the Activity
+     * @param string $filename : the name of the image file
+     * @param string $time : the time the picture was taken in the format HH:mm:ss
+     * @param char $iscensured : '0' if the Picture is not censured, '0' otherwise
+     * @param char $isvideo : '0' if the Picture is a video, '0' otherwise
      * @return boolean $b : true if the User was added, false otherwise
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      * @throws NullObjectException : this exception is raised when the specified Object didn't exist
@@ -400,6 +404,34 @@ class PictureManager {
         	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer les images d'une activite");
         	return false;
         }
+    }
+    
+    /**
+     * Delete a given picture Object
+     * @param int $aid : the identifier of the Activity
+     * @param string $filename : the filename of the image file
+     * @return boolean $b : true if the removing was successful
+     * @throws SQLException : this exception is raised if the Query is refused
+     * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
+     */
+    public function delete($aid, $filename){
+    	try {
+    		$sql = "DELETE FROM picture WHERE idactivity = :id AND filename = :filename";
+    		$stmt = $this->_db->prepare($sql);
+    		$stmt->execute(array( 'id' => $aid, 'filename' => $filename));
+    		if($stmt->errorCode() != 0){
+    			$error = $stmt->errorInfo();
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer la photo " . $filename);
+    		}
+    		if($this->_apc){
+    			apc_delete(self::APC_ACTIVITY_PICTURES . $aid);
+    			apc_delete(PictureManager::APC_ACTIVITY_LASTCOM);
+    		}
+    		return true;
+    	}catch(PDOException $e){
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer la photo " . $filename);
+    		return false;
+    	}
     }
 
     /*

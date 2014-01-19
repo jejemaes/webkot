@@ -1,11 +1,12 @@
 <?php
 
-error_reporting(0);
-
 
 // Include config & autres class utiles
 require_once("config/configuration.php");
 require_once("config/frontend.inc.php");
+date_default_timezone_set(TIMEZONE);
+error_reporting(DEBUG_MODE);
+
 
 //######## SYSTEM FUNCTINOS ##########
 include("system/functions.inc.php");
@@ -37,10 +38,16 @@ include(DIR_SYST_LIB."UserManager.class.php");
 include(DIR_SYST_LIB."Option.class.php");
 include(DIR_SYST_LIB."OptionManager.class.php");
 
+
 include(DIR_SYST_INTERFACE."iGeneralTemplate.php");
 include(DIR_SYST_INTERFACE."iView.php");
 include(DIR_SYST_INTERFACE."iWidget.php");
 include(DIR_SYST_INTERFACE."iPlugin.php");
+include(DIR_SYST_INTERFACE."iModuleLoader.php");
+require_once(DIR_SYST_INTERFACE . "iLayout.php");
+require_once(DIR_SYST_INTERFACE . "iLayout2col.php");
+require_once(DIR_SYST_INTERFACE . "iLayout1col.php");
+require_once(DIR_SYST_INTERFACE . "iTemplate.php");
 
 
 //########### EXCEPTIONS #############
@@ -61,7 +68,8 @@ try{
 		$module = $manager->getModule($module);
 		if($module != null){
 			//load the file
-			include(DIR_MODULE . $module->getLocation() . 'server.inc.php');
+			//include(DIR_MODULE . $module->getLocation() . 'server.inc.php');
+			include system_load_module_server($module->getName());
 		}		
 	}else{
 		echo "{message : {type : 'error' , content : 'Le module est non specifie.'}}";

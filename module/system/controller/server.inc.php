@@ -1,12 +1,5 @@
 <?php
 
-include DIR_MODULE . $module->getLocation() . 'functions.inc.php';
-
-include DIR_MODULE . $module->getLocation() . 'model/Media.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/MediaCategory.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/MediaManager.class.php';
-
-
 
 if(isset($_REQUEST['part']) && !empty($_REQUEST['part'])){
 	

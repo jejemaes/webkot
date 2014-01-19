@@ -27,7 +27,7 @@ class SystemModuleLoader implements iModuleLoader{
 		return SystemModuleLoader::getController($relativePath);
 	}
 
-	public static function loadJsCode(iTemplate $template){
+	public static function loadJsCode(iTemplate $template, $relativePath){
 	
 	}
 
@@ -48,7 +48,7 @@ class SystemModuleLoader implements iModuleLoader{
 	}
 
 	public static function getAdminController($relativePath){
-		return $relativePath . 'controller/admin.mod.php';
+		return $relativePath . 'controller/backend.inc.php';
 	}
 
 	public static function loadAdminModule($relativePath){
@@ -57,6 +57,33 @@ class SystemModuleLoader implements iModuleLoader{
 		SystemModuleLoader::loadAdminView($relativePath);
 		return SystemModuleLoader::getAdminController($relativePath);
 	}
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+		system_include_file($relativePath . 'model/Media.class.php');
+		system_include_file($relativePath . 'model/MediaCategory.class.php');
+		system_include_file($relativePath . 'model/MediaManager.class.php');
+	}
+	
+	public static function loadServerFunctions($relativePath){
+		system_include_file($relativePath . 'functions.inc.php');
+	}
+	
+	public static function getServerController($relativePath){
+		return $relativePath . 'controller/server.inc.php';
+	}
+	
+	public static function loadServerModule($relativePath){
+		SystemModuleLoader::loadServerFunctions($relativePath);
+		SystemModuleLoader::loadServerModel($relativePath);
+		return SystemModuleLoader::getServerController($relativePath);
+	}
+	
 	
 		
 }

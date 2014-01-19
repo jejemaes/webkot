@@ -15,7 +15,7 @@ class LinkModuleLoader implements iModuleLoader{
 	}
 
 	public static function loadFunctions($relativePath){
-		
+		system_include_file($relativePath . 'functions.inc.php');
 	}
 
 	public static function getController($relativePath){
@@ -29,7 +29,7 @@ class LinkModuleLoader implements iModuleLoader{
 		return LinkModuleLoader::getController($relativePath);
 	}
 
-	public static function loadJsCode(iTemplate $template){
+	public static function loadJsCode(iTemplate $template, $relativePath){
 	
 	}
 
@@ -59,6 +59,28 @@ class LinkModuleLoader implements iModuleLoader{
 		LinkModuleLoader::loadAdminView($relativePath);
 		return LinkModuleLoader::getAdminController($relativePath);
 	}
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+	
+	}
+	
+	public static function loadServerFunctions($relativePath){
+	
+	}
+	
+	public static function getServerController($relativePath){
+	
+	}
+	
+	public static function loadServerModule($relativePath){
+	
+	}
+	
 	
 		
 }

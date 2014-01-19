@@ -68,11 +68,6 @@ class Activity {
 	}
 	
 	
-	public function toCover(){
-		$str = '<p class="activity_date">' . (string)$this->getDate() . '</p> - ' . (string)$this->getTitle() . '<br>' . (string)$this->getDescription();
-		return $str;
-	}
-	
     
     // SETTERS & GETTERS
 	public function setId($id){
@@ -189,6 +184,15 @@ class Activity {
 	
 	public function getNbrpictures(){
 		return $this->nbrpictures;
+	}
+	
+	
+	public function getCountPictures(){
+		if(!empty($this->getNbrpictures())){
+			return $this->getNbrpictures();
+		}else{
+			return count($this->getPictures());
+		}
 	}
  		
 }

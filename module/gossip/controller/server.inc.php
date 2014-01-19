@@ -1,11 +1,5 @@
 <?php
 
-include DIR_MODULE . $module->getLocation() . 'functions.inc.php';
-include DIR_MODULE . $module->getLocation() . 'model/Gossip.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/GossipManager.class.php';
-
-
-
 
 if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 

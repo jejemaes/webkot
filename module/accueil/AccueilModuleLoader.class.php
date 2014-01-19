@@ -38,7 +38,7 @@ class AccueilModuleLoader implements iModuleLoader{
 		return AccueilModuleLoader::getController($relativePath);
 	}
 	
-	public static function loadJsCode(iTemplate $template){
+	public static function loadJsCode(iTemplate $template, $relativePath){
 		$modulesToLoad = self::$modulesToLoadFrontend;
 		for($i=0 ; $i<count($modulesToLoad) ; $i++){
 			$name = $modulesToLoad[$i];
@@ -77,6 +77,27 @@ class AccueilModuleLoader implements iModuleLoader{
 		AccueilModuleLoader::loadAdminModel($relativePath);
 		AccueilModuleLoader::loadAdminView($relativePath);
 		return AccueilModuleLoader::getAdminController($relativePath);
+	}
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+		
+	}
+	
+	public static function loadServerFunctions($relativePath){
+		
+	}
+	
+	public static function getServerController($relativePath){
+		
+	}
+	
+	public static function loadServerModule($relativePath){
+		
 	}
 	
 		

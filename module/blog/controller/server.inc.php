@@ -1,10 +1,5 @@
 <?php
 
-include DIR_MODULE . $module->getLocation() . 'model/BlogComment.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/BlogPost.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/BlogManager.class.php';
-
-
 if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 
 	switch ($_REQUEST['action']) {
@@ -46,6 +41,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 			if(RoleManager::getInstance()->hasCapabilitySession('blog-delete-comment')){
 				if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])){
 					$manager = BlogManager::getInstance();
+					
 					$manager->deleteComment($_REQUEST['id']);
 					echo '{"message" : {"type" : "success", "content" : "Le commentaire '.$_REQUEST['id'].' a &eacute;t&eacute; supprim&eacute; avec succ&egrave;s."}}';
 				}else{

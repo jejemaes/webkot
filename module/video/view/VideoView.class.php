@@ -48,8 +48,8 @@ class VideoView extends View implements iView{
 	
 	
 	public function pageVideo(Video $video){
-		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-		$HTML = '<h4>'.$video->getTitle().'</h4>';
+		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML .= '<h4>'.$video->getTitle().'</h4>';
 		$HTML .= '<iframe class="video-youtube-iframe" width="640" height="480" src="//www.youtube.com/embed/'.$video->getId().'" frameborder="0" allowfullscreen></iframe>';
 		$HTML .= '<div class="row">';
         $HTML .= '<div class="col-lg-5 col-md-offset-2">

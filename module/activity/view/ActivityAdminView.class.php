@@ -94,19 +94,33 @@ class ActivityAdminView extends AdminView implements iAdminView{
 	
 	
 	
-	public function pageFormAddPicture($directory){
+	public function pageFormManagePicture(Activity $activity, $message = null){
+		$directory = $activity->getDirectory();
+		$t = $this->getTemplate();
 		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
-		$nbrFile = system_count_files_in_directory(DIR_HD_PICTURES . $directory . "/", array("jpg","jpeg","JPG","JPEG"));
-		$content .= activity_form_add_picture($nbrFile,$directory . "/");
+		//$nbrFile = system_count_files_in_directory(DIR_HD_PICTURES . $directory . "/", array("jpg","jpeg","JPG","JPEG"));
+		$content .= '<h3>Gestion des photos de l\'activit&eacute; <i>'.$activity->getTitle().'</i></h3>';
+		$content .= $message;
+		$content .= 'D&eacute;tail de l\'activit&eacute; : <ul>
+				<li><strong>Id : </strong> '.$activity->getId().'</li>
+				<li><strong>Titre : </strong> '.$activity->getTitle().'</li>
+				<li><strong>Description : </strong> '.$activity->getDescription().'</li>
+				<li><strong>Date : </strong> '.$activity->getDate().'</li>
+				<li><strong>R&eacute;pertoire : </strong> <i>'.$activity->getDirectory().'/</i></li>
+				<li><strong>Level : </strong> '.$activity->getLevel().'</li>
+				<li><strong>Nombre de photos : </strong> '.$activity->getCountPictures().' <small>(ce nombre ne sera pas en cas de suppression d\'image sans rafraichissement de page)</small></li>
+			</ul><br>';
+		$content .= system_load_plugin(array('bootstrap-fileuploadhandler' => array("template"=> $t, "url" => URLUtils::builtServerUrl($this->getModule()->getName(), array('action' => 'picturehandler', 'activityid' => $activity->getId())))));
 		$content .= '</div>';
 		$content .= '</div>';
 		$content .= '</div>';
-		$t = $this->getTemplate();
 		$t->setContent($content);
-		system_load_plugin(array('bootstrap-uploadhandler' => array('directory' => $directory, 'url' => URLUtils::builtServerUrl('activity', array('directory' => $directory)), 'module' => 'activity', "template" => $t, 'action' => '??')));
+		//system_load_plugin(array('bootstrap-uploadhandler' => array('directory' => $directory, 'url' => URLUtils::builtServerUrl('activity', array('directory' => $directory)), 'module' => 'activity', "template" => $t, 'action' => '??')));
 	}
+	
+	
 	
 	
 	public function pagePublishing($activity){

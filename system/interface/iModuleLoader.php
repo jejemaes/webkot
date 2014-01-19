@@ -15,7 +15,7 @@ interface iModuleLoader{
 
 	public static function loadModule($relativePath);
 	
-	public static function loadJsCode(iTemplate $template);
+	public static function loadJsCode(iTemplate $template, $relativePath);
 
 
 	// BACKEND
@@ -28,4 +28,16 @@ interface iModuleLoader{
 	public static function getAdminController($relativePath);
 	
 	public static function loadAdminModule($relativePath);
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath);
+	
+	
+	// SERVER
+	public static function loadServerModel($relativePath);
+	
+	public static function loadServerFunctions($relativePath);
+	
+	public static function getServerController($relativePath);
+	
+	public static function loadServerModule($relativePath);
 }

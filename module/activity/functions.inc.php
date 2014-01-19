@@ -542,8 +542,9 @@ function activity_admin_html_table_activity_list(array $list, $modname){
     <ul class="dropdown-menu">
     	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'edit', 'id' => $a->getId())).'"><i class="fa fa-pencil"></i> Editer</a></li>
     	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'delete', 'id' => $a->getId())).'" onclick=\'return(confirm("Etes vous certain de vouloir supprimer cet event ?"));\'"><i class="fa fa-trash-o"></i> Supprimer</a></li>';
+		$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'managepicture', 'id' => $a->getId())).'"><i class="fa fa-picture-o"></i> Gestion des photos</a></li>';
 		if(!$a->getIspublished()){
-			$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'addpicture', 'id' => $a->getId())).'"><i class="fa fa-plus"></i> Add Pictures</a></li>';
+			//$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'addpicture', 'id' => $a->getId())).'"><i class="fa fa-plus"></i> Add Pictures</a></li>';
 			$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'publish', 'id' => $a->getId())).'" id="activity-action-publish-'.$a->getId().'" ><i class="fa fa-leaf"></i> Publier</a></li>';
 		}else{
 			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'unpublish', 'id' => $a->getId())).'" onclick="activityUnpublish(\''.URL.'server.php?module='.$modname.'&action=unpublish\', '.$a->getId().');return false;"><i class="fa fa-fire"></i> Depublier</a></li>';
@@ -555,26 +556,6 @@ function activity_admin_html_table_activity_list(array $list, $modname){
 		$HTML .= '</tr>';
 	}
 	$HTML .= '</tbody></table>';
-	
-	$HTML2 = '<div id="modal-publishing" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-publishing-label" aria-hidden="true">
-  <div class="modal-header">
-    <!--<button type="button" class="close disabled" data-dismiss="modal" aria-hidden="true">×</button>-->
-    <h3 id="modal-publishing-label">Publication d\'activite</h3>
-  </div>
-  <div class="modal-body">
-	<h4>Renommage</h4>
-    <div class="progress progress-striped active">
-  		<div id="modal-publishing-rename-progressbar" class="bar" style="width: 0%;"></div>
-	</div>
-	<h4>Copie et creation des thumbnails</h4>
-	<div class="progress progress-striped active">
-  		<div id="modal-publishing-copy-progressbar" class="bar" style="width: 0%;"></div>
-	</div>
-  </div>
-  <!--<div class="modal-footer">
-    <button id="modal-publishing-close-button" class="btn disabled" data-dismiss="modal" aria-hidden="true">Close</button>
-  </div>-->
-</div>';
 	
 	return $HTML;
 }

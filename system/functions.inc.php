@@ -27,13 +27,14 @@ function system_include_file($file){
 function system_load_module_frontend($name, iTemplate $template = null){
 	$mmanager = ModuleManager::getInstance();
 	$module = $mmanager->getModule($name);
+	$relativePath = DIR_MODULE . $module->getLocation();
 	$loader = $module->getLoader();
 	if(!class_exists($loader)){
-		include DIR_MODULE . $module->getLocation() . $loader . '.class.php';
-		$controller = $loader::loadModule(DIR_MODULE . $module->getLocation());
+		include_once $relativePath . $loader . '.class.php';
 	}
+	$controller = $loader::loadModule($relativePath);
 	if($template){
-		$loader::loadJsCode($template);
+		$loader::loadJsCode($template, $relativePath);
 	}
 	return $controller;
 }
@@ -46,14 +47,15 @@ function system_load_module_frontend($name, iTemplate $template = null){
 function system_load_partial_module_frontend($name, iTemplate $template = null){
 	$mmanager = ModuleManager::getInstance();
 	$module = $mmanager->getModule($name);
+	$relativePath = DIR_MODULE . $module->getLocation();
 	$loader = $module->getLoader();
 	if(!class_exists($loader)){
-		include_once DIR_MODULE . $module->getLocation() . $loader . '.class.php';
-		$loader::loadFunctions(DIR_MODULE . $module->getLocation());
-		$loader::loadModel(DIR_MODULE . $module->getLocation());
+		include_once $relativePath . $loader . '.class.php';
+		$loader::loadFunctions($relativePath);
+		$loader::loadModel($relativePath);
 	}
 	if($template){
-		$loader::loadJsCode($template);
+		$loader::loadJsCode($template, $relativePath);
 	}
 }
 
@@ -64,16 +66,17 @@ function system_load_partial_module_frontend($name, iTemplate $template = null){
  * @param iTemplate $template : the template to add the js code tags
  * @return string : the path to controller file to include
  */
-function system_load_module_backend($name, iTemplate $template = null){
+function system_load_module_backend($name, iAdminTemplate $template = null){
 	$mmanager = ModuleManager::getInstance();
 	$module = $mmanager->getModule($name);
+	$relativePath = DIR_MODULE . $module->getLocation();
 	$loader = $module->getLoader();
 	if(!class_exists($loader)){
-		include_once DIR_MODULE . $module->getLocation() . $loader . '.class.php';
-		$controller = $loader::loadAdminModule(DIR_MODULE . $module->getLocation());
+		include_once $relativePath . $loader . '.class.php';
 	}
+	$controller = $loader::loadAdminModule($relativePath);
 	if($template){
-		//$loader::loadAdminJsCode($template);
+		$loader::loadAdminJsCode($template, $relativePath);
 	}
 	return $controller;
 }
@@ -86,17 +89,35 @@ function system_load_module_backend($name, iTemplate $template = null){
 function system_load_partial_module_backend($name, iTemplate $template = null){
 	$mmanager = ModuleManager::getInstance();
 	$module = $mmanager->getModule($name);
+	$relativePath = DIR_MODULE . $module->getLocation();
 	$loader = $module->getLoader();
 	if(!class_exists($loader)){
-		include_once DIR_MODULE . $module->getLocation() . $loader . '.class.php';
-		$loader::loadAdminFunctions(DIR_MODULE . $module->getLocation());
-		$loader::loadAdminModel(DIR_MODULE . $module->getLocation());
+		include_once $relativePath . $loader . '.class.php';
+		$loader::loadAdminFunctions($relativePath);
+		$loader::loadAdminModel($relativePath);
 	}
 	if($template){
-		//$loader::loadAdminJsCode($template);
+		$loader::loadAdminJsCode($template, $relativePath);
 	}
 }
 
+/**
+ * load a module : the Model, View and include the controller. It includes the Controller and the js file too.
+ * @param string $name : the name of the module to load
+ * @param iTemplate $template : the template to add the js code tags
+ * @return string : the path to the controller
+ */
+function system_load_module_server($name){
+	$mmanager = ModuleManager::getInstance();
+	$module = $mmanager->getModule($name);
+	$relativePath = DIR_MODULE . $module->getLocation();
+	$loader = $module->getLoader();
+	if(!class_exists($loader)){
+		include_once $relativePath . $loader . '.class.php';
+	}
+	$controller = $loader::loadServerModule($relativePath);
+	return $controller;
+}
 
 
 

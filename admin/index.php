@@ -114,9 +114,10 @@ try{
 					$logger->loginfo("Module ".$module->getName()." is gonna be loaded");
 					
 					//load module;
-					$loader = $module->getLoader();
+					include system_load_module_backend($module->getName(), $template);
+					/*$loader = $module->getLoader();
 					include DIR_MODULE . $module->getLocation() . $loader . '.class.php';
-					include $loader::loadAdminModule(DIR_MODULE . $module->getLocation());
+					include $loader::loadAdminModule(DIR_MODULE . $module->getLocation());*/
 				}else{
 					throw new InvalidURLException("Le module est actuellement inactif.");
 				}

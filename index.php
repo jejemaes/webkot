@@ -1,7 +1,5 @@
 <?php
 
-
-
 // Include config & autres class utiles
 require_once("config/configuration.php");
 require_once("config/frontend.inc.php");

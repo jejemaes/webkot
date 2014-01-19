@@ -1,56 +1,11 @@
 <?php
 
-//TODO : move that to Loader when the loader will contain load functions for server side
-define('ACTIVITY_PUBLISHING_LOG', DIR_TMP . "activity-publishing-log.log");
-define('ACTIVITY_PUBLISHING_FILE', DIR_TMP . "activity-publishing.json");
-define('ACTIVITY_PUBLISHING_FILE_BACKUP', DIR_TMP . "activity-publishing-backup.json");
-
-define('ACTIVITY_JS_CLASS_CALL_ANCHOR','activity-js-anchor');
-
-
-include DIR_MODULE . $module->getLocation() . 'functions.inc.php';
-
-include DIR_MODULE . $module->getLocation() . 'model/ImgUtils.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/Activity.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/ActivityManager.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/AbstractPicture.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/Picture.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/PictureManager.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/MyPicture.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/MyPictureManager.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/ActivityPicture.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/ActivityPictureManager.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/Comment.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/CommentManager.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/StatUser.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/StatManager.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/Censure.class.php';
-include DIR_MODULE . $module->getLocation() . 'model/CensureManager.class.php';
-
-include DIR_MODULE . $module->getLocation() . 'model/Publisher.class.php';
-
-include DIR_MODULE . $module->getLocation() . 'controller/ActivityController.class.php';
-include DIR_MODULE . $module->getLocation() . 'controller/PictureController.class.php';
-
-//######################
-//## Upload picture ####
-//######################
-if(isset($_REQUEST['directory']) && !empty($_REQUEST['directory'])){
-	system_load_php_files(DIR_PLUGIN . 'bootstrap-uploadhandler/');
-	if(isset($_REQUEST['directory'])){
-		$directory = DIR_HD_PICTURES . $_REQUEST['directory'];	
-		$options = array();
-		$options['inline_file_types'] = '/\.(jpe?g)$/i';
-		$options['upload_dir'] = dirname($_SERVER['SCRIPT_FILENAME']) . "/". $directory . "/";
-		$options['upload_url'] = URLUtils::getFullUrl(). "/" . $directory . "/";
-		$options['script_url'] = URLUtils::getFullUrl().'/server.php?module='.$_REQUEST['module'].'&directory='.$_REQUEST['directory'];
-		$upload_handler = new UploadHandler($options);
-	}else{
-		$upload_handler = new UploadHandler();
-	}
+if(isset($_REQUEST['aid'])){
+	$manager = ActivityManager::getInstance();
+	$activity = $manager->getActivity($_REQUEST['aid'], 1);
+	//var_dump((array)$activity);
+	var_dump(system_to_data_obj($activity));
 }
-
-
 
 //######################
 //# Action for picture #
@@ -67,7 +22,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 			break;
 	
 		// PUBLICATION
-		case "ispublishing":
+		/* case "ispublishing":
 			if(file_exists(ACTIVITY_PUBLISHING_FILE_BACKUP)){
 				echo "1";
 			}else{
@@ -117,14 +72,32 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 			}else{
 				echo '{"message" : {"type" : "error", "content" : "Vous n avez pas les autorisations requises pour cette operation!"}}';
 			}
-			break;
-			
-		case "unpublish" :
+			break; */
+		
+		case "publish" :
 			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-publish-activity' )) {
-				$message = ActivityController::unpublishAction($_REQUEST);
+				$request = array(
+						'id' => $_REQUEST['id'],
+						'value' => "true"
+				);
+				$message = ActivityController::updatePublishAction($request);
 				echo $message->toJSON();
 			}else{
-				throw new AccessRefusedException("Vous ne pouvez pas d�publier d'activity.");
+				throw new AccessRefusedException("Vous ne pouvez pas publier d'activit&eacute;.");
+			}
+			break;
+					
+				
+		case "unpublish" :
+			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-publish-activity' )) {
+				$request = array(
+						'id' => $_REQUEST['id'],
+						'value' => "false"
+					);
+				$message = ActivityController::updatePublishAction($request);
+				echo $message->toJSON();
+			}else{
+				throw new AccessRefusedException("Vous ne pouvez pas d&eacute;publier d'activit&eacute;.");
 			}
 			break;
 			
@@ -169,38 +142,69 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 			}			
 			break;
 			
+			
+		// UPLOAD PICTURES
+		case "picturehandler":
+			if(RoleManager::getInstance()->hasCapabilitySession('activity-add-picture')){
+				if(isset($_REQUEST['activityid']) && !empty($_REQUEST['activityid'])){
+					$activity = ActivityManager::getInstance()->getActivity($_REQUEST['activityid'],  system_session_privilege());
+					
+					system_load_plugin(array('bootstrap-fileuploadhandler' => array()));
+					system_include_file(DIR_MODULE . $module->getLocation() . 'model/PictureUploadHandler.class.php');
+					
+					$parameters = array(
+						'activity' => system_to_data_obj($activity),
+						'url' => URLUtils::builtServerUrl($module->getName(), array("action" => "picturehandler", "activityid" => $activity->getId())),
+						'directory_original' => DIR_HD_PICTURES,
+						'directory_medium' => DIR_PICTURES
+					);
+					
+					$upload_handler = new PictureUploadHandler($parameters);
+				}else{
+					$message = new Message(3);
+					$message->addMessage("Le directory est manquant !");
+					echo $message->toJSON();
+				}
+			}else{
+				throw new AccessRefusedException("Vous n'avez pas les autorisations requises pour cette ajouter des photos !");
+			}
+			break;
+			
 		// MYPICTURE (add and remove)
 		case "addfav":
 			if(RoleManager::getInstance()->hasCapabilitySession('activity-manage-mypicture')){
+				$message = new Message(3);
 				$smanager = SessionManager::getInstance();
-					if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id']) && $smanager->existsUserSession()){
+				if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id']) && $smanager->existsUserSession()){
 					try{
 						$pid = $_REQUEST['id'];
 						$uid = $smanager->getUserprofile()->getId();
 						
 						$mpmanager = MyPictureManager::getInstance();
 						if($mpmanager->exists($uid,$pid)){
-							echo '{"message" : {"type" : "warn", "content" : "La photo '.$pid.' est deja presente dans vos favoris."}}';
+							$message->setType(2);
+							$message->addMessage("La photo '.$pid.' est deja pr&eacute;sente dans vos favoris.");
 						}else{
 							$mpmanager->addFavorite($uid,$pid);
-							echo '{"message" : {"type" : "success", "content" : "La photo '.$pid.' a ete ajoutee avec succes a vos favoris."}}';
+							$message->setType(1);
+							$message->addMessage("La photo '.$pid.' a &eacute;t&eacute; ajout&eacute;e avec succes a vos favoris.");
 						}
-		
 					} catch ( DatabaseException $dbe ) {
-						echo '{"message" : {"type" : "error", "content" : "'.$dbe->getMessage().'"}}';
+						$message->addMessage($dbe->getMessage());
 					} catch ( SQLException $sqle ) {
-						echo '{"message" : {"type" : "error", "content" : "'.$dbe->getMessage().'"}}';
+						$message->addMessage($sqlbe->getMessage());
 					}
-						
 				}else{
-					echo '{"message" : {"type" : "error", "content" : "Au moins un des champs requis est vide."}}';
+					$message->addMessage("Au moins un des champs requis est vide.");
 				}
+				echo $message->toJSON();
 			}else{
-				echo '{"message" : {"type" : "error", "content" : "Vous n\'avez pas les autorisations requises d\'ajouter une photos a vos favoris."}}';
+				throw new AccessRefusedException("Vous n'avez pas les autorisations requises d'ajouter une photos a vos favoris.");
 			}
 			break;
 		case "delfav":
 			if(RoleManager::getInstance()->hasCapabilitySession('activity-manage-mypicture')){
+				$message = new Message(3);
 				$smanager = SessionManager::getInstance();
 				if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id']) && $smanager->existsUserSession()){
 					try{
@@ -209,23 +213,23 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 		
 						$mpmanager = MyPictureManager::getInstance();
 						if(!$mpmanager->exists($uid,$pid)){
-							echo '{"message" : {"type" : "warn", "content" : "La photo est deja presente dans vos favoris."}}';
+							$message->setType(2);
+							$message->addMessage("La photo '.$pid.' n'&eacute;tait pas pr&eacute;sente dans vos favoris.");
 						}else{
 							$mpmanager->removeFavorite($uid,$pid);
-							echo '{"message" : {"type" : "success", "content" : "La photo '.$pid.' a ete supprimee avec succes de vos favoris."}}';
+							$message->setType(1);
+							$message->addMessage("La photo '.$pid.' a &eacute;t&eacute; supprim&eacute;e avec succes a vos favoris.");
 						}
-		
 					} catch ( DatabaseException $dbe ) {
-						echo '{"message" : {"type" : "error", "content" : "'.$dbe->getMessage().'"}}';
+						$message->addMessage($dbe->getMessage());
 					} catch ( SQLException $sqle ) {
-						echo '{"message" : {"type" : "error", "content" : "'.$dbe->getMessage().'"}}';
+						$message->addMessage($sqlbe->getMessage());
 					}
-		
 				}else{
-					echo '{"message" : {"type" : "error", "content" : "Au moins un des champs requis est vide."}}';
+					$message->addMessage("Au moins un des champs requis est vide.");
 				}
 			}else{
-				echo '{"message" : {"type" : "error", "content" : "Vous n\'avez pas les autorisations requises d\'ajouter une photos a vos favoris."}}';
+				throw new AccessRefusedException("Vous n'avez pas les autorisations requises de supprimer une photos de vos favoris.");
 			}
 			break;
 			
@@ -305,6 +309,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 		// GET CSV
 		case "getcsv":
 			if(RoleManager::getInstance()->hasCapabilitySession('activity-read-activity')){
+				$message = new Message(3);
 				if(isset($_REQUEST['nbr']) && !empty($_REQUEST['nbr']) && is_numeric($_REQUEST['nbr'])){
 					try{
 						$managerActi = ActivityManager::getInstance();
@@ -333,15 +338,18 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 						}
 						fclose($fp);
 					} catch ( DatabaseException $dbe ) {
-						echo '{"message" : {"type" : "error", "content" : "'.$dbe->getMessage().'"}}';
+						$message->addMessage($dbe->getMessage());
+						echo $message->toJSON();
 					} catch ( SQLException $sqle ) {
-						echo '{"message" : {"type" : "error", "content" : "'.$sqle->getMessage().'"}}';
+						$message->addMessage($sqle->getMessage());
+						echo $message->toJSON();
 					}
 				}else{
-					echo '{"message" : {"type" : "error", "content" : "Au moins un des champs requis est vide."}}';
+					$message->addMessage("Au moins un des champs requis est vide (ici, il s'agit du nombre d'activit&eacute;s a mettre dans le CSV).");
+					echo $message->toJSON();
 				}
 			}else{
-				echo '{"message" : {"type" : "error", "content" : "Vous n\'avez pas les autorisations requises pour t�l�charger le CSV."}}';
+				throw new AccessRefusedException("vous n'avez pas les autorisations pour pouvoir t&eacute;l&eacute;charger le CSV.");
 			}
 			break;
 			
@@ -358,6 +366,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 		// ROTATION
 		case "rotation":
 			if(RoleManager::getInstance()->hasCapabilitySession('activity-rotate-picture')){
+				$message = new Message(3);
 				if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id']) && isset($_REQUEST['degree']) && is_numeric($_REQUEST['degree'])){
 					$degreeAllowed = array("90","180","270");
 	 				if(in_array($_REQUEST['degree'],$degreeAllowed)){
@@ -376,21 +385,23 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 			 				for($i=0 ; $i < count($paths) ; $i++){
 			 	 				ImgUtils::rotation($paths[$i],$paths[$i],$_REQUEST['degree']);
 			 				}
-			 		
-			 				echo '{"message" : {"type" : "success", "content" : "Les 3 fichiers (thumbnail,normale et HD) ont &eacute;t&eacute; retourn&eacute;s <strong>avec succ&egrave;s</strong> de '.$_REQUEST['degree'].' degrees. Si vous ne voyez aucun changement, rafraichissez la page ;)"}}';		
+			 			
+			 				$message->setType(1);
+			 				$message->addMessage('Les 3 fichiers (thumbnail,normale et HD) ont &eacute;t&eacute; retourn&eacute;s <strong>avec succ&egrave;s</strong> de '.$_REQUEST['degree'].' degrees. Si vous ne voyez aucun changement, rafraichissez la page ;)');		
 		 				} catch ( DatabaseException $dbe ) {
-							echo '{"message" : {"type" : "error", "content" : "' . $dbe->getMessage () . '"}}';
+							$message->addMessage($dbe->getMessage());
 						} catch ( SQLException $sqle ) {
-							echo '{"message" : {"type" : "error", "content" : "' . $sqle->getMessage () . '"}}';
+							$message->addMessage($sqlbe->getMessage());
 						}		
 	 				}else{
-	 					echo '{"message" : {"type" : "error", "content" : "Les degres introduits ne sont pas reglementaires."}}';
+	 					$message->addMessage("Les degres introduits ne sont pas reglementaires.");
 	 				}
 				}else{
-					echo '{"message" : {"type" : "error", "content" : "Au moins un des champs requis est vide."}}';
+					$message->addMessage("Les degres introduits ne sont pas reglementaires.");
 				}
+				echo $message->toJSON();
 			}else{
-				echo '{"message" : {"type" : "error", "content" : "Vous n\'avez pas les autorisations requises pour retourner une photo."}}';
+				throw new AccessRefusedException("Vous n'avez pas les autorisations requises pour retourner une photo.");
 			}
 			break;
 		

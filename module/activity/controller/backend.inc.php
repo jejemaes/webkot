@@ -76,26 +76,25 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 			}
 			break;
 			
-		case "addpicture" :
-			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-add-picture' )) {
-				//ActivityController::addPictureAction($view, $request);
+		case "managepicture" :
+			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-manage-picture' ) || RoleManager::getInstance ()->hasCapabilitySession ( 'activity-add-picture' )) {
 				if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
 					$manager = ActivityManager::getInstance();
 					$level = system_session_privilege();
 					$activity = $manager->getActivity($_GET['id'], $level);
-					if(!$activity->getIspublished()){
-						$directory = $activity->getDirectory();
-						$view->pageFormAddPicture($directory);
-					}else{
+					// Comments are waiting for the lock. @see TODO 76
+					//if(!$activity->getIspublished()){
+						$view->pageFormManagePicture($activity);
+					/*}else{
 						$message = new Message(3);
 						$message->addMessage("L'activite est deja publiee : vous ne pouvez y rajouter des photos !");
-					}
+					}*/
 				}
 			}else{
-				throw new AccessRefusedException("Vous ne pouvez pas ajouter de photos ï¿½ une activitï¿½.");
+				throw new AccessRefusedException("Vous ne pouvez pas manager les photos de l'activit.");
 			}
 			break;
-			
+		/*	
 		case "publish" :
 			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-publish-activity' )) {
 				if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
@@ -132,15 +131,34 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				throw new AccessRefusedException("Vous ne pouvez pas publier d'activity.");
 			}
 			break;
+			*/
+			case "publish" :
+				if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-publish-activity' )) {
+					$request = array(
+						'id' => $_GET['id'],
+						'value' => "true"
+					);
+					$message = ActivityController::updatePublishAction($request);
+					$SMM = SessionMessageManager::getInstance();
+					$SMM->setSessionMessage($message);
+					URLUtils::redirection(URLUtils::getPreviousURL());
+				}else{
+					throw new AccessRefusedException("Vous ne pouvez pas publier d'activity.");
+				}
+				break;
 			
 		case "unpublish" :
 			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-publish-activity' )) {
-				$message = ActivityController::unpublishAction($_GET);
-				$SMM = SessionMessageManager::getInstance();
-				$SMM->setSessionMessage($message);
-				URLUtils::redirection(URLUtils::generateURL($module->getName(), array()));	
+				$request = array(
+						'id' => $_GET['id'],
+						'value' => "false"
+					);
+					$message = ActivityController::updatePublishAction($request);
+					$SMM = SessionMessageManager::getInstance();
+					$SMM->setSessionMessage($message);
+					URLUtils::redirection(URLUtils::getPreviousURL());	
 			}else{
-				throw new AccessRefusedException("Vous ne pouvez pas publier d'activity.");
+				throw new AccessRefusedException("Vous ne pouvez pas d&eacute;publier d'activity.");
 			}
 			break;
 			
@@ -152,7 +170,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						$cmanager = CensureManager::getInstance();
 						$cmanager->delete($_GET['id']);
 						$message = new Message(1);
-						$message->addMessage("La demande de censure a Ã©tÃ© supprimÃ©e avec succÃ¨s.");
+						$message->addMessage("La demande de censure a t supprime avec succes.");
 					}catch(Exception $e){
 						$message = new Message(3);
 						$message->addMessage($e);

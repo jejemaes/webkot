@@ -28,7 +28,7 @@ class PageModuleLoader implements iModuleLoader{
 		return PageModuleLoader::getController($relativePath);
 	}
 	
-	public static function loadJsCode(iTemplate $template){
+	public static function loadJsCode(iTemplate $template, $relativePath){
 	
 	}
 
@@ -56,6 +56,27 @@ class PageModuleLoader implements iModuleLoader{
 		PageModuleLoader::loadAdminModel($relativePath);
 		PageModuleLoader::loadAdminView($relativePath);
 		return PageModuleLoader::getAdminController($relativePath);
+	}
+	
+	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
+	
+	}
+	
+	// SERVER
+	public static function loadServerModel($relativePath){
+	
+	}
+	
+	public static function loadServerFunctions($relativePath){
+	
+	}
+	
+	public static function getServerController($relativePath){
+	
+	}
+	
+	public static function loadServerModule($relativePath){
+	
 	}
 	
 		

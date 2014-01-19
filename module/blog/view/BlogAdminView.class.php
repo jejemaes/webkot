@@ -16,7 +16,7 @@ class BlogAdminView extends AdminView implements iAdminView{
 	
 	
 	public function pageListPost($list){
-		$content .= '<div class="row">';
+		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
 		
@@ -33,7 +33,7 @@ class BlogAdminView extends AdminView implements iAdminView{
 	
 	
 	public function pageFormPost($action, Message $message, $post = null){
-		$content .= '<div class="row">';
+		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
 		$content .= $message;

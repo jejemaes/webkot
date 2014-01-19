@@ -43,7 +43,7 @@ class ImgUtils{
 	 * @param string $dest : the destination picture
 	 * @param string $size : the size of the largest side of the thumbnail
 	 */
-	public static function createThumbnail($source,$dest,$size, $option = array(), $addtext = false){
+	public static function gd_create_scale_thumbnail_watermaked($source,$dest,$size, $font_path, $addtext = false){
 		$n_width = $size;
 		$n_height = $size;
 		$new_img = imagecreatefromjpeg ( $source );
@@ -76,7 +76,7 @@ class ImgUtils{
 			}
 	
 			$text = 'Webkot ' . $from . '-' . $to;
-			$font = $option['font_path'];
+			$font = $font_path;
 	
 			imagettftext($mythumb, 14, 0, 6, $n_height - 4, $grey, $font, $text);
 			imagettftext($mythumb, 14, 0, 5, $n_height - 5, $white, $font, $text);
