@@ -139,7 +139,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 			
 		// UPLOAD PICTURES
 		case "picturehandler":
-			if(RoleManager::getInstance()->hasCapabilitySession('activity-add-picture')){
+			if(RoleManager::getInstance()->hasCapabilitySession('activity-manage-picture')){
 				if(isset($_REQUEST['activityid']) && !empty($_REQUEST['activityid'])){
 					$activity = ActivityManager::getInstance()->getActivity($_REQUEST['activityid'],  system_session_privilege());
 					

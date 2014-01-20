@@ -685,9 +685,9 @@ function activity_admin_html_table_activity_list(array $list, $modname){
     	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'delete', 'id' => $a->getId())).'" onclick=\'return(confirm("Etes vous certain de vouloir supprimer cet event ?"));\'"><i class="fa fa-trash-o"></i> Supprimer</a></li>';
 		$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'managepicture', 'id' => $a->getId())).'"><i class="fa fa-picture-o"></i> Gestion des photos</a></li>';
 		if(!$a->getIspublished()){
-			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'publish', 'id' => $a->getId())).'"><i class="fa fa-leaf"></i> Publier</a></li>';
+			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'publish', 'id' => $a->getId())).'" ><i class="fa fa-leaf"></i> Publier</a></li>';
 		}else{
-			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'unpublish', 'id' => $a->getId())).'"><i class="fa fa-fire"></i> Depublier</a></li>';
+			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'unpublish', 'id' => $a->getId())).'" ><i class="fa fa-fire"></i> Depublier</a></li>';
 		}
 		$HTML .= '</ul>
     </div>';

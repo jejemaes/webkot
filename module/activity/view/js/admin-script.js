@@ -1,4 +1,72 @@
 
+
+
+function activity_remote_call(baseUrl, href){
+	var uri = new Uri(href);
+	var serveruri = new Uri(baseUrl);
+	
+	
+	var tmp = new Uri(uri.query());
+	tmp.addQueryParam('module',serveruri.getQueryParamValues('module'));
+	tmp.setPath(serveruri.path());
+	tmp.setHost(serveruri.host());
+	tmp.setProtocol(serveruri.protocol());
+
+	$.ajax({
+		url: tmp,
+		async: true,
+		dataType: 'json',
+		type: "GET",
+		data: {},
+		cache: false,
+		beforeSend: function () {
+			console.log("before send");
+			if(uri.getQueryParamValue('id')){
+				var actid = uri.getQueryParamValue('id');
+				if($('#activity-loader-'+actid)){
+					$('#activity-loader-'+actid).css("visibility","visible"); 
+				}
+			}
+		},
+		success: function (data, textStatus, xhr) {
+			console.log("CALL send");
+			try{
+				res = JSON.parse(data);
+			}catch(e){
+				res = data;
+			}
+			
+			if(res.message){
+				$("#activity-message").html(SystemUtils.htmlMessage(res.message));
+			}else{	
+				$('#activity-message').html(res);
+			}
+			if(uri.getQueryParamValue('id')){
+				var actid = uri.getQueryParamValue('id');
+				if($('#activity-loader-'+actid)){
+					$('#activity-loader-'+actid).css("visibility","hidden"); 
+				}
+			}
+		},
+		error: function (xhr, textStatus, errorThrown) {
+			$('#activity-message').html("opps: " + textStatus + " : " + errorThrown);
+			$('#activity-message').append("Une erreur est survenue cot&eacute; serveur. L'action n'a donc pas &eacute;t&eacute; termin&eacute;e.");
+			if(uri.getQueryParamValue('id')){
+				var actid = uri.getQueryParamValue('id');
+				if($('#activity-loader-'+actid)){
+					$('#activity-loader-'+actid).css("visibility","hidden"); 
+				}
+			}
+			return "Error";
+		}
+	});
+}
+
+
+
+
+
+
 function activityGetStat(newUrl, actid){
 	
 	$.ajax({

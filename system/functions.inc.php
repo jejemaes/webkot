@@ -51,9 +51,9 @@ function system_load_partial_module_frontend($name, iTemplate $template = null){
 	$loader = $module->getLoader();
 	if(!class_exists($loader)){
 		include_once $relativePath . $loader . '.class.php';
-		$loader::loadFunctions($relativePath);
-		$loader::loadModel($relativePath);
 	}
+	$loader::loadFunctions($relativePath);
+	$loader::loadModel($relativePath);
 	if($template){
 		$loader::loadJsCode($template, $relativePath);
 	}

@@ -144,7 +144,7 @@ try{
 		//load module;
 		$logger->loginfo("Module ".$module->getName()." is gonna be loaded (default)");
 		include system_load_module_frontend($module->getName(), $template);
-		
+		$logger->loginfo("Module ".$module->getName()." is loaded (default)");
 	}
 }catch(Exception $e){
 	//$template->initLayout();

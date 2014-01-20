@@ -72,6 +72,15 @@ class ActivityAdminView extends AdminView implements iAdminView{
 				
 				</script>');
 		$t->addJsFooter('<script src="'.DIR_MODULE. $this->getModule()->getName().'/view/js/script.js"></script>');
+		/*
+		$t->addJsFooter("<script>$( document ).ready(function() {
+					$(document).on('click','.".ACTIVITY_JS_CLASS_CALL_ANCHOR."',function(e)  { 
+					    var href = ($(this).attr('href'));
+						activity_remote_call('".URLUtils::builtServerUrl($this->getModule()->getName(), array())."', href);
+						e.preventDefault();
+					});	
+				});</script>");
+		*/
 		$t->setContent($content);
 	}
 	

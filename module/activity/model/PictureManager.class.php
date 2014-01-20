@@ -52,7 +52,7 @@ class PictureManager {
      * @throws NullObjectException : this exception is raised when the specified Object didn't exist
      * @uses APC
      */
-    public function add($idactivity,$filename,$time,$iscensured,$isvideo){
+    public function add($idactivity, $filename, $time, $iscensured, $isvideo){
  		try {
         	$sql = "INSERT INTO picture(idactivity,filename, time, iscensured, isvideo) " .
         			"VALUES (:idactivity, :filename, :time, :iscensured, :isvideo)";

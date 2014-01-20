@@ -38,4 +38,3 @@ define('CHMOD', 0777);
 
 define('FACEBOOK_APPID','516806348339496');
 define('FACEBOOK_SECRET','1163e8dcd6af2e9ed3632b5202bb6d2f');
-

@@ -2,6 +2,7 @@
  * this function take a link (for a web page) and return the page in a modal. It built the modal bootstrap if it doesn't exist yet.
  * @param link : the link to transform in a server action to make the call (from index.php to server.php)
  * @returns {Boolean}
+ * @uses Uri class
  */
 function activityOverlayPage(baseUrl, link, title){
 	var uri = new Uri(link);

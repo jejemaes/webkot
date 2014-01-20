@@ -13,6 +13,18 @@
     margin-right: auto
 }
 
+/* from activity for the modal*/
+.activity-picture-inner-content{
+	display: inline-block;
+	position : relative;
+}
+
+.activity-picture-content{
+	margin:auto; 
+	position:relative; 
+	text-align:center;
+}
+
 
 
 /* Half Page Height Carousel Customization */
