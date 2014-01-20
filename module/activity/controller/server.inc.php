@@ -1,11 +1,5 @@
 <?php
 
-if(isset($_REQUEST['aid'])){
-	$manager = ActivityManager::getInstance();
-	$activity = $manager->getActivity($_REQUEST['aid'], 1);
-	//var_dump((array)$activity);
-	var_dump(system_to_data_obj($activity));
-}
 
 //######################
 //# Action for picture #

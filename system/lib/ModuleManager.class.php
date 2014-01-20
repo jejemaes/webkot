@@ -232,14 +232,16 @@ class ModuleManager{
 			$mod = $modules[$i];
 			if($mod->getIsActive()){
 				$param = $mod->getParameters();
-				$suburl = $param["subscriber-url"];
-				if($suburl){
-					foreach($suburl as $name => $vals){
-						$url = "index.php?mod=".$mod->getName();
-						foreach($vals as $key => $value){
-							$url .= "&".$key."=".$value;
+				if(!empty($param["subscriber-url"])){	
+					$suburl = $param["subscriber-url"];
+					if($suburl){
+						foreach($suburl as $name => $vals){
+							$url = "index.php?mod=".$mod->getName();
+							foreach($vals as $key => $value){
+								$url .= "&".$key."=".$value;
+							}
+							$action[$name] = $url;
 						}
-						$action[$name] = $url;
 					}
 				}
 			}

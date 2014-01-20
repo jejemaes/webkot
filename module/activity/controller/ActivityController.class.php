@@ -32,11 +32,11 @@ class ActivityController{
 								$message->addMessage("Le dossier ".DIR_HD_PICTURES . $request['activity-input-directory']." cree !");
 							}else{
 								$message->setType(3);
-								$message->addMessage("ERREUR : le dossier n'a PAS &eacute;t&eacute; cree !");
+								$message->addMessage("ERREUR : le dossier n'a PAS &eacute;t&eacute; cr&eacute;&eacute; !");
 							}
 						}else{
 							$message->setType(2);
-							$message->addMessage("Le repertoire existait d√©ja (".DIR_HD_PICTURES . $request['activity-input-directory'].").");
+							$message->addMessage("Le repertoire existait d&eacute;ja (".DIR_HD_PICTURES . $request['activity-input-directory'].").");
 								
 							$actiUsingDir = $managerA->getListActivityForDirectory($request['activity-input-directory']);
 						}
@@ -44,7 +44,7 @@ class ActivityController{
 						if(count($actiUsingDir) == 0){
 							//creation of the activity, and add the authors
 							$aid = $managerA->add($request['activity-input-title'],$request['activity-input-description'],$request['activity-input-date'],$request['activity-input-directory'],$request['activity-input-level']);
-							$message->addMessage("L'activite a &eacute;t&eacute; ajout√©e avec succes, et porte l'identifiant " . $aid);
+							$message->addMessage("L'activit&eacute; a &eacute;t&eacute; ajout√©e avec succ&egrave;s, et porte l'identifiant " . $aid);
 		
 							$authors = $request['activity-input-authors'];
 							for($i=0 ; $i<count($authors) ; $i++){
@@ -68,11 +68,11 @@ class ActivityController{
 						}
 					}catch(SQLException $sqle){
 						$message = new Message(3);
-						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a echoue.");
+						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a &eacute;chou&eacute;.");
 						$message->addMessage($sqle->getMessage());
 					}catch(DatabaseExcetion $dbe){
 						$message = new Message(3);
-						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a echoue.");
+						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a &eacute;chou&eacute;.");
 						$message->addMessage($dbe->getMessage());
 					}
 				}
@@ -110,27 +110,37 @@ class ActivityController{
 						//$aid = $managerA->add($request['activity-input-title'],$request['activity-input-description'],$request['activity-input-date'],$request['activity-input-directory'],$request['activity-input-level']);
 						$manager->update($request['id'],$request['activity-input-title'],$request['activity-input-description'],$request['activity-input-date'],$request['activity-input-level']);
 						$message->setType(1);
-						$message->addMessage("L'activit&eacute; a &eacute;t&eacute; mis a jour avec succes.");
+						$message->addMessage("L'activit&eacute; a &eacute;t&eacute; mis a jour avec succ&egrave;s.");
 							
-						//deleteAuthor
-						$manager->deleteAllAuthor($request['id']);
-						$authors = $request['activity-input-authors'];
-						for($i=0 ; $i<count($authors) ; $i++){
-							try{
-								$manager->addAuthors($request['id'],$authors[$i]);
-								$message->addMessage($authors[$i] . ' est auteur.');
-							}catch(Exception $e){
-								$message->addMessage($authors[$i] . ' N\A PAS &eacute;t&eacute; AJOUTE comme auteur.');
-								$message->setType(3);
-							}
+						// check authors
+						$actualAuthors = array();
+						foreach ($activity->getAuthors() as $user){
+							$actualAuthors[] = $user->getId();
 						}
+						if(count(array_diff($actualAuthors, $request['activity-input-authors'])) !== 0 && count(array_diff($request['activity-input-authors'], $actualAuthors)) !== 0){
+							// we change the authors only they were changed	
+							$manager->deleteAllAuthor($request['id']);
+							$authors = $request['activity-input-authors'];
+							for($i=0 ; $i<count($authors) ; $i++){
+								try{
+									$manager->addAuthors($request['id'],$authors[$i]);
+									$message->addMessage($authors[$i] . ' est auteur.');
+								}catch(Exception $e){
+									$message->addMessage($authors[$i] . ' n\'a pas &eacute;t&eacute; ajout&eacute; comme auteur.');
+									$message->setType(3);
+								}
+							}
+						}else{
+							$message->addMessage("Les auteurs n'ont pas &eacute;t&eacute; mis &agrave; jour car ils n'ont pas &eacute;t&eacute; modifi&eacute;.");
+						}
+						
 					}catch(SQLException $sqle){
 						$message->setType(3);
-						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a echoue.");
+						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a &eacute;chou&eacute;.");
 						$message->addMessage($sqle->getMessage());
 					}catch(DatabaseExcetion $dbe){
 						$messagesetType(3);
-						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a echoue.");
+						$message->addMessage("Une erreur s'est produite, l'ajout de votre activity a &eacute;chou&eacute;.");
 						$message->addMessage($dbe->getMessage());
 					}
 				}else{
@@ -164,20 +174,20 @@ class ActivityController{
 			//delete the activity in the database (cascade : so the pictures and comments are removed too)
 			try{
 				$amanager->delete($activity->getId());
-				$message->addMessage("L'activite a &eacute;t&eacute; supprimee avec succes.");
+				$message->addMessage("L'activit&eacute; a &eacute;t&eacute; supprim&eacute;e avec succ&egrave;s.");
 			}catch(SQLException $sqle){
-				$message->addMessage("Une erreur s'est produite, l'activity et les photos n'ont pu etre supprimee dans la database.");
+				$message->addMessage("Une erreur s'est produite, l'activit&eacute; et les photos n'ont pu etre supprim&eacute;e dans la database.");
 				$message->addMessage($sqle->getMessage());
 				$messag->setType(3);
 			}catch(DatabaseExcetion $dbe){
-				$message->addMessage("Une erreur s'est produite, l'activity et les photos n'ont pu etre supprimee dans la database.");
+				$message->addMessage("Une erreur s'est produite, l'activit&eacute; et les photos n'ont pu etre supprim&eacute;e dans la database.");
 				$message->addMessage($dbe->getMessage());
 				$messag->setType(3);
 			}
 			
 			//delete the file in the medium directory
 			if(system_remove_directory(DIR_PICTURES . $activity->getDirectory() . "/")){
-				$message->addMessage("Le dossier (medium picture) " . DIR_PICTURES . $activity->getDirectory() . " a &eacute;t&eacute; supprim&eacute; avec succes.");
+				$message->addMessage("Le dossier (medium picture) " . DIR_PICTURES . $activity->getDirectory() . " a &eacute;t&eacute; supprim&eacute; avec succ&egrave;s.");
 			}else{
 				$message->addMessage("Le dossier (medium picture)" . DIR_PICTURES . $activity->getDirectory() . " n'a pu etre vid&eacute;. Les medium pictures sont donc toujours pr&eacute;sentes sur le disque.");
 				$message->setType(2);
@@ -185,7 +195,7 @@ class ActivityController{
 				
 			//delete the file in the HD directory
 			if(system_remove_directory(DIR_HD_PICTURES . $activity->getDirectory() . "/")){
-				$message->addMessage("Le dossier (HD picture) " . DIR_HD_PICTURES . $activity->getDirectory() . " a &eacute;t&eacute; supprim&eacute; avec succes.");
+				$message->addMessage("Le dossier (HD picture) " . DIR_HD_PICTURES . $activity->getDirectory() . " a &eacute;t&eacute; supprim&eacute; avec succ&egrave;s.");
 			}else{
 				$message->addMessage("Le dossier (HD picture)" . DIR_HD_PICTURES . $activity->getDirectory() . " n'a pu etre vid&eacute;. Les HD pictures sont donc toujours pr&eacute;sentes sur le disque.");
 				$message->setType(2);
@@ -214,11 +224,13 @@ class ActivityController{
 				$activity = $amanager->getActivity($request['id'],$level);
 				if($request['value'] == "true"){
 					$amanager->updatePublish($activity->getId(), '1');
-					$message->addMessage("L'activit&eacute; a &eacute;t&eacute; publi&eacute;e avec succes.");
+					$message->addMessage("L'activit&eacute; a &eacute;t&eacute; publi&eacute;e avec succ&egrave;s.");
 				}else{
 					$amanager->updatePublish($activity->getId(), '0');
-					$message->addMessage("L'activit&eacute; a &eacute;t&eacute; d&eacute;publi&eacute;e avec succes.");
+					$message->addMessage("L'activit&eacute; a &eacute;t&eacute; d&eacute;publi&eacute;e avec succ&egrave;s.");
 				}
+				// rebuilt the RSS feed
+				rebuild_rss();
 			}catch(SQLException $sqle){
 				$message->addMessage("Une erreur s'est produite, l'activit&eacute; n'a pu etre modifi&eacute; dans la database.");
 				$message->addMessage($sqle->getMessage());
@@ -252,7 +264,7 @@ class ActivityController{
 				$view->pageFormAddPicture($directory);
 			}else{
 				$message = new Message(3);
-				$message->addMessage("L'activite est deja publiee : vous ne pouvez y rajouter des photos !");
+				$message->addMessage("L'activit&eacute; est deja publi&eacute;e : vous ne pouvez y rajouter des photos !");
 			}
 		}
 		return $message;
@@ -260,6 +272,7 @@ class ActivityController{
 	
 	
 	/**
+	 * @deprecated !!!!!!!!!!!!!!
 	 * unpublish a given Activity
 	 * @param array $request : the REQUEST variables
 	 * @return Message $message : Message Object containing the result of the action 
@@ -279,32 +292,32 @@ class ActivityController{
 					$pmanager = PictureManager::getInstance();
 					$pmanager->deleteActivityPictures($activity->getId());
 				}catch(SQLException $sqle){
-					$message->addMessage("Une erreur s'est produite, les photos n'ont pu etre supprimee dans la database.");
+					$message->addMessage("Une erreur s'est produite, les photos n'ont pu etre supprim&eacute;e dans la database.");
 					$message->addMessage($sqle->getMessage());
 					$messag->setType(3);
 				}catch(DatabaseExcetion $dbe){
-					$message->addMessage("Une erreur s'est produite, les photos n'ont pu etre supprimee dans la database.");
+					$message->addMessage("Une erreur s'est produite, les photos n'ont pu etre supprim&eacute;e dans la database.");
 					$message->addMessage($dbe->getMessage());
 					$messag->setType(3);
 				}
 					
 				//delete the file in the medium directory
 				if(system_remove_directory(DIR_PICTURES . $activity->getDirectory() . "/")){
-					$message->addMessage("Le dossier " . DIR_PICTURES . $activity->getDirectory() . " a &eacute;t&eacute; supprime avec succes.");
+					$message->addMessage("Le dossier " . DIR_PICTURES . $activity->getDirectory() . " a &eacute;t&eacute; supprime avec succ&egrave;s.");
 				}else{
-					$message->addMessage("Le dossier " . DIR_PICTURES . $activity->getDirectory() . " n'a pu etre vide. Les medium pictures sont donc toujours pr&eacute;sentes sur le disque.");
+					$message->addMessage("Le dossier " . DIR_PICTURES . $activity->getDirectory() . " n'a pu etre vid&eacute;. Les medium pictures sont donc toujours pr&eacute;sentes sur le disque.");
 					$message->setType(2);
 				}
 			
 				//change the status of the activity
 				$amanager->updatePublish($activity->getId(), '0');
-				$message->addMessage("L'activité a &eacute;t&eacute; depubliée avec succes.");
-				$message->addMessage("Vous pouvez maintenant ajouter de novuelles photos, et republie l'activite.");
+				$message->addMessage("L'activit&eacute; a &eacute;t&eacute; depubli&eacute;e avec succ&egrave;s.");
+				$message->addMessage("Vous pouvez maintenant ajouter de novuelles photos, et republi&eacute; l'activit&eacute;.");
 		
 				rebuild_rss();
 			}else{
 				$message = new Message(3);
-				$message->addMessage("L'activite est non publiee, vous ne pouvez donc pas la depublier ! Banane va :p");
+				$message->addMessage("L'activit&eacute; est non publiee, vous ne pouvez donc pas la depublier ! Banane va :p");
 			}
 		}else{
 			$message = new Message(3);
@@ -312,5 +325,8 @@ class ActivityController{
 		}
 		return $message;
 	}
+	
+	
+	
 	
 }

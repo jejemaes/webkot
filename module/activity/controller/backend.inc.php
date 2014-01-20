@@ -150,13 +150,13 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 		case "unpublish" :
 			if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-publish-activity' )) {
 				$request = array(
-						'id' => $_GET['id'],
-						'value' => "false"
-					);
-					$message = ActivityController::updatePublishAction($request);
-					$SMM = SessionMessageManager::getInstance();
-					$SMM->setSessionMessage($message);
-					URLUtils::redirection(URLUtils::getPreviousURL());	
+					'id' => $_GET['id'],
+					'value' => "false"
+				);
+				$message = ActivityController::updatePublishAction($request);
+				$SMM = SessionMessageManager::getInstance();
+				$SMM->setSessionMessage($message);
+				URLUtils::redirection(URLUtils::getPreviousURL());	
 			}else{
 				throw new AccessRefusedException("Vous ne pouvez pas d&eacute;publier d'activity.");
 			}
@@ -200,7 +200,10 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 			$level = system_session_privilege();
 			$list = $managerActi->getListUnpublishedActivity($level);
 			
-			$view->pageListActivity($list, 0, 0, 0);
+			$smanager = SessionMessageManager::getInstance();
+			$message = $smanager->getSessionMessage();
+			
+			$view->pageListActivity($message, $list, 0, 0, 0);
 		}
 		
 		if($_GET['list'] == "censures"){
@@ -249,15 +252,19 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 	}else{	
 		// list
 		if (RoleManager::getInstance ()->hasCapabilitySession ( 'activity-read-activity')) {
+			$smanager = SessionMessageManager::getInstance();
+			$message = $smanager->getSessionMessage();
+			
 			$desc = system_get_desc_pagination();
 			$page = (system_get_page_pagination()-1);
 			$limit = ($page*$desc);
 			
 			$level = system_session_privilege();
-			
+
 			$list = $managerActi->getSelectionActivity($limit,$desc, $level);
 			$count = $managerActi->getCountActivity($level);
-			$view->pageListActivity($list, $count, $desc, ($page+1));
+			
+			$view->pageListActivity($message, $list, $count, $desc, ($page+1));
 		}else{
 			throw new AccessRefusedException("Vous n'avez pas les permissions pour lire les activities.");
 		}

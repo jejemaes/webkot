@@ -646,9 +646,6 @@ class UploadHandler
         list($file_path, $new_file_path) =
             $this->get_scaled_image_file_paths($file_name, $version);
         
-        $tmp = "\ncreate watermark for --> " . $new_file_path;
-        $tmp .= "\n".$file_path."\n\n";
-        //error_log($tmp, 3, "test-erreursH.txt");
         
         $type = strtolower(substr(strrchr($file_name, '.'), 1));
         switch ($type) {

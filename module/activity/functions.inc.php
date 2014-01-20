@@ -445,6 +445,41 @@ function activity_html_modal_censure($pid, $buttonClass, $email){
 }
 
 
+
+/**
+ * generate the div htl code for the given Comment
+ * @param unknown $currentComment
+ * @return string
+ */
+function activity_html_modal_comment($currentComment, $actions){
+	$comm = '<div id="activity-comment-'.$currentComment->getId().'">';
+	$comm .= '<b><a href="'.URLUtils::getUserPageURL($currentComment->getUserid()).'">'.$currentComment->getUserid() . '</a></b>, le <i>' . ConversionUtils::timestampToDatetime($currentComment->getDate()) . '</i> ';
+	for($i=0 ; $i<count($actions) ; $i++){
+		$action = $actions[$i];
+
+		$href = $action["href"];
+		foreach ($action["param"] as $key => $value){
+			$href = str_replace($key, $currentComment->$value(), $href);
+		}
+		//$comm .= '<a href="'.$action["url"]. $currentComment->$action["function"]() .'" class="btn btn-danger btn-mini">'.$action["name"].'</a>  ';
+		$comm .= ' - <a href="'.$href .'" class="btn btn-danger btn-xs">'.$action["title"].'</a>  ';
+	}
+	$comm .= '<br>';
+	$commentText = ConversionUtils::smiley(ConversionUtils::decoding($currentComment->getComment()));
+	$commentText = preg_replace("
+	  #((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie",
+	  "'<a href=\"$1\" target=\"_blank\">$3</a>$4'",
+	  $commentText
+	);
+	$comm .= str_replace("&lt;br /&gt;", "<br/>", $commentText);
+	$comm .= '<hr class="activity-hr-style">';
+	$comm .= '</div>';
+	return $comm;
+}
+
+
+
+
 function activity_path_thumbnail($moduleloc, $directory, $filename){
 	if(file_exists(DIR_PICTURES . $directory . "/small/" .$filename)){
 		return DIR_PICTURES . $directory . "/small/" .$filename;
@@ -478,367 +513,6 @@ function activity_path_picture($moduleloc, $directory, Picture $picture){
 		}
 	}
 	return $path;
-}
-
-
-function activity_admin_html_table_activity_list(array $list, $modname){
-	
-	$HTML = '<h3>Liste des activit&eacute;s</h3>';
-
-	// adding button
-	$HTML .= '<a class="btn btn-primary" href="'.URLUtils::generateURL($modname, array('action' => 'add')).'"><i class="fa fa-plus"></i> Ajouter</a>  ';
-
-	$HTML .= '<!-- Single button -->
-<div class="btn-group">
-  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-    Actions <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-    <li><a href="#" onClick="activityClearCache()"><i class="fa fa-warning"></i> Clear cache</a></li>
-    <li><a href="#"><i class="fa fa-list-alt"></i> Publication Log</a></li>
-    <li><a href="#" onclick="activityGetCsv(\''.URLUtils::builtServerUrl($modname, array('action' => 'getcsv')).'\')"><i class="fa fa-download"></i> Auteurs en CSV</a></li>
-  </ul>
-</div>';
-	
-	$HTML .= '<div id="activity-message" style="margin:15px;"></div>';
-	
-	
-	$HTML .= '<table class="table table-striped tablesorter">';
-	$HTML .= '<thead>
-		<tr>
-			<th>Id</th>
-			<th>Titre</th>
-			<th>Description</th>
-			<th>Infos</th>
-			<th>Auteurs</th>
-			<th>Publi&eacute;</th>
-			<th><u>Actions</u></th>
-		</tr>
-	</thead>
-	<tfoot>
-		<tr>
-			<th>Id</th>
-			<th>Titre</th>
-			<th>Description</th>
-			<th>Infos</th>
-			<th>Auteurs</th>
-			<th>Publi&eacute;</th>
-			<th><u>Actions</u></th>
-		</tr>
-	</tfoot>';
-	
-	$HTML .= '<tbody>';
-	for ($i = 0; $i < count($list); $i++) {
-		$a = $list[$i];
-		$HTML .= '<tr>';
-		$statut = ($a->getIspublished() == '1' ? '<span class="label label-success">Oui</span>' : '<span class="label label-danger">Non</span>');
-		$HTML .= '<td>'.$a->getId().'</td><td>'.($a->getTitle()).'</td><td>'.($a->getDescription()).'</td>';
-		$HTML .= '<td><strong>Date :</strong> '.($a->getDate()).'<br><strong>Repertoire :</strong> '.($a->getDirectory()).'</td>';
-		$HTML .= '<td>'.str_replace(",", "<br>", system_html_array_to_string($a->getAuthors())).'</td>';
-		$HTML .= '<td><div id="activity-statut-'.$a->getId().'">'.$statut.'</div></td>';
-				
-		$HTML .= '<td><div class="btn-group">
-    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">Actions <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-    	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'edit', 'id' => $a->getId())).'"><i class="fa fa-pencil"></i> Editer</a></li>
-    	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'delete', 'id' => $a->getId())).'" onclick=\'return(confirm("Etes vous certain de vouloir supprimer cet event ?"));\'"><i class="fa fa-trash-o"></i> Supprimer</a></li>';
-		$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'managepicture', 'id' => $a->getId())).'"><i class="fa fa-picture-o"></i> Gestion des photos</a></li>';
-		if(!$a->getIspublished()){
-			//$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'addpicture', 'id' => $a->getId())).'"><i class="fa fa-plus"></i> Add Pictures</a></li>';
-			$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'publish', 'id' => $a->getId())).'" id="activity-action-publish-'.$a->getId().'" ><i class="fa fa-leaf"></i> Publier</a></li>';
-		}else{
-			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'unpublish', 'id' => $a->getId())).'" onclick="activityUnpublish(\''.URL.'server.php?module='.$modname.'&action=unpublish\', '.$a->getId().');return false;"><i class="fa fa-fire"></i> Depublier</a></li>';
-		}
-    $HTML .= '</ul>
-    </div>';
-    	$HTML .= '<img src="'.DIR_MODULE.$modname.'/view/img/loader.gif" alt="loader" style="visibility:hidden;" id="activity-loader-'.$a->getId().'">';
-		$HTML .= '</td>';
-		$HTML .= '</tr>';
-	}
-	$HTML .= '</tbody></table>';
-	
-	return $HTML;
-}
-
-
-
-function activity_admin_html_table_activity_list_authors(array $list, $modname){
-
-	$HTML = '<h3>Liste des activit&eacute;s (avec auteurs)</h3>';
-
-	$HTML .= '<br><div id="clear-cache-message"></div>';
-	$HTML .= '<div id="activity-message"></div>';
-
-
-	$HTML .= '<table class="table table-striped tablesorter">';
-	$HTML .= '<thead>
-		<tr>
-			<th>Id</th>
-			<th>Titre</th>
-			<th>Date</th>
-			<th>Repertoire</th>
-			<th>Auteurs</th>
-			<th>Publi&eacute;</th>
-			<th><u>Actions</u></th>
-		</tr>
-	</thead>
-	<tfoot>
-		<tr>
-			<th>Id</th>
-			<th>Titre</th>
-			<th>Date</th>
-			<th>Repertoire</th>
-			<th>Auteurs</th>
-			<th>Publi&eacute;</th>
-			<th><u>Actions</u></th>
-		</tr>
-	</tfoot>';
-
-	$HTML .= '<tbody>';
-	for ($i = 0; $i < count($list); $i++) {
-		$a = $list[$i];
-		$HTML .= '<tr>';
-		$statut = ($a->getIspublished() == '1' ? '<span class="label label-success">Oui</span>' : '<span class="label label-danger">Non</span>');
-		$HTML .= '<td>'.$a->getId().'</td><td>'.($a->getTitle()).'</td><td>'.($a->getDate()).'</td><td>'.($a->getDirectory()).'</td>';
-		$HTML .= '<td>'.str_replace(",", "<br>", $a->getAuthors()).'</td>';
-		$HTML .= '<td><div id="activity-statut-'.$a->getId().'">'.$statut.'</div></td>';
-
-		$HTML .= '<td><div class="btn-group">
-    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">Actions <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-    	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'edit', 'id' => $a->getId())).'"><i class="fa fa-pencil"></i> Editer</a></li>
-    	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'delete', 'id' => $a->getId())).'" onclick=\'return(confirm("Etes vous certain de vouloir supprimer cet event ?"));\'"><i class="fa fa-trash-o"></i> Supprimer</a></li>';
-		if(!$a->getIspublished()){
-			$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'addpicture', 'id' => $a->getId())).'"><i class="fa fa-plus"></i> Add Pictures</a></li>';
-			$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'publish', 'id' => $a->getId())).'" id="activity-action-publish-'.$a->getId().'" ><i class="fa fa-leaf"></i> Publier</a></li>';
-		}else{
-			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'unpublish', 'id' => $a->getId())).'" onclick="activityUnpublish(\''.URL.'server.php?module='.$modname.'&action=unpublish\', '.$a->getId().');return false;"><i class="fa fa-fire"></i> Depublier</a></li>';
-		}
-		$HTML .= '</ul>
-    </div>';
-		$HTML .= '<img src="'.DIR_MODULE.$modname.'/view/img/loader.gif" alt="loader" style="visibility:hidden;" id="activity-loader-'.$a->getId().'">';
-		$HTML .= '</td>';
-		$HTML .= '</tr>';
-	}
-	$HTML .= '</tbody></table>';
-	return $HTML;
-}
-
-
-
-
-
-function activity_admin_activity_form($action, $modname, Activity $activity, $potentialAuthors, $roles){
-	
-	if($action == 'add'){
-		$label = 'Ajouter';
-		$url = URLUtils::generateURL($modname, array('action' => 'add'));
-		$date = date('Y-m-d');
-		$readonly = "";
-	}else{
-		$label = 'Modifier';
-		$url = URLUtils::generateURL($modname, array('action' => 'edit', 'id' => $activity->getId()));
-		$date = $activity->getDate();
-		$readonly = "readonly";
-	}
-	
-	// level options
-	$options = '';
-	foreach($roles as $role){
-		$value = $role->getLevel();
-		$key = $role->getRole();
-		if($value == $activity->getLevel()){
-			$options .= '<option value="'.$value.'" selected="selected">'.$key.'</option>';
-		}else{
-			$options .= '<option value="'.$value.'">'.$key.'</option>';
-		}
-	}
-	
-	// authors possibilities
-	$authorsCheckboxes = '<div class="control-group">
-			 <label class="control-label" for="acitivity-input-authors">Auteurs</label>
-    <div class="controls">';
-	foreach($potentialAuthors as $author){
-		$checked = "";
-		$authors = $activity->getAuthors();
-		foreach($authors as $a){
-			if($a->getId() == $author->getId()){
-				$checked = "checked";
-			}
-		}
-		
-		$authorsCheckboxes .= '<label class="checkbox inline">
-  									<input type="checkbox" id="inlineCheckbox'.$author->getId().'" value="'.$author->getId().'" name="activity-input-authors[]" '.$checked.'> '.$author->getFirstname().' '.$author->getName().' ('.$author->getUsername().')
-							  </label>';
-	}
-	$authorsCheckboxes .= '</div></div>';
-	
-	
-	// create the form	
-	$HTML = '<h3>'.$label.' une activit&eacute;</h3>';
-	
-	$HTML .= '<form class="form-horizontal" method="post" action="'. $url .'">
-<fieldset>
-
-<!-- Form Name -->
-<legend>Formulaire</legend>
-
-<!-- Text input-->
-<div class="control-group">
-  <label class="control-label" for="activity-input-title">Titre</label>
-  <div class="controls">
-    <input id="activity-input-title" name="activity-input-title" type="text" placeholder="titre" class="input-xlarge" value="'.$activity->getTitle().'">
-    
-  </div>
-</div>
-
-<!-- Textarea -->
-<div class="control-group">
-  <label class="control-label" for="acitivty-input-description">Description</label>
-  <div class="controls">                     
-    <textarea id="acitivty-input-description" name="activity-input-description" class="bootstrap-editor input-xlarge" style="width: 80%; height: 300px">'.$activity->getDescription().'</textarea>
-  </div>
-</div>
-			
-<!-- Text input-->
-<div class="control-group">
-  <label class="control-label" for="activity-input-date">Date</label>
-  <div class="controls">
-   	<div class="input-append">
-    	<input id="activity-input-date" name="activity-input-date" type="text" data-date-format="yyyy-mm-dd" class="input-xlarge" value="'.$date.'" readonly>
-    	<span class="add-on"><i class="fa fa-calendar"></i></span>
-    </div>
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="control-group">
-  <label class="control-label" for="activity-input-directory">Dossier</label>
-  <div class="controls">
-    <input id="activity-input-directory" name="activity-input-directory" type="text" placeholder="yyyy-mm-jj_activity_name" class="input-xlarge" value="'.$activity->getDirectory().'" '.$readonly.'>
-    <p class="help-block">Surtout : ne pas mettre d\'accents dans le nom du dossier, ni d\'autre caractere special !</p>
-  </div>
-</div>
-
-<!-- Select Basic -->
-<div class="control-group">
-  <label class="control-label" for="activity-input-level">Level</label>
-  <div class="controls">
-    <select id="activity-input-level" name="activity-input-level" class="input-xlarge">
-      '.$options.'
-    </select>
-  </div>
-</div>
-      		'.$authorsCheckboxes.'
-    		
-<div class="control-group">
-    <div class="controls">
-      <button type="submit" class="btn">'.$label.'</button>
-    </div>
-</div>
-
-</fieldset>
-</form>';
-	
-	return $HTML;
-}
-
-
-function activity_form_add_picture($nbrFile, $directory){
-	$HTML = '<h3>Ajouter des photos</h3>';
-	$message = new Message(0);
-	$message->addMessage("Il y a deja " . $nbrFile . " photos dans ce dossier <i>".$directory."</i>.");
-	$HTML .= $message;
-	$HTML .= '<form class="form-horizontal-upload" id="fileupload" action="#" method="POST" enctype="multipart/form-data">
-		<fieldset>
-		<!-- Form Name -->
-		<legend>Formulaire</legend>
-        <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <!--<noscript><input type="hidden" name="redirect" value="http://blueimp.github.io/jQuery-File-Upload/"></noscript>-->
-        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-        <div class="row fileupload-buttonbar">
-            <div class="col-lg-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="fa fa-plus"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="fa fa-upload"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="fa fa-ban-circle"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="fa fa-trash-o"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" class="toggle">
-                <!-- The loading indicator is shown during file processing -->
-                <span class="fileupload-loading"></span>
-            </div>
-            <!-- The global progress information -->
-            <div class="col-lg-5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                </div>
-                <!-- The extended global progress information -->
-                <div class="progress-extended">&nbsp;</div>
-            </div>
-        </div>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-		</fieldset>
-    </form>';
-	
-    return $HTML;
-}
-
-
-
-
-function activity_page_publishing(Activity $activity){
-	$HTML = '<h3>Publication</h3>';
-	$HTML .= '<div class="alert alert-danger">Il est important que vous restiez sur la page durant toute l\'operation !</div>';
-	$HTML .= 'Detail de l\'activite : <ul>
-				<li>Id : '.$activity->getId().'</li>
-				<li>Titre : '.$activity->getTitle().'</li>
-				<li>Description : '.$activity->getDescription().'</li>
-				<li>Date : '.$activity->getDate().'</li>
-				<li>Repertoire : '.$activity->getDirectory().'</li>
-				<li>Level : '.$activity->getLevel().'</li>
-			</ul>';
-	$HTML .= '<div class="control-group">
-    <div class="controls">
-      <label class="checkbox">
-        <input type="checkbox" id="activity-publishing-sendmail" name="activity-publishing-sendmail"> Envoyer un mail aux utilisateurs
-      </label>
-    </div>
-  </div>';
-	$HTML .= '<a class="start btn btn-info" href="#">Start</a>';
-	$HTML .= '<div id="activity-message"></div>';
-	$HTML .= '<hr><div id="publishing-progress">
-	<h4>Renommage : <span id="publishing-pvalue-rename">0%</span></h4>
-    <div class="progress progress-striped active">
-  		<div id="modal-publishing-rename-progressbar" class="progress-bar" style="width: 0%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-	</div>
-	<h4>Copie et creation des thumbnails : <span id="publishing-pvalue-copy">0%</span></h4>
-	<div class="progress progress-striped active">
-  		<div id="modal-publishing-copy-progressbar" class="progress-bar" style="width: 0%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-	</div>
-	<div id="modal-publishing-mailer">
-		<h4>Envoi des mails : <span id="publishing-pvalue-mailer">0%</span></h4>
-		<div class="progress progress-striped active">
-	  		<div id="modal-publishing-mailer-progressbar" class="progress-bar" style="width: 0%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-		</div>			
-	</div>
-  </div>';
-	
-	return $HTML;
 }
 
 
@@ -965,39 +639,186 @@ function activity_get_random_picture(Activity $activity){
 
 
 
-/**
- * generate the div htl code for the given Comment
- * @param unknown $currentComment
- * @return string
- */
-function activity_html_modal_comment($currentComment, $actions){
-	$comm = '<div id="activity-comment-'.$currentComment->getId().'">';
-	$comm .= '<b><a href="'.URLUtils::getUserPageURL($currentComment->getUserid()).'">'.$currentComment->getUserid() . '</a></b>, le <i>' . ConversionUtils::timestampToDatetime($currentComment->getDate()) . '</i> ';
-	for($i=0 ; $i<count($actions) ; $i++){
-		$action = $actions[$i];
-		
-		$href = $action["href"];
-		foreach ($action["param"] as $key => $value){
-			$href = str_replace($key, $currentComment->$value(), $href);
+function activity_admin_html_table_activity_list(array $list, $modname){
+
+	$HTML = '<table class="table table-striped tablesorter">';
+	$HTML .= '<thead>
+		<tr>
+			<th>Id</th>
+			<th>Titre</th>
+			<th>Description</th>
+			<th>Infos</th>
+			<th>Publi&eacute;</th>
+			<th><u>Actions</u></th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<th>Id</th>
+			<th>Titre</th>
+			<th>Description</th>
+			<th>Infos</th>
+			<th>Publi&eacute;</th>
+			<th><u>Actions</u></th>
+		</tr>
+	</tfoot>';
+
+	$HTML .= '<tbody>';
+	for ($i = 0; $i < count($list); $i++) {
+		$a = $list[$i];
+		$HTML .= '<tr>';
+		$statut = ($a->getIspublished() == '1' ? '<span class="label label-success">Oui</span>' : '<span class="label label-danger">Non</span>');
+		$HTML .= '<td>'.$a->getId().'</td><td>'.($a->getTitle()).'</td><td>'.($a->getDescription()).'</td>';
+		$HTML .= '<td>';
+		$HTML .= '<strong>Date :</strong> '.($a->getDate()).'<br>';
+		$HTML .= '<strong>R&eacute;pertoire :</strong> '.($a->getDirectory()).'<br>';
+		$HTML .= '<strong>Photos :</strong> '.$a->getCountPictures().'<br>';
+		$HTML .= '<strong>Auteurs :</strong> <ol><li>'.str_replace(",", "</li><li>", $a->getAuthors()) . '</li></ol>';
+		$HTML .= '</td>';
+		//$HTML .= '<td>'.str_replace(",", "<br>", $a->getAuthors()).'</td>';
+		$HTML .= '<td><div id="activity-statut-'.$a->getId().'">'.$statut.'</div></td>';
+
+		$HTML .= '<td><div class="btn-group">
+    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">Actions <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+    	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'edit', 'id' => $a->getId())).'"><i class="fa fa-pencil"></i> Editer</a></li>
+    	<li><a href="'.URLUtils::generateURL($modname, array('action' => 'delete', 'id' => $a->getId())).'" onclick=\'return(confirm("Etes vous certain de vouloir supprimer cet event ?"));\'"><i class="fa fa-trash-o"></i> Supprimer</a></li>';
+		$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('action' => 'managepicture', 'id' => $a->getId())).'"><i class="fa fa-picture-o"></i> Gestion des photos</a></li>';
+		if(!$a->getIspublished()){
+			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'publish', 'id' => $a->getId())).'"><i class="fa fa-leaf"></i> Publier</a></li>';
+		}else{
+			$HTML .= '<li><a id="activity-action-publish-'.$a->getId().'" href="'.URLUtils::generateURL($modname, array('action' => 'unpublish', 'id' => $a->getId())).'"><i class="fa fa-fire"></i> Depublier</a></li>';
 		}
-		//$comm .= '<a href="'.$action["url"]. $currentComment->$action["function"]() .'" class="btn btn-danger btn-mini">'.$action["name"].'</a>  ';
-		$comm .= ' - <a href="'.$href .'" class="btn btn-danger btn-xs">'.$action["title"].'</a>  ';
+		$HTML .= '</ul>
+    </div>';
+		$HTML .= '<img src="'.DIR_MODULE.$modname.'/view/img/loader.gif" alt="loader" style="visibility:hidden;" id="activity-loader-'.$a->getId().'">';
+		$HTML .= '</td>';
+		$HTML .= '</tr>';
 	}
-	$comm .= '<br>';
-	$commentText = ConversionUtils::smiley(ConversionUtils::decoding($currentComment->getComment()));
-	$commentText = preg_replace("
-	  #((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie",
-	  "'<a href=\"$1\" target=\"_blank\">$3</a>$4'",
-	  $commentText
-	);
-	$comm .= str_replace("&lt;br /&gt;", "<br/>", $commentText);
-	$comm .= '<hr class="activity-hr-style">';
-	$comm .= '</div>';
-	return $comm;
+	$HTML .= '</tbody></table>';
+
+	return $HTML;
 }
 
 
-function activity_html_list_directories($list){
+
+
+function activity_admin_html_activity_form($action, $modname, Activity $activity, $potentialAuthors, $roles){
+
+	if($action == 'add'){
+		$label = 'Ajouter';
+		$url = URLUtils::generateURL($modname, array('action' => 'add'));
+		$date = date('Y-m-d');
+		$readonly = "";
+	}else{
+		$label = 'Modifier';
+		$url = URLUtils::generateURL($modname, array('action' => 'edit', 'id' => $activity->getId()));
+		$date = $activity->getDate();
+		$readonly = "readonly";
+	}
+	
+	// level options
+	$options = '';
+	foreach($roles as $role){
+		$value = $role->getLevel();
+		$key = $role->getRole();
+		if($value == $activity->getLevel()){
+			$options .= '<option value="'.$role->getId().'" selected="selected">'.$key.'</option>';
+		}else{
+			$options .= '<option value="'.$role->getId().'">'.$key.'</option>';
+		}
+	}
+
+	// authors possibilities
+	$authorsCheckboxes = '<div class="control-group">
+			 <label class="control-label" for="acitivity-input-authors">Auteurs</label>
+    <div class="controls">';
+	foreach($potentialAuthors as $author){
+		$checked = "";
+		$authors = $activity->getAuthors();
+		foreach($authors as $a){
+			if($a->getId() == $author->getId()){
+				$checked = "checked";
+			}
+		}
+
+		$authorsCheckboxes .= '<label class="checkbox inline">
+  									<input type="checkbox" id="inlineCheckbox'.$author->getId().'" value="'.$author->getId().'" name="activity-input-authors[]" '.$checked.'> '.$author->getFirstname().' '.$author->getName().' ('.$author->getUsername().')
+							  </label>';
+	}
+	$authorsCheckboxes .= '</div></div>';
+
+
+	// create the form
+	$HTML = '<form class="form-horizontal" method="post" action="'. $url .'">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Formulaire</legend>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="activity-input-title">Titre</label>
+  <div class="controls">
+    <input id="activity-input-title" name="activity-input-title" type="text" placeholder="titre" class="input-xlarge" value="'.$activity->getTitle().'">
+
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="control-group">
+  <label class="control-label" for="acitivty-input-description">Description</label>
+  <div class="controls">
+    <textarea id="acitivty-input-description" name="activity-input-description" class="bootstrap-editor input-xlarge" style="width: 80%; height: 300px">'.$activity->getDescription().'</textarea>
+  </div>
+</div>
+		
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="activity-input-date">Date</label>
+  <div class="controls">
+   	<div class="input-append">
+    	<input id="activity-input-date" name="activity-input-date" type="text" data-date-format="yyyy-mm-dd" class="input-xlarge" value="'.$date.'" readonly>
+    	<span class="add-on"><i class="fa fa-calendar"></i></span>
+    </div>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="activity-input-directory">Dossier</label>
+  <div class="controls">
+    <input id="activity-input-directory" name="activity-input-directory" type="text" placeholder="yyyy-mm-jj_activity_name" class="input-xlarge" value="'.$activity->getDirectory().'" '.$readonly.'>
+    <p class="help-block">Surtout : ne pas mettre d\'accents dans le nom du dossier, ni d\'autre caractere special !</p>
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="control-group">
+  <label class="control-label" for="activity-input-level">Level</label>
+  <div class="controls">
+    <select id="activity-input-level" name="activity-input-level" class="input-xlarge">
+      '.$options.'
+    </select>
+  </div>
+</div>
+      		'.$authorsCheckboxes.'
+
+<div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">'.$label.'</button>
+    </div>
+</div>
+
+</fieldset>
+</form>';
+
+	return $HTML;
+}
+
+
+
+function activity_admin_html_list_directories($list){
 	$HTML = '<h3>Liste des r&eacute;pertoires non utilis&eacute;s dans '.DIR_HD_PICTURES.' (HD directory)</h3>';
 	$HTML .= '<table class="table table-striped tablesorter">';
 	$HTML .= '<thead>
@@ -1033,7 +854,7 @@ function activity_html_list_directories($list){
 
 
 
-function activity_html_stat_table($year, $stats){
+function activity_admin_html_stat_table($year, $stats){
 	$HTML = '<div class="col-lg-3 col-md-3">';
 	$HTML .= '<h4 class="text-center">Ann&eacute;e '.$year.'</h4>';
 	$HTML .= '<table class="table table-striped tablesorter">';
@@ -1074,7 +895,7 @@ function activity_html_stat_table($year, $stats){
 }
 
 
-function activity_html_stat_acti_table($statActi, $total){
+function activity_admin_html_stat_acti_table($statActi, $total){
 	$HTML = '<div class="">';
 	$HTML .= '<table class="table table-striped tablesorter">';
 	$HTML .= '<thead>
@@ -1136,13 +957,7 @@ function activity_html_stat_acti_table($statActi, $total){
 
 function activity_admin_html_table_censures_list(array $list, $modname){
 
-	$HTML = '<h3>Liste des censures</h3>';
-	$HTML .= '<p>Pour supprimer une demande de censure, cliquez sur "Rejeter" (Attention, cette opération est irréversible !!). Pour l\'approuver, cliquez sur voir, regarder la photo, et censurer la.</p>';
-	$HTML .= '<p>Il y a actuellement '.count($list).' demandes en attentes. Au boulot les gars !</p><br>';
-	
-	$HTML .= '<div id="activity-message"></div>';
-
-	$HTML .= '<table class="table table-striped tablesorter">';
+	$HTML = '<table class="table table-striped tablesorter">';
 	$HTML .= '<thead>
 		<tr>
 			<th>Id</th>
@@ -1180,16 +995,6 @@ function activity_admin_html_table_censures_list(array $list, $modname){
 	$HTML .= '</tbody></table>';
 	return $HTML;
 }
-
-
-/***
- * 
- */
-function activity_utils_is_publishing(){
-	return file_exists(ACTIVITY_PUBLISHING_FILE_BACKUP);
-}
-
-
 
 
 

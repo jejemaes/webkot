@@ -52,11 +52,11 @@ class ActivityManager {
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      * @uses APC
      */
-    public function add($title,$descri,$date,$directory,$level){
+    public function add($title,$descri,$date,$directory,$privilegeid){
         try {
-        	$sql = "INSERT INTO activity(title,description,date,directory,level) VALUES (:title, :descri, :date, :directory, :level)";
+        	$sql = "INSERT INTO activity(title,description,date,directory,privilege) VALUES (:title, :descri, :date, :directory, :privilegeid)";
 	        $stmt = $this->_db->prepare($sql);
-        	$stmt->execute(array( 'title' => $title, 'descri' => $descri, 'date' => $date, 'directory' => $directory, 'level' => $level));
+        	$stmt->execute(array( 'title' => $title, 'descri' => $descri, 'date' => $date, 'directory' => $directory, 'privilegeid' => $privilegeid));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
 	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une activit&eacute;");
@@ -302,7 +302,7 @@ class ActivityManager {
      */
     public function getListUnpublishedActivity($level){
     	try{
-    		$sql = "SELECT A.*, P.level FROM activity A, privilege P WHERE P.id = A.privilege AND P.level <= :level AND ispublished = '0' ORDER BY A.date DESC";
+    		$sql = "SELECT A.*, P.level, (SELECT GROUP_CONCAT(concat(U.firstname,' ', U.name,' (',U.username,')')) FROM user U, isauthor I WHERE I.userid = U.id AND activityid = A.id) as authors , ( SELECT COUNT(*) FROM picture WHERE idactivity = A.id ) as nbrpictures FROM activity A, privilege P WHERE P.id = A.privilege AND P.level <= :level AND ispublished = '0' ORDER BY A.date DESC";
 		        $stmt = $this->_db->prepare($sql);
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
@@ -361,7 +361,7 @@ class ActivityManager {
      */
     public function getSelectionActivity($offset,$nbr, $level){
     	try {
-    		$sql = "SELECT A.id as id, A.title as title, A.description as description, A.date as date, A.directory as directory, P.level as level, A.viewed as viewed, A.ispublished as ispublished, GROUP_CONCAT(concat(U.firstname,' ', U.name,' (',U.username,')')) as authors FROM activity A, privilege P, user U, isauthor I WHERE A.privilege = P.id AND P.level <= :level AND A.id = I.activityid AND U.id = I.userid GROUP BY A.id ORDER BY date DESC LIMIT ".$offset.', ' . $nbr;
+    		$sql = "SELECT A.id as id, A.title as title, A.description as description, A.date as date, A.directory as directory, P.level as level, A.viewed as viewed, A.ispublished as ispublished, GROUP_CONCAT(concat(U.firstname,' ', U.name,' (',U.username,')')) as authors, ( SELECT COUNT(*) FROM picture WHERE idactivity = A.id ) as nbrpictures FROM activity A, privilege P, user U, isauthor I WHERE A.privilege = P.id AND P.level <= :level AND A.id = I.activityid AND U.id = I.userid GROUP BY A.id ORDER BY date DESC LIMIT ".$offset.', ' . $nbr;
     		$stmt = $this->_db->prepare($sql);
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
@@ -571,16 +571,17 @@ class ActivityManager {
 	 * @param string $title : the title og the activity
 	 * @param string $descri : the description (edito) of the activity
 	 * @param string $date : the date in the YYYY-MM-DD format
+	 * @param int $privilegeid : the identifier of the privilege
 	 * @return boolean $b : true if the update is a success, false otherwise
 	 * @throws SQLException : this exception is raised if the Query is refused
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      * @uses APC
 	 */
- 	public function update($id, $title, $descri, $date, $level){
+ 	public function update($id, $title, $descri, $date, $privilegeid){
  		try{
-	 		$sql = "UPDATE activity SET title = :title, description = :descri, date = :date, level = :level WHERE id=:id";
+	 		$sql = "UPDATE activity SET title = :title, description = :descri, date = :date, privilege = :privilegeid WHERE id=:id";
  			$stmt = $this->_db->prepare($sql);
-	        $n = $stmt->execute(array('title' => $title, 'descri' => $descri,'date' => $date, 'level' => $level, 'id' => $id));
+	        $n = $stmt->execute(array('title' => $title, 'descri' => $descri,'date' => $date, 'privilegeid' => $privilegeid, 'id' => $id));
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
 		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour");

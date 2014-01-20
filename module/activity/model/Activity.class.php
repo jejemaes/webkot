@@ -37,9 +37,9 @@ class Activity {
 	 * @param array $data : the data from the file, in a key-array
 	 */
 	public function __construct(array $donnees = array()){
-		$this->hydrate($donnees);
 		$this->pictures = array();
 		$this->authors = array();
+		$this->hydrate($donnees);
     }
     
   

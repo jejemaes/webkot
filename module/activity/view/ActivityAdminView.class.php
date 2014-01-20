@@ -17,17 +17,36 @@ class ActivityAdminView extends AdminView implements iAdminView{
 	
 	
 	
-	public function pageListActivity($list, $count = 0, $desc = 0, $page = 0){
+	public function pageListActivity(Message $message, array $list, $count = 0, $desc = 0, $page = 0){
 		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';	
-		$man = SessionMessageManager::getInstance();
-		$content .= $man->getSessionMessage();
+
+		$content .= '<h3>Liste des activit&eacute;s</h3>';
+		
+		// adding button
+		$content .= '<a class="btn btn-primary" href="'.URLUtils::generateURL($this->getModule()->getName(), array('action' => 'add')).'"><i class="fa fa-plus"></i> Ajouter</a>  ';
+		
+		$content .= '<!-- Single button -->
+<div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+    Actions <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#" onClick="activityClearCache()"><i class="fa fa-warning"></i> Clear cache</a></li>
+    <li><a href="#"><i class="fa fa-list-alt"></i> Publication Log</a></li>
+    <li><a href="#" onclick="activityGetCsv(\''.URLUtils::builtServerUrl($this->getModule()->getName(), array('action' => 'getcsv')).'\')"><i class="fa fa-download"></i> Auteurs en CSV</a></li>
+  </ul>
+</div>';
+		
+		$content .= '<div id="activity-message" class="template-message">';
+		$content .= $message;
+		$content .= '</div>';
 		
 		$content .= activity_admin_html_table_activity_list($list, $this->getModule()->getName());	
 		
 		if($count != 0 && $desc != 0 && $page != 0){
-			$content .= '<hr>' . system_html_pagination($this->getModule()->getName(), array(),$count,$desc,$page, "activit�s");	
+			$content .= '<hr>' . system_html_pagination($this->getModule()->getName(), array(),$count,$desc,$page, "activit&eacute;s");	
 		}
 		$content .= '</div>';
 		$content .= '</div>';
@@ -57,31 +76,20 @@ class ActivityAdminView extends AdminView implements iAdminView{
 	}
 	
 	
-	public function pageListActivityAuthors($list, $count = 0, $desc = 0, $page = 0){
-		$content = '<div class="row">';
-		$content .= '<div class="col-lg-12">';
-		$content .= '<div class="well">';
-		$man = SessionMessageManager::getInstance();
-		$content .= $man->getSessionMessage();
-	
-		$content .= activity_admin_html_table_activity_list_authors($list, $this->getModule()->getName());
-	
-		if($count != 0 && $desc != 0 && $page != 0){
-			$content .= '<hr>' . system_html_pagination($this->getModule()->getName(), array("list" => "authors"),$count,$desc,$page, "activit�s");
-		}
-		$content .= '</div>';
-		$content .= '</div>';
-		$content .= '</div>';
-		$t = $this->getTemplate();
-		$t->setContent($content);
-	}
 	
 	public function pageFormActivity($action, Message $message, $activity, array $potentialAuthors, array $roles){
 		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
+		
+		$label = ($action == 'add' ? 'Ajouter' : 'Editer');
+		$content .= '<h3>'.$label.' une activit&eacute;</h3>';
+		
+		$content .= '<div id="activity-message" class="template-message">';
 		$content .= $message;
-		$content .= activity_admin_activity_form($action, $this->getModule()->getName(), $activity, $potentialAuthors, $roles);//($action, $this->getModule()->getName(),$post);
+		$content .= '</div>';
+		
+		$content .= activity_admin_html_activity_form($action, $this->getModule()->getName(), $activity, $potentialAuthors, $roles);//($action, $this->getModule()->getName(),$post);
 		$content .= '</div>';
 		$content .= '</div>';
 		$content .= '</div>';
@@ -102,7 +110,13 @@ class ActivityAdminView extends AdminView implements iAdminView{
 		$content .= '<div class="well">';
 		//$nbrFile = system_count_files_in_directory(DIR_HD_PICTURES . $directory . "/", array("jpg","jpeg","JPG","JPEG"));
 		$content .= '<h3>Gestion des photos de l\'activit&eacute; <i>'.$activity->getTitle().'</i></h3>';
+		
+		$content .= '<div id="activity-message" class="template-message">';
 		$content .= $message;
+		$content .= '</div>';
+		
+		$content .= '<div class="row">';
+		$content .= '<div class="col-lg-10">';
 		$content .= 'D&eacute;tail de l\'activit&eacute; : <ul>
 				<li><strong>Id : </strong> '.$activity->getId().'</li>
 				<li><strong>Titre : </strong> '.$activity->getTitle().'</li>
@@ -111,7 +125,17 @@ class ActivityAdminView extends AdminView implements iAdminView{
 				<li><strong>R&eacute;pertoire : </strong> <i>'.$activity->getDirectory().'/</i></li>
 				<li><strong>Level : </strong> '.$activity->getLevel().'</li>
 				<li><strong>Nombre de photos : </strong> '.$activity->getCountPictures().' <small>(ce nombre ne sera pas en cas de suppression d\'image sans rafraichissement de page)</small></li>
-			</ul><br>';
+			</ul>';
+		$content .= '</div>';
+		$content .= '<div class="col-lg-2">';
+		if(!$activity->getIspublished()){
+			$content .= '<a id="activity-action-publish-'.$activity->getId().'" href="'.URLUtils::generateURL($this->getModule()->getName(), array('action' => 'publish', 'id' => $activity->getId())).'" class="btn btn-success"><i class="fa fa-leaf"></i> Publier</a>';
+		}else{
+			$content .= '<a id="activity-action-publish-'.$activity->getId().'" href="'.URLUtils::generateURL($this->getModule()->getName(), array('action' => 'unpublish', 'id' => $activity->getId())).'" class="btn btn-warning"><i class="fa fa-fire"></i> D&eacute;publier</a>';
+		}
+		$content .= '</div>';
+		$content .= '</div>';
+		
 		$content .= system_load_plugin(array('bootstrap-fileuploadhandler' => array("template"=> $t, "url" => URLUtils::builtServerUrl($this->getModule()->getName(), array('action' => 'picturehandler', 'activityid' => $activity->getId())))));
 		$content .= '</div>';
 		$content .= '</div>';
@@ -204,7 +228,7 @@ class ActivityAdminView extends AdminView implements iAdminView{
 		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
-		$content .= activity_html_list_directories($list);
+		$content .= activity_admin_html_list_directories($list);
 		$content .= '</div>';
 		$content .= '</div>';
 		$content .= '</div>';
@@ -226,7 +250,7 @@ class ActivityAdminView extends AdminView implements iAdminView{
   			$content .= '<div class="panel-body">';
   			$content .= '<div class="row">';
   			foreach ($statUser as $year => $stat){
-  				$content .= activity_html_stat_table($year,$stat);
+  				$content .= activity_admin_html_stat_table($year,$stat);
   			}
   			$content .= '</div>';
   			$content .= '</div>';
@@ -239,7 +263,7 @@ class ActivityAdminView extends AdminView implements iAdminView{
 			$content .= '</div>';
 			$content .= '<div class="panel-body">';
 			$content .= '<p class="text-info">Nous sommes le '.date('d-m-Y').'.</p>';
-			$content .= activity_html_stat_acti_table($statCompare, false);		
+			$content .= activity_admin_html_stat_acti_table($statCompare, false);		
 			$content .= '</div>';
 		$content .= '</div>';
 		
@@ -288,7 +312,13 @@ class ActivityAdminView extends AdminView implements iAdminView{
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
 		
+		$content .= '<h3>Liste des censures</h3>';
+		$content .= '<p>Pour supprimer une demande de censure, cliquez sur "Rejeter" (Attention, cette op&eacute;ration est irr&eacute;versible !!). Pour l\'approuver, cliquez sur voir, regarder la photo, et censurer la.</p>';
+		$content .= '<p>Il y a actuellement '.count($censures).' demandes en attente. Au boulot les gars !</p><br>';	
+		
+		$content .= '<div id="activity-message" class="template-message">';
 		$content .= $message;
+		$content .= '</div>';
 		$content .= activity_admin_html_table_censures_list($censures, $this->getModule()->getName());
 		
 		$content .= '</div>';

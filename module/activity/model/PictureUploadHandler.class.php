@@ -36,7 +36,7 @@ class PictureUploadHandler extends UploadHandler {
 						'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')) . "/" . $parameters['directory_medium'] . $parameters['activity']['directory'] . "/",
 						'upload_url' => $this->get_full_url() . "/". $parameters['directory_medium'] . $parameters['activity']['directory'] . "/",
 						'max_width' => 800,
-						'max_height' => 600
+						'max_height' => 800
 				),
 				'thumbnail' => array(
 						// Uncomment the following to use a defined directory for the thumbnails
@@ -49,8 +49,8 @@ class PictureUploadHandler extends UploadHandler {
 						// Uncomment the following to force the max
 						// dimensions and e.g. create square thumbnails:
 						//'crop' => true,
-						'max_width' => 180,
-						'max_height' => 180
+						'max_width' => 150,
+						'max_height' => 150
 				)
 		);
 
