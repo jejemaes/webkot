@@ -38,11 +38,13 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$desc = 10;// system_get_desc_pagination();
 					$page = (system_get_page_pagination()-1);
 					$limit = ($page*$desc);
-					
-					$emanager = EventManager::getInstance();
-					$events = $emanager->getEventsAfter(date('Y-m-d'), false, $limit,$desc);
-					$events = echogito_sort_by_month($events);
-					
+					if(ECHOGITO_JS_ACTIVE){	
+						$emanager = EventManager::getInstance();
+						$events = $emanager->getEventsAfter(date('Y-m-d'), false, $limit,$desc);
+						$events = echogito_sort_by_month($events);
+					}else{
+						$events = array();
+					}
 					$count = $emanager->getCountEventsAfter(date('Y-m-d'), false);
 				
 					$view->pageLaterEvents($events, $count, $desc, ($page+1));
@@ -68,26 +70,32 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				break;
 		}	
 	}else{
-		if (RoleManager::getInstance ()->hasCapabilitySession ( 'echogito-read-event' )) {			
-			$events = array();
-			$SMM = SessionMessageManager::getInstance();
-			$message = $SMM->getSessionMessage();
-			try{
-				$emanager = EventManager::getInstance();
-				$events = $emanager->getWeekEvent(date('Y'), date('W'));
-				$events = echogito_sort_by_day($events); 
-			}catch(SQLException $sqle){
-				$message = new Message(3);
-				$message->addMessage("Une erreur s'est produite, la recuperation des &eacute;v&eacute;nements a echou&eacute;.");
-				$message->addMessage($sqle->getMessage());
-			}catch(DatabaseExcetion $dbe){
-				$message = new Message(3);
-				$message->addMessage("Une erreur s'est produite, la recuperation des &eacute;v&eacute;nements a echou&eacute;.");
-				$message->addMessage($dbe->getMessage());
+		if(ECHOGITO_ACTIVE){		
+			if (RoleManager::getInstance ()->hasCapabilitySession ( 'echogito-read-event' )) {			
+				$events = array();
+				$SMM = SessionMessageManager::getInstance();
+				$message = $SMM->getSessionMessage();
+				if(ECHOGITO_JS_ACTIVE){			
+					try{
+						$emanager = EventManager::getInstance();
+						$events = $emanager->getWeekEvent(date('Y'), date('W'));
+						$events = echogito_sort_by_day($events); 
+					}catch(SQLException $sqle){
+						$message = new Message(3);
+						$message->addMessage("Une erreur s'est produite, la recuperation des &eacute;v&eacute;nements a echou&eacute;.");
+						$message->addMessage($sqle->getMessage());
+					}catch(DatabaseExcetion $dbe){
+						$message = new Message(3);
+						$message->addMessage("Une erreur s'est produite, la recuperation des &eacute;v&eacute;nements a echou&eacute;.");
+						$message->addMessage($dbe->getMessage());
+					}
+				}
+				$view->pageWeekEvents($events, $message);
+			}else{
+				throw new AccessRefusedException("Vous ne pouvez pas lire la liste des &eacute;v&egrave;nements.");
 			}
-			$view->pageWeekEvents($events, $message);
 		}else{
-			throw new AccessRefusedException("Vous ne pouvez pas lire la liste des &eacute;v&egrave;nements.");
+			$view->pageCalendarAge();
 		}
 	}
 }

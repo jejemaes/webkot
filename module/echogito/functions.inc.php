@@ -193,7 +193,7 @@ function echogito_html_facebook_form($modulename){
 
 
 /**
- * built the traditionnal form to add an event
+ * built the traditionnal form to submit an event
  * @param string $modulename : the name of hte current Module
  * @param iTemplate $template : the tempalte to add the css and js additionnal code
  * @return string : the html code

@@ -45,9 +45,7 @@ class EventView extends View implements iView{
 	}
 	
 	public function pageWeekEvents(array $events, $message){
-		
 		$HTML = $this->headerView();
-		$HTML .= '<br>';
 		$HTML .= '<div id="echogito-message" class="template-message">';
 		$HTML .= $message;
 		$HTML .= '</div>';
@@ -104,7 +102,6 @@ class EventView extends View implements iView{
 		
 		$HTML = $this->headerView();
 		
-		$HTML .= '<br>';
 		$HTML .= '<div id="echogito-later-content" class="col-lg-10 col-lg-offset-1">';
 		/*
 		foreach ($list as $key => $events){
@@ -168,7 +165,6 @@ class EventView extends View implements iView{
 	
 	public function pageCalendarAge(){
 		$HTML = $this->headerView();
-		$HTML .= '<br>';
 		$HTML .= '<iframe src="http://www.google.com/calendar/embed?showTitle=0&amp;height=800&amp;mode=MONTH&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=age%40fundp.ac.be&amp;color=%23A32929&amp;src=ffialf5uitb78e3a4ailq2u51o%40group.calendar.google.com&amp;color=%23AB8B00&amp;src=r1bunu9fqk7trrk2c27dg2e4a0%40group.calendar.google.com&amp;color=%23B1440E&amp;src=regionales.age%40gmail.com&amp;color=%230D7813&amp;src=laobrn2mf85ilagvbbnn34fklg%40group.calendar.google.com&amp;color=%23705770&amp;src=1cs2q4j7qpg78ok2dup7jqu5m4%40group.calendar.google.com&amp;color=%232952A3&amp;src=3krdj656r7h5dlkgi7eja9oqo0%40group.calendar.google.com&amp;color=%232952A3&amp;src=ihfd4oa9i3fam6jcllphem5bvg%40group.calendar.google.com&amp;color=%232952A3&amp;src=bf804v20e8jr95q6v8chlm4i6s%40group.calendar.google.com&amp;color=%232952A3&amp;src=8n0fsgvlfcdfp80gbdifv176hk%40group.calendar.google.com&amp;color=%232952A3&amp;src=8alnmb61lbslviob94okv28v6k%40group.calendar.google.com&amp;color=%232952A3&amp;src=nn6l6pi6ja7b50q5g60rrbjpsc%40group.calendar.google.com&amp;color=%232952A3&amp;src=cbvipid1pghp5v5ucc2tdukdno%40group.calendar.google.com&amp;color=%232952A3&amp;src=2le23msratjh6j79tmmksj3nm4%40group.calendar.google.com&amp;color=%232952A3&amp;src=u1c3or7lp6rgr41a7dm2fqolgo%40group.calendar.google.com&amp;color=%232952A3" style="border-width:0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>';
 		$this->getTemplate()->setPageSubtitle("Calendrier AGE");
 		$this->configureLayout('page-echogito',$HTML);
@@ -180,17 +176,20 @@ class EventView extends View implements iView{
 	 */
 	private function headerView(){
 		$HTML = '<br>';
-		$HTML .= '<div class="row">';
-		$HTML .= '<div class="col-lg-8">';
-		$HTML .= '<img src="'.DIR_MODULE.$this->getModule()->getLocation().'view/img/echogito.png" alt="Logo" class="img-responsive" style="margin:auto;">';
-		$HTML .= '</div>';
-		$HTML .= '<div class="col-lg-4">';
-		$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array()).'" class="btn btn-default"><i class="fa fa-home"></i> Home</a> ';
-		$HTML .= ' <a href="'.URLUtils::generateURL($this->getModule()->getName(), array("action" => "submit")).'" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a></p>';
-		$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p" => "later")).'" class="btn btn-success"><i class="fa fa-list"></i> Ev&eacute;nements &agrave; venir</a></p>';
-		$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p" => "calendar")).'" class="btn btn-info"><i class="fa fa-calendar"></i> Calendrier AGE</a></p>';
-		$HTML .= '</div>';
-		$HTML .= '</div>';
+		if(ECHOGITO_ACTIVE){	
+			$HTML .= '<div class="row">';
+			$HTML .= '<div class="col-lg-8">';
+			$HTML .= '<img src="'.DIR_MODULE.$this->getModule()->getLocation().'view/img/echogito.png" alt="Logo" class="img-responsive" style="margin:auto;">';
+			$HTML .= '</div>';
+			$HTML .= '<div class="col-lg-4">';
+			$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array()).'" class="btn btn-default"><i class="fa fa-home"></i> Home</a> ';
+			$HTML .= ' <a href="'.URLUtils::generateURL($this->getModule()->getName(), array("action" => "submit")).'" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a></p>';
+			$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p" => "later")).'" class="btn btn-success"><i class="fa fa-list"></i> Ev&eacute;nements &agrave; venir</a></p>';
+			$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p" => "calendar")).'" class="btn btn-info"><i class="fa fa-calendar"></i> Calendrier AGE</a></p>';
+			$HTML .= '</div>';
+			$HTML .= '</div>';
+			$HTML .= '</br>';
+		}
 		return $HTML;
 	}
 
