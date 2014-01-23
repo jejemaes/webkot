@@ -14,7 +14,7 @@ class WidgetAdminView extends AdminView implements iAdminView{
 
 
 	public function pageWidgetList($list, $mods, $message){
-		$content .= '<div class="row">';
+		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
 		$content .= $message;
@@ -27,8 +27,23 @@ class WidgetAdminView extends AdminView implements iAdminView{
 	}
 
 	
+	public function pageWidgetAddForm($message, $modules, $potential){
+		$content = '<div class="row">';
+		$content .= '<div class="col-lg-12">';
+		$content .= '<div class="well">';
+		$content .= '<h3>Ajouter un Widget</h3>';
+		$content .= $message;
+		$content .= system_admin_add_form_widget($this->getModule()->getName(), $modules, $potential);
+		$content .= '</div>';
+		$content .= '</div>';
+		$content .= '</div>';
+		$t = $this->getTemplate();
+		$t->setContent($content);
+	}
+	
+	
 	public function pageWidgetForm($widget, $message){
-		$content .= '<div class="row">';
+		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
 		$content .= $message;
@@ -43,7 +58,7 @@ class WidgetAdminView extends AdminView implements iAdminView{
 	
 	
 	public function pageWidgetPlacement($allwidgets, $mod, $modwidgets, $message){
-		$content .= '<div class="row">';
+		$content = '<div class="row">';
 		$content .= '<div class="col-lg-12">';
 		$content .= '<div class="well">';
 		$content .= $message;

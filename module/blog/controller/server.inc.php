@@ -51,7 +51,25 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 				echo '{"message" : {"type" : "error", "content" : "Vous n\'avez pas les autorisations requises pour cette op&eacute;ration!"}}';
 			}
 			break;
+		// GET THE LAST POSTS
+		case "getlast":
+			if (RoleManager::getInstance ()->hasCapabilitySession ( 'blog-read-post' )) {
+				if(isset($_REQUEST['nbr']) && !empty($_REQUEST['nbr']) && is_numeric($_REQUEST['nbr'])){
+					$manager = BlogManager::getInstance();
+					$list = $manager->getLastListPost($_REQUEST['nbr']);
+					$listArray = system_array_obj_to_data_array($list);
+					echo json_encode($listArray);
+				}else{
+					$message = new Message(3);
+					$message->addMessage("Le nombre d'article a renvoy&eacute; est manquant.");
+					echo $message->toJSON();
+				}
+			}else{
+				throw new AccessRefusedException("Vous n\'avez pas les autorisations requises pour lire les articles.");
+			}
+			break;
 		default:
+			throw new InvalidURLException("Aucune action n'a &eacute;t&eacute; indiqu&eacute;e.");
 			break;
 	}
 	

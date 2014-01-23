@@ -1,5 +1,6 @@
 <?php
 
+define('ECHOGITO_JS_CLASS_CALL_ANCHOR', 'echogito-js-anchor');
 
 class EchogitoModuleLoader implements iModuleLoader{
 
@@ -33,7 +34,7 @@ class EchogitoModuleLoader implements iModuleLoader{
 	}
 
 	public static function loadJsCode(iTemplate $template, $relativePath){
-	
+		$template->addJSHeader('<script type="text/javascript" src="'.$relativePath.'view/js/frontend.js"></script>');
 	}
 	
 
@@ -67,24 +68,31 @@ class EchogitoModuleLoader implements iModuleLoader{
 	}
 	
 	public static function loadAdminJsCode(iAdminTemplate $template, $relativePath){
-	
+		$template->addJSFooter('<script type="text/javascript" src="'.$relativePath.'view/js/backend.js"></script>');
 	}
 	
 	// SERVER
 	public static function loadServerModel($relativePath){
-	
+		system_include_file($relativePath . 'model/EventCategory.class.php');
+		system_include_file($relativePath . 'model/EventCategoryManager.class.php');
+		system_include_file($relativePath . 'model/Event.class.php');
+		system_include_file($relativePath . 'model/EventManager.class.php');
 	}
 	
 	public static function loadServerFunctions($relativePath){
-	
+		system_include_file($relativePath . "functions.inc.php");
 	}
 	
 	public static function getServerController($relativePath){
-	
+		system_include_file($relativePath . 'controller/EventController.class.php');
+		system_include_file($relativePath . 'controller/EventCategoryController.class.php');
+		return $relativePath . 'controller/server.inc.php';
 	}
 	
 	public static function loadServerModule($relativePath){
-	
+		EchogitoModuleLoader::loadServerFunctions($relativePath);
+		EchogitoModuleLoader::loadServerModel($relativePath);
+		return EchogitoModuleLoader::getServerController($relativePath);
 	}
 	
 		

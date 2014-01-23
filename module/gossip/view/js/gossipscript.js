@@ -8,6 +8,9 @@ function gossipGetPageContent(newUrl, numero){
 			type: "POST",
 			data: {'num' : numero},
 			cache: false,
+			beforeSend: function(){
+				$( "#gossip-page-content" ).html('<span style="text-align: center;"><i class="fa fa-spinner fa-5x fa-spin"></i>LOADING<span>');
+			},
 			success: function (data, textStatus, xhr) {
 				return data;
 			},

@@ -431,17 +431,23 @@ function system_admin_html_table_widget($modname,$list, $mods){
 	
 		$HTML = '<h3>Liste des Widgets</h3>';
 		
+		
+		//$HTML .= '<a href="'.URLUtils::generateURL($modname, array("part" => "widgets", "action"=>"add")).'" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a>';
+		
+		
 		foreach ($mods as $m){
 			$options .= '<option value="'.$m->getId().'">'.$m->getName().'</option>';
 		}
 		
 		$HTML .= '<form class="form-inline" method="GET">
-			<input type="hidden" name="mod" value="'.$modname.'">
+			<a href="'.URLUtils::generateURL($modname, array("part" => "widgets", "action"=>"add")).'" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a>
+			| <input type="hidden" name="mod" value="'.$modname.'">
 			<input type="hidden" name="part" value="widgets">
 			<input type="hidden" name="action" value="place">
   <select id="mid" name="mid">' . $options . '</select>
   <button type="submit" class="btn">Widgets</button>
 </form>';
+		
 	
 		$HTML .= '<table class="table table-striped tablesorter">';
 		$HTML .= '<thead>
@@ -480,6 +486,96 @@ function system_admin_html_table_widget($modname,$list, $mods){
 	
 		return $HTML;
 }
+
+
+
+function system_admin_add_form_widget($modname, array $modules, array $potentials){
+
+	$options = "";
+	foreach ($potentials as $w){
+		$options .= '<option value="'.$w.'">'.$w.'</option>';
+	}
+	
+	$optionsModule = '<option value="">Aucune dependance</option>';
+	foreach ($modules as $m){
+		$optionsModule .= '<option value="'.$m->getId().'">'.$m->getName().'</option>';
+	}
+	
+	
+	$url = URLUtils::generateURL($modname, array("part" => "widgets", "action"=>"add"));
+
+	$html = '<form class="form-horizontal" method="post" action="'.$url.'">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Formulaire</legend>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="widget-input-name">Nom</label>
+  <div class="controls">
+    <input id="widget-input-name" name="widget-input-name" type="text" placeholder="nom" class="input-xlarge" >
+
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="control-group">
+  <label class="control-label" for="widget-input-active">Actif</label>
+  <div class="controls">
+    <select id="widget-input-active" name="widget-input-active" class="input-xlarge">
+      	<option value="1">true</option>
+    	<option value="0" selected="selected">false</option>
+    </select>
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="control-group">
+  <label class="control-label" for="widget-input-infooter">In Footer</label>
+  <div class="controls">
+    <select id="widget-input-inmenu" name="widget-input-infooter" class="input-xlarge">
+      	<option value="1">true</option>
+    	<option value="0" selected="selected">false</option>
+    </select>
+  </div>
+</div>
+
+			
+<!-- Select Basic -->
+<div class="control-group">
+  <label class="control-label" for="widget-input-class">Fichier (Class name)</label>
+  <div class="controls">
+    <select id="widget-input-class" name="widget-input-class" class="input-xlarge">
+      	'.$options.'
+    </select>
+    <p class="help-block">Le nom de la Class inclue dans le fichier &agrave; inclure du widget.</p>
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="control-group">
+  <label class="control-label" for="widget-input-module">D&eacute;pendance Module</label>
+  <div class="controls">
+    <select id="widget-input-module" name="widget-input-module" class="input-xlarge">
+      	'.$optionsModule.'
+    </select>
+    <p class="help-block">Le Widget est d&eacute;pendant d\'un module (requiert des class de model de module).</p>
+  </div>
+</div>
+      			
+<div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">Modifier</button>
+    </div>
+</div>
+
+</fieldset>
+</form>';
+
+	return $html;
+}
+
 
 
 

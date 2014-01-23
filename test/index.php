@@ -1,10 +1,14 @@
 <?php
+date_default_timezone_set("Europe/Paris");
 
+echo date('l');
+exit();
+//############################################
 
 echo dirname(__FILE__);
 echo "<br>";
 echo realpath(__FILE__);
-exit();
+
 
 //############################################
 

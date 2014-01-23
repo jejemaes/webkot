@@ -16,9 +16,8 @@ class WebkotteurManager {
 	private $_db; // Instance de Database
 	private $_apc;
 	
-	const APC_WEBKOT_OLD_TEAM = 'webkot-old-team';
-	const APC_WEBKOT_YOUNG_TEAM = 'webkot-young-team';
-	
+	public $apc_webkot_old_team;
+	public $apc_webkot_young_team;
 
 	/**
 	 * GetInstance 
@@ -38,7 +37,11 @@ class WebkotteurManager {
 	 */
    	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_webkot_old_team = APC_PREFIX . 'webkot-old-team';
+			$this->apc_webkot_young_team = APC_PREFIX . 'webkot-young-team';
+		}
     }
     
     
@@ -71,8 +74,8 @@ class WebkotteurManager {
 		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un membre a une equipe. id=" .$wid);
 		    } 
 		    if($this->_apc){
-		    	apc_delete(self::APC_WEBKOT_OLD_TEAM);
-		    	apc_delete(self::APC_WEBKOT_YOUNG_TEAM);
+		    	apc_delete($this->apc_webkot_old_team);
+		    	apc_delete($this->apc_webkot_young_team);
 		    }
 	        return true;       
         }catch(PDOException $e){
@@ -105,8 +108,8 @@ class WebkotteurManager {
 		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un membre a une equipe");
 		    } 
 		    if($this->_apc){
-		    	apc_delete(self::APC_WEBKOT_OLD_TEAM);
-		    	apc_delete(self::APC_WEBKOT_YOUNG_TEAM);
+		    	apc_delete($this->apc_webkot_old_team);
+		    	apc_delete($this->apc_webkot_young_team);
 		    }
 	        return true;       
         }catch(PDOException $e){
@@ -212,8 +215,8 @@ class WebkotteurManager {
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      */
     public function getYoungestTeam(){
-    	if($this->_apc && apc_exists(self::APC_WEBKOT_YOUNG_TEAM)){
-    		return apc_fetch(self::APC_WEBKOT_YOUNG_TEAM);
+    	if($this->_apc && apc_exists($this->apc_webkot_young_team)){
+    		return apc_fetch($this->apc_webkot_young_team);
     	}else{
 	    	try{
 		    	$sql = "SELECT W.id as id, W.name as name, W.firstname as firstname, W.nickname as nickname, T.age as age, W.mail as mail, T.function as function, T.pathimg as img, T.studies as studies,W.userid as userid, W.valuetolike as valuetolike, T.place as place FROM webkot_team_member T, webkot_webkotteur W WHERE (T.webkotteurid = W.id) and (T.year = (select max(year) from webkot_team_member)) order by T.place";
@@ -228,7 +231,7 @@ class WebkotteurManager {
 		         	$team[] = new Webkotteur($data);
 		        }   
 		        if($this->_apc){
-		        	apc_store(self::APC_WEBKOT_YOUNG_TEAM, $team, 175000);
+		        	apc_store($this->apc_webkot_young_team, $team, 175000);
 		        }
 		        return $team;	
 	    	}catch(PDOException $e){
@@ -244,8 +247,8 @@ class WebkotteurManager {
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      */
     public function getAllOldWebkotTeam(){
-    	if($this->_apc && apc_exists(self::APC_WEBKOT_OLD_TEAM)){
-    		return apc_fetch(self::APC_WEBKOT_OLD_TEAM);
+    	if($this->_apc && apc_exists($this->apc_webkot_old_team)){
+    		return apc_fetch($this->apc_webkot_old_team);
     	}else{   		
 	    	try{
 		    	$sql = "SELECT T.year, W.id as id, W.name as name, W.firstname as firstname, W.nickname as nickname, T.age as age, W.mail as mail, T.function as function, T.pathimg as img, W.userid as userid, T.studies as studies , W.valuetolike as valuetolike FROM webkot_team_member T, webkot_webkotteur W WHERE (T.webkotteurid = W.id) and (T.year <> (SELECT max(year) FROM webkot_team_member)) order by T.year DESC, T.place";
@@ -260,7 +263,7 @@ class WebkotteurManager {
 		         	$team[] = new Webkotteur($data);
 		        }  
 		        if($this->_apc){
-		        	apc_store(self::APC_WEBKOT_OLD_TEAM, $team, 175000);
+		        	apc_store($this->apc_webkot_old_team, $team, 175000);
 		        } 
 		        return $team;
 	    	}catch(PDOException $e){
@@ -438,8 +441,8 @@ class WebkotteurManager {
 		        throw new SQLException($error[2], $error[0], $sql, "Impossible de mettre a jour un Webkotteur");
 		    }
 		    if($this->_apc){
-		    	apc_delete(self::APC_WEBKOT_OLD_TEAM);
-		    	apc_delete(self::APC_WEBKOT_YOUNG_TEAM);
+		    	apc_delete($this->apc_webkot_old_team);
+		    	apc_delete($this->apc_webkot_young_team);
 		    }
 			return ($n > 0);	
     	}catch(PDOException $e){
@@ -459,14 +462,14 @@ class WebkotteurManager {
     		$stmt = $this->_db->prepare($sql);
     		$param = array('id' => $wid, 'year' => $year, 'function' => $function, 'age' => $age, 'studies' => $studies, 'pathimg' => $pathimg, 'place' => $order);
     		$n =  $stmt->execute($param);
-    var_dump($param);
+    		
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
     			throw new SQLException($error[2], $error[0], $sql, "Impossible de mettre a jour un Membership");
     		}
     		if($this->_apc){
-    			apc_delete(self::APC_WEBKOT_OLD_TEAM);
-    			apc_delete(self::APC_WEBKOT_YOUNG_TEAM);
+    			apc_delete($this->apc_webkot_old_team);
+    			apc_delete($this->apc_webkot_young_team);
     		}
     		return ($n > 0);
     	}catch(PDOException $e){
@@ -494,8 +497,8 @@ class WebkotteurManager {
     			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer un membership.");
     		}
     		if($this->_apc){
-    			apc_delete(self::APC_WEBKOT_YOUNG_TEAM);
-    			apc_delete(self::APC_WEBKOT_OLD_TEAM);
+    			apc_delete($this->apc_webkot_young_team);
+    			apc_delete($this->apc_webkot_old_team);
     		}
     		return true;
     	}catch(PDOException $e){

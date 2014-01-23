@@ -13,17 +13,18 @@ class EventController{
 	 */
 	public static function submitEventAction($request){
 		$event = new Event();
-		if(isset($request['echogito-input-title']) && isset($request['echogito-input-description']) && isset($request['echogito-input-date'])  && isset($request['echogito-input-location'])){
+		if(isset($request['echogito-input-title']) && isset($request['echogito-input-description']) && isset($request['echogito-input-date'])  && isset($request['echogito-input-location']) && $request['echogito-input-organizer']){
 			// traditionnal form
 			$event->setName($request['echogito-input-title']);
 			$event->setDescription($request['echogito-input-description']);
 			$event->setStart_time($request['echogito-input-date']);
 			$event->setLocation($request['echogito-input-location']);
-				
-			if(!empty($request['echogito-input-title']) && !empty($request['echogito-input-description']) && !empty($request['echogito-input-date'])  && !empty($request['echogito-input-location'])){
+			$event->setOrganizer($request['echogito-input-organizer']);
+			
+			if(!empty($request['echogito-input-title']) && !empty($request['echogito-input-description']) && !empty($request['echogito-input-date'])  && !empty($request['echogito-input-location']) && !empty($request['echogito-input-organizer'])){
 				try{
 					$emanager = EventManager::getInstance();
-					$emanager->add($request['echogito-input-title'], nl2br($request['echogito-input-description']), $request['echogito-input-date'], $request['echogito-input-location'], null, '0', null);
+					$emanager->add($request['echogito-input-title'], nl2br($request['echogito-input-description']), $request['echogito-input-date'], $request['echogito-input-location'], null, '0', $request['echogito-input-organizer'], null);
 		
 					$message = new Message(1);
 					$message->addMessage("Votre &eacute;v&eacute;nement a bien &eacute;t&eacute; soumis avec succes. Il sera valid&eacute; dans les plus brefs d&eacute;lais.");
@@ -65,11 +66,11 @@ class EventController{
 										$event->setStart_time(ConversionUtils::transformDate($fb_event['start_time'],"Y-m-d H:i:s"));
 										$event->setLocation($fb_event['location']);
 										$event->setFacebookid($matches[0]);
-										
+										$event->setOrganizer($fb_event['owner']['name']);
 										
 										
 										$emanager = EventManager::getInstance();
-										$emanager->add($fb_event['name'], nl2br($fb_event['description']), ConversionUtils::transformDate($fb_event['start_time'],"Y-m-d H:i:s"), $fb_event['location'], $matches[0], '0', null);
+										$emanager->add($fb_event['name'], nl2br($fb_event['description']), ConversionUtils::transformDate($fb_event['start_time'],"Y-m-d H:i:s"), $fb_event['location'], $matches[0], '0', $fb_event['owner']['name'], null);
 									
 										$message = new Message(1);
 										$message->addMessage("Votre &eacute;v&eacute;nement a bien &eacute;t&eacute; soumis avec succes. Il sera valid&eacute; dans les plus brefs d&eacute;lais.");
@@ -105,7 +106,7 @@ class EventController{
 					$message->addMessage("L'url introduite est incorrecte.");
 				}
 			}else{
-				$message = new Message(3);
+				$message = new Message(2);
 			}
 		}
 		return array($message, $event);
@@ -131,10 +132,12 @@ class EventController{
 				$event->setLocation($request['echogito-input-location']);
 				$event->setFacebookid($request['echogito-input-facebookid']);
 				$event->setCategoryid($request['echogito-input-categoryid']);
-				if(!empty($request['echogito-input-title']) && !empty($request['echogito-input-description']) && !empty($request['echogito-input-date']) && !empty($request['echogito-input-location']) && !empty($request['echogito-input-categoryid'])){
+				$event->setOrganizer($request['echogito-input-organizer']);
+				
+				if(!empty($request['echogito-input-title']) && !empty($request['echogito-input-description']) && !empty($request['echogito-input-date']) && !empty($request['echogito-input-location']) && !empty($request['echogito-input-categoryid']) && !empty($request['echogito-input-organizer'])){
 					try{
 						$emanager = EventManager::getInstance();
-						$emanager->add($request['echogito-input-title'], $request['echogito-input-description'], $request['echogito-input-date'], $request['echogito-input-location'], $request['echogito-input-facebookid'], '1', $request['echogito-input-categoryid']);
+						$emanager->add($request['echogito-input-title'], $request['echogito-input-description'], $request['echogito-input-date'], $request['echogito-input-location'], $request['echogito-input-facebookid'], '1', $request['echogito-input-organizer'], $request['echogito-input-categoryid']);
 						
 						$message = new Message(1);
 						$message->addMessage("Votre &eacute;v&eacute;nement a bien &eacute;t&eacute; mis a jour avec succes.");
@@ -172,7 +175,7 @@ class EventController{
 		if(isset($request['id']) && !empty($request['id']) && is_numeric($request['id'])){
 			$emanager = EventManager::getInstance();
 			$event = $emanager->getEvent($request['id']);
-			if(isset($request['echogito-input-title']) && isset($request['echogito-input-description']) && isset($request['echogito-input-date'])  && isset($request['echogito-input-location']) && isset($request['echogito-input-facebookid'])){	
+			if(isset($request['echogito-input-title']) && isset($request['echogito-input-description']) && isset($request['echogito-input-date'])  && isset($request['echogito-input-location']) && isset($request['echogito-input-facebookid']) && isset($request['echogito-input-organizer'])){	
 				if((is_numeric($request['echogito-input-facebookid']) || empty($request['echogito-input-facebookid'])) && FormatUtils::isDatetimeSqlFormat($request['echogito-input-date'])){
 					$event->setName($request['echogito-input-title']);
 					$event->setDescription($request['echogito-input-description']);
@@ -180,9 +183,11 @@ class EventController{
 					$event->setLocation($request['echogito-input-location']);
 					$event->setFacebookid($request['echogito-input-facebookid']);
 					$event->setCategoryid($request['echogito-input-categoryid']);
-					if(!empty($request['echogito-input-title']) && !empty($request['echogito-input-description']) && !empty($request['echogito-input-date'])  && !empty($request['echogito-input-location']) && !empty($request['echogito-input-categoryid'])){
+					$event->setOrganizer($request['echogito-input-organizer']);
+					
+					if(!empty($request['echogito-input-title']) && !empty($request['echogito-input-description']) && !empty($request['echogito-input-date'])  && !empty($request['echogito-input-location']) && !empty($request['echogito-input-categoryid']) && !empty($request['echogito-input-organizer'])){
 						try{
-							$emanager->update($request['id'], $request['echogito-input-title'], $request['echogito-input-description'], $request['echogito-input-date'], $request['echogito-input-location'], $request['echogito-input-facebookid'], $request['echogito-input-categoryid']);
+							$emanager->update($request['id'], $request['echogito-input-title'], $request['echogito-input-description'], $request['echogito-input-date'], $request['echogito-input-location'], $request['echogito-input-facebookid'], $request['echogito-input-categoryid'], $request['echogito-input-organizer']);
 							
 							$message = new Message(1);
 							$message->addMessage("Votre &eacute;v&eacute;nement a bien &eacute;t&eacute; mis a jour avec succes.");
@@ -258,6 +263,37 @@ class EventController{
 				$messag->setType(3);
 			}catch(DatabaseExcetion $dbe){
 				$message->addMessage("Une erreur s'est produite, l'Event et les photos n'a pu etre approuv&eacute; dans la database.");
+				$message->addMessage($dbe->getMessage());
+				$messag->setType(3);
+			}
+		}else{
+			$message->setType(3);
+			$message->addMessage("L'identifiant de l'event est manquant.");
+		}
+		return $message;
+	}
+	
+	
+	
+	/**
+	 * update the Category of a given Event
+	 * @param array $request :  $request['id'] is the identifier of the Event to remove
+	 * 							$request['categoryid'] : the identifier of the category
+	 * @return Message : the Message Object explaining if the approval is a success or not
+	 */
+	public static function updateCategoryEventAction($request){
+		$message = new Message(1);
+		if(isset($request['id']) && !empty($request['id']) && is_numeric($request['id']) && isset($request['categoryid']) && !empty($request['categoryid']) && is_numeric($request['categoryid'])){
+			$emanager = EventManager::getInstance();
+			try{
+				$emanager->updateCategoryid($request['id'], $request['categoryid']);
+				$message->addMessage("L'Event a &eacute;t&eacute; cat&eacute;goris&eacute; avec succes.");
+			}catch(SQLException $sqle){
+				$message->addMessage("Une erreur s'est produite, la cat&eacute;gorie n'a pas pu etre modifi&eacute;e dans la database.");
+				$message->addMessage($sqle->getMessage());
+				$messag->setType(3);
+			}catch(DatabaseExcetion $dbe){
+				$message->addMessage("Une erreur s'est produite, la cat&eacute;gorie n'a pu etre modifi&eacute;e dans la database.");
 				$message->addMessage($dbe->getMessage());
 				$messag->setType(3);
 			}

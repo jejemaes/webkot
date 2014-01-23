@@ -1,5 +1,20 @@
 <?php
 
+
+/**
+ * transform a list of Event Object into key-array, adding the field event_url containing the url to the event page
+ * @param array $events : the list of Event Objects
+ * @param string $modname : the name of the module
+ * @return array $array : the array of array event
+ */
+function echogito_event_array_object_to_array(array $events, $modname){
+	$array = system_array_obj_to_data_array($events);
+	for($i=0 ; $i<count($array);$i++){
+		$array[$i]['event_url'] = URLUtils::generateURL($modname, array("p" => "event", "id" => $array[$i]['id']));
+	}
+	return $array;
+}
+
 /**
  * sort an array of Event Objects by day. It returns a key-array (key are the day names) and the value are array of Event Objects.
  * @param array $events : array of Event Objects
@@ -7,19 +22,19 @@
  */
 function echogito_sort_by_day(array $events){
 	$week = array();
-	$week['Monday'] = array();
-	$week['Tuesday'] = array();
-	$week['Wednesday'] = array();
-	$week['Thursday'] = array();
-	$week['Friday'] = array();
-	$week['Saturday'] = array();
-	$week['Sunday'] = array();
+	$week['Lundi'] = array();
+	$week['Mardi'] = array();
+	$week['Mercredi'] = array();
+	$week['Jeudi'] = array();
+	$week['Vendredi'] = array();
+	$week['Samedi'] = array();
+	$week['Dimanche'] = array();
 	
 	foreach ($events as $event){
 		$date = $event->getStart_time();
 		$date_array = date_parse($date);
 		$day = date("l", mktime(0, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']));
-		$week[$day][] = $event;
+		$week[echogito_translate_day_name($day)][] = $event;
 	}
 	return $week;
 }
@@ -101,6 +116,7 @@ function echogito_html_page_event($modname, $event){
 	$html .= '<i class="fa fa-globe"></i> <strong>Lieu :</strong> '.$event->getLocation();
 	$html .= ' |  <i class="fa fa-calendar"></i> <strong>Date :</strong> le '.ConversionUtils::dateToDateFr($dt[0],"/");
 	$html .= ' |  <i class="fa fa-clock-o"></i> <strong>Heure :</strong> &agrave; '.ConversionUtils::timeToTimefr($dt[1]);
+	$html .= ' |  <i class="fa fa-user"></i> <strong>Organis&eacute; par </strong> '.$event->getOrganizer();
 	if($event->getFacebookid()){
 		$html .= ' |  <i class="fa fa-facebook-square"></i> <a href="https://www.facebook.com/events/'.$event->getFacebookid().'"  target="_blank">Lien Facebook</a>';
 	}
@@ -108,7 +124,7 @@ function echogito_html_page_event($modname, $event){
 		$html .= ' | <span style="color:'.$event->getCategorycolor().'"><i class="fa fa-folder-open"></i> '.$event->getCategoryname().'</span>';
 	}
 	$html .= '</p>';
-	$html .= '<p>'.($event->getDescription()).' ...</p>';
+	$html .= '<p>'.$event->getDescription().'</p>';
 	$html .= '</div>';
 	return $html;
 }
@@ -127,7 +143,8 @@ function echogito_html_media_event($modname, Event $event, $class){
 	$html .= '<p >'.substr(($event->getDescription()),0,550).' ...</p>';
 	$html .= '<br><a class="btn btn-primary btn-sm pull-right" href="'.URLUtils::generateURL($modname, array("p"=>"event", "id" => $event->getId())).'">&#187; Lire plus</a>';
 	$html .= '<ul class="list-unstyled">';
-	$html .= '<li><i class="fa fa-clock-o"></i> <strong>Heure :</strong> Le '.conversionUtils::timestampToDatetime($event->getStart_time(),"/").'</li>';
+	$html .= '<li><i class="fa fa-user"></i> <strong>Organis&eacute; par </strong> '.$event->getOrganizer().'</li>';
+	$html .= '<li><i class="fa fa-clock-o"></i> <strong>Heure :</strong> Le '.ConversionUtils::timestampToDatetime($event->getStart_time(),"/").'</li>';
 	$html .= '<li><i class="fa fa-globe"></i> <strong>Lieu :</strong> '.$event->getLocation().'</li>';
 	if($event->getFacebookid()){
 		$html .= '<li><i class="fa fa-facebook-square"></i> <a href="https://www.facebook.com/events/'.$event->getFacebookid().'" target="_blank">Lien Facebook</a></li>';
@@ -140,6 +157,7 @@ function echogito_html_media_event($modname, Event $event, $class){
 	$html .= '</div>';
 	return $html;
 }
+
 
 /**
  * built the facebook form to add an event
@@ -191,7 +209,7 @@ function echogito_html_traditionnal_form($modulename, $template){
 <div class="form-group">
   <label class="col-md-6 control-label" for="echogito-input-title">Titre</label>  
   <div class="col-md-6">
-  <input id="echogito-input-title" name="echogito-input-title" type="text" placeholder="titre" class="form-control input-md" required="">
+  <input id="echogito-input-title" name="echogito-input-title" type="text" placeholder="Organisateur" class="form-control input-md" required="">
     
   </div>
 </div>
@@ -217,6 +235,15 @@ function echogito_html_traditionnal_form($modulename, $template){
   <label class="col-md-6 control-label" for="echogito-input-location">Location</label>  
   <div class="col-md-6">
   <input id="echogito-input-location" name="echogito-input-location" type="text" placeholder="location" class="form-control input-md" required="">
+    
+  </div>
+</div>
+  		
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-6 control-label" for="echogito-input-organizer">Organisateur</label>  
+  <div class="col-md-6">
+  <input id="echogito-input-organizer" name="echogito-input-organizer" type="text" placeholder="titre" class="form-control input-md" required="">
     
   </div>
 </div>
@@ -313,7 +340,7 @@ $html .= '<!-- Modal -->
 function echogito_admin_html_list_events($modname, array $events){
 
 	// adding button
-	$HTML .= '<a class="btn btn-primary" href="'.URLUtils::generateURL($modname, array('part'=>'event','action' => 'add')).'"><i class="fa fa-plus "></i> Ajouter</a>';
+	$HTML = '<a class="btn btn-primary" href="'.URLUtils::generateURL($modname, array('part'=>'event','action' => 'add')).'"><i class="fa fa-plus "></i> Ajouter</a>';
 	
 	$HTML .= '<table class="table table-striped table-hover tablesorter">';
 	$HTML .= '<thead>
@@ -322,6 +349,7 @@ function echogito_admin_html_list_events($modname, array $events){
 			<th>Nom</th>
 			<th>Date</th>
 			<th>Lieu</th>
+			<th>Cat&eacute;gorie</th>
 			<th>Approuv&eacute;</th>
 			<th><u>Actions</u></th>
 		</tr>
@@ -332,6 +360,7 @@ function echogito_admin_html_list_events($modname, array $events){
 			<th>Nom</th>
 			<th>Date</th>
 			<th>Lieu</th>
+			<th>Cat&eacute;gorie</th>
 			<th>Approuv&eacute;</th>
 			<th><u>Actions</u></th>
 		</tr>
@@ -345,6 +374,7 @@ function echogito_admin_html_list_events($modname, array $events){
 		$HTML.= '<td>'.$event->getName().'</td>';
 		$HTML .= '<td>'.$event->getStart_time().'</td>';
 		$HTML .= '<td>'.$event->getLocation().'</td>';
+		$HTML .= '<td>'.$event->getCategoryname().'</td>';
 		$statut = ($event->getIsapproved() == '1' ? '<span class="label label-success">Oui</span>' : '<span class="label label-danger">Non</span>');
 		
 		$HTML .= '<td>'.$statut.'</td>';	
@@ -356,7 +386,7 @@ function echogito_admin_html_list_events($modname, array $events){
 		    	$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('part'=>'event', 'action' => 'edit', 'id' => $event->getId())).'"><i class="fa fa-pencil"></i> Editer</a></li>';
 		    	$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('part'=>'event', 'action' => 'delete', 'id' => $event->getId())).'" onclick=\'return(confirm("Etes vous certain de vouloir supprimer cet Event ?"));\'"><i class="fa fa-trash-o"></i> Supprimer</a></li>';
 				if($event->getIsapproved() == '0'){
-					$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('part'=>'event', 'action' => 'approve', 'id' => $event->getId())).'"><i class="fa fa-check-square"></i> Approuver</a></li>';
+					$HTML .= '<li><a href="'.URLUtils::generateURL($modname, array('part'=>'event', 'p' => 'approve', 'id' => $event->getId())).'"><i class="fa fa-check-square"></i> Approuver</a></li>';
 				}
 		$HTML .= '</ul>
 		    </div>';
@@ -378,7 +408,7 @@ function echogito_admin_html_list_events($modname, array $events){
 function echogito_admin_html_list_category($modname, array $categories){
 
 	// adding button
-	$HTML .= '<a class="btn btn-primary" href="'.URLUtils::generateURL($modname, array("part"=>"category",'action' => 'add')).'"><i class="fa fa-plus "></i> Ajouter</a>';
+	$HTML = '<a class="btn btn-primary" href="'.URLUtils::generateURL($modname, array("part"=>"category",'action' => 'add')).'"><i class="fa fa-plus "></i> Ajouter</a>';
 
 	$HTML .= '<table class="table table-striped table-hover tablesorter">';
 	$HTML .= '<thead>
@@ -486,7 +516,15 @@ function echogito_admin_html_form($action, $modulename, $template, Event $event,
 
   </div>
 </div>
-
+  		
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-6 control-label" for="echogito-input-organizer">Organisateur</label>  
+  <div class="col-md-6">
+  <input id="echogito-input-organizer" name="echogito-input-organizer" type="text" placeholder="Organisateur" class="form-control input-md" required="" value="'.$event->getOrganizer().'">
+  </div>
+</div>
+  		
 <!-- Text input-->
 <div class="form-group">
   <label class="col-md-6 control-label" for="echogito-input-facebookid">Facebookid</label>
@@ -527,7 +565,7 @@ function echogito_admin_html_form_category($action, $modulename, $template, Even
 		$label = 'Envoyer';
 		$url = URLUtils::generateURL($modulename, array('part'=>'category', 'action'=>$action, 'id'=>$category->getId()));
 	}
-	$html .= '<form class="form-horizontal" method="POST" action="'.$url.'">
+	$html = '<form class="form-horizontal" method="POST" action="'.$url.'">
 <fieldset>
 
 <!-- Form Name -->
@@ -576,13 +614,18 @@ function echogito_admin_html_form_category($action, $modulename, $template, Even
  * @return string : the html code
  */
 function echogito_admin_html_form_approve_category($modulename, $categories, $eventid){
-	$html = '<form class="form-horizontal" method="POST" action="'.URLUtils::generateURL($modulename, array("action"=>"approve", "id" => $eventid)).'">
+	$html = '<form class="form-horizontal" method="POST" action="'.URLUtils::generateURL($modulename, array("action"=>"approve")).'">
 <fieldset>
 
 <!-- Form Name -->
 <legend>Formulaire</legend>
-    
-  
+    <!-- Text input-->
+	<div class="form-group">
+		<label class="col-md-4 control-label" for="echogito-input-id">Identifiant</label>  			
+		<div class="col-md-4">
+			<input id="echogito-input-id" name="echogito-input-id" type="text" placeholder="" class="form-control input-md" value="'.$eventid.'" readonly="readonly">
+		</div>			    
+	</div>
 '. echogito_html_category_options($categories).'
 		
 <div class="control-group">
@@ -616,7 +659,7 @@ function echogito_html_category_options(array $categories, $selectedid = 0){
 	}else{
 		$options .= '<option value="" selected="selected">NULL</option>';
 	}
-	$html .= '<div class="form-group">
+	$html = '<div class="form-group">
   <label class="col-md-4 control-label" for="echogito-input-categoryid">Cat&eacute;gorie</label>
   <div class="col-md-5">
     <select id="echogito-input-categoryid" name="echogito-input-categoryid" class="form-control">
@@ -625,4 +668,30 @@ function echogito_html_category_options(array $categories, $selectedid = 0){
   </div>
 </div>';
 	return $html;
+}
+
+
+/**
+ * built the javascript code (with tag or not) for the overlay page
+ * @param string $modaltitle : the title of the modal (overlay)
+ * @param string $modulename : the name of the current module
+ * @param boolean $withtag : true if tags are required, false otherwise
+ * @return string : the js code
+ */
+function echogito_js_remote_call($modulename, $withtag = true){
+	$js = "";
+	if($withtag){
+		$js .= "<script>";
+	}
+	$js .= "$( document ).ready(function() {
+					$(document).on('click','.".ECHOGITO_JS_CLASS_CALL_ANCHOR."',function(e)  {
+					    var href = ($(this).attr('href'));
+						echogito_remote_call('".URLUtils::builtServerUrl($modulename, array())."', href);
+						e.preventDefault();
+					});
+				});";
+	if($withtag){
+		$js .= "</script>";
+	}
+	return $js;
 }

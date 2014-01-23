@@ -37,7 +37,7 @@ class GossipView extends View implements iView{
 
 
 	public function pageList(array $list, $nbrpage, $numpage, $message){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="col-lg-12">';
 		
 		system_load_plugin(array('social-ring' => array("template" => $this->getTemplate(), "level" => 0, "appId" => OptionManager::getInstance()->getOption("facebook-appid"))));
 		 
@@ -49,16 +49,16 @@ class GossipView extends View implements iView{
 		}
 		$HTML .= '<div class="clearfix"></div><br>';
 		$HTML .= $message;
-		$HTML .= '<hr>';
-		$HTML .= '<div id="bootpag-content">';
+		$HTML .= '<hr class="clearfix">';
+		
+		$HTML .= '<div id="gossip-page-content">';
 		$HTML .= gossip_html_list($list, $numpage, $this->getModule()->getName());
 		$HTML .= '</div>';
 		
 		$HTML .= '<!-- Modal -->
   <div class="modal fade" id="gossip-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialogBAD">
-      <div class="modal-content">
-        
+      <div class="modal-content">    
         <div class="modal-body">
 	         <form class="form-horizontal" method="POST" action="'.URLUtils::generateURL($this->getModule()->getName(), array("action" => "add")).'">
 				<fieldset>
@@ -94,16 +94,14 @@ class GossipView extends View implements iView{
 				
 				</fieldset>
 			</form>
-				
         </div>
-        
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->';
 		
-		$url = "'".URL . "server.php?module=".$this->getModule()->getName()."&action=getpage'";
-		$callback = "gossipGetPageContent(".$url.", num)";
-		$HTML .= system_load_plugin(array('bootpag' => array("template" => $this->getTemplate(), "callback" => $callback, 'total' => $nbrpage)));
+		$url = URLUtils::builtServerUrl($this->getModule()->getName(), array("action" => "getpage"));
+		$callback = "$('#gossip-page-content').html(gossipGetPageContent('".$url."', num));";
+		$HTML .= system_load_plugin(array('bootpag' => array("template" => $this->getTemplate(), "call-on-change" => $callback, 'total' => $nbrpage)));
 		
 		$HTML .= '</div>';
 		

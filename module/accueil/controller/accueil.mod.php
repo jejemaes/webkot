@@ -10,6 +10,7 @@ $nbrLP = $omanager->getOption('blog-widget-lastpost');
 
 try{
 	$slmanager = SlideManager::getInstance();
+	$slides = array();
 	$slides = $slmanager->getActiveSlides();
 }catch(Exception $e){
 	$slides = array();
@@ -29,19 +30,23 @@ try{
 	$pictures = array();
 }
 
+
+/*
 try{
 	$bmanager = BlogManager::getInstance();
 	$posts = $bmanager->getLastListPost($nbrLP);
 }catch(Exception $e){
 	$posts = array();
 }
+*/
+
 
 try{
 	$vmanager = VideoManager::getInstance();
+	$video = new Video();
 	$video = $vmanager->getLastVideo($ytUserId);
 }catch(Exception $e){
 	$video = new Video();
 }
 
-
-$view->pageHome($slides, $activities, $pictures, $posts, $video);
+$view->pageHome($slides, $activities, $pictures, array(), $video);

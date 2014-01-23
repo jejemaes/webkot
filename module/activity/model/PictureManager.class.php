@@ -14,9 +14,9 @@ class PictureManager {
 	private $_db; // Instance of Database
 	private $_apc;
 	
-	const APC_ACTIVITY_LASTCOM = 'activity-last-commented-picture';
-	const APC_ACTIVITY_PICTURES = 'activity-pictures-';
-	const APC_ACTIVITY_PICTURE = 'activity-picture-';
+	public $apc_activity_lastcomm;
+	public $apc_activity_pictures;
+	public $apc_activity_picture;
 
 	
 	/**
@@ -37,7 +37,12 @@ class PictureManager {
 	 */
    	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_activity_lastcomm = APC_PREFIX . 'activity-last-commented-picture';
+			$this->apc_activity_pictures = APC_PREFIX . 'activity-pictures-';
+			$this->apc_activity_picture = APC_PREFIX . 'activity-picture-';
+		}
     }
     
     
@@ -64,7 +69,7 @@ class PictureManager {
 	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une Picture" . print_r($tab));
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_ACTIVITY_PICTURES . $idactivity);
+	        	apc_delete($this->apc_activity_pictures . $idactivity);
 	        }
 	        return true;    
         }catch(PDOException $e){
@@ -85,8 +90,8 @@ class PictureManager {
      */
     public function getPicture($id){
     	try{
-    		if($this->_apc && apc_exists(self::APC_ACTIVITY_PICTURE . $id)){
-    			$picture = apc_fetch(self::APC_ACTIVITY_PICTURE . $id);
+    		if($this->_apc && apc_exists($this->apc_activity_picture . $id)){
+    			$picture = apc_fetch($this->apc_activity_picture . $id);
     		}else{	
 	    		$sql = 'SELECT * FROM picture WHERE id = :id';
 		    	$stmt = $this->_db->prepare($sql);
@@ -101,7 +106,7 @@ class PictureManager {
 				}
 		        $picture = new Picture($data);
 				if($this->_apc){
-					apc_store(self::APC_ACTIVITY_PICTURE . $id, $picture, 43000);
+					apc_store($this->apc_activity_picture . $id, $picture, 43000);
 				}
     		}
 			$manager = CommentManager::getInstance();
@@ -122,8 +127,8 @@ class PictureManager {
      * @uses APC
      */
     public function getListPicture($idact){
-    	if($this->_apc && apc_exists(self::APC_ACTIVITY_PICTURES . $idact)){
-    		return apc_fetch(self::APC_ACTIVITY_PICTURES . $idact);
+    	if($this->_apc && apc_exists($this->apc_activity_pictures . $idact)){
+    		return apc_fetch($this->apc_activity_pictures . $idact);
     	}else{
     		try{
     			//In this request, the 'WHERE idactivity =:idact' is in every syb Select queries for performance reason ;)
@@ -147,7 +152,7 @@ class PictureManager {
     				$pictures[] = new Picture($data);
     			}
     			if($this->_apc){
-    				apc_store(self::APC_ACTIVITY_PICTURES . $idact, $pictures, 86000);
+    				apc_store($this->apc_activity_pictures . $idact, $pictures, 86000);
     			}
     			return $pictures;
     		}catch(PDOException $e){
@@ -294,8 +299,8 @@ class PictureManager {
      * @uses APC
      */
     public function getLastCommentedPicture($nbr = 12, $level){	
-    	if($this->_apc && apc_exists(self::APC_ACTIVITY_LASTCOM)){
-    		return apc_fetch(self::APC_ACTIVITY_LASTCOM);
+    	if($this->_apc && apc_exists($this->apc_activity_lastcomm)){
+    		return apc_fetch($this->apc_activity_lastcomm);
     	}else{
 	    	try {
 		    	 $sql = 'SELECT P.*, A.directory as directory
@@ -316,7 +321,7 @@ class PictureManager {
 		         	$pictures[] = $tmp;
 		         } 
 		         if($this->_apc){
-			         apc_store(self::APC_ACTIVITY_LASTCOM, $pictures, 175000);
+			         apc_store($this->apc_activity_lastcomm, $pictures, 175000);
 		         }
 		         return $pictures;	
 	    	}catch(PDOException $e){
@@ -344,8 +349,8 @@ class PictureManager {
 		    }
 		    if($this->_apc){
 		    	$picture = $this->getPicture($pictid);
-		    	apc_delete(self::APC_ACTIVITY_PICTURES . $picture->getIdactivity());
-		    	apc_delete(self::APC_ACTIVITY_PICTURE . $pictid);
+		    	apc_delete($this->apc_activity_pictures . $picture->getIdactivity());
+		    	apc_delete($this->apc_activity_picture . $pictid);
 		    }
 		    return true;
      	}catch(PDOException $e){
@@ -396,8 +401,8 @@ class PictureManager {
 	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer les images d'une activite");
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_ACTIVITY_PICTURES . $aid);
-	        	apc_delete(PictureManager::APC_ACTIVITY_LASTCOM);
+	        	apc_delete($this->apc_activity_pictures . $aid);
+	        	apc_delete($this->apc_activity_lastcomm);
 	        }
 	        return true;       
         }catch(PDOException $e){
@@ -424,8 +429,8 @@ class PictureManager {
     			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer la photo " . $filename);
     		}
     		if($this->_apc){
-    			apc_delete(self::APC_ACTIVITY_PICTURES . $aid);
-    			apc_delete(PictureManager::APC_ACTIVITY_LASTCOM);
+    			apc_delete($this->apc_activity_pictures . $aid);
+    			apc_delete($this->apc_activity_lastcomm);
     		}
     		return true;
     	}catch(PDOException $e){
@@ -479,10 +484,10 @@ class PictureManager {
 		    }
 	        $n = $stmt->execute(array('id' => $pid));
 	        if($this->_apc){
-	        	if(apc_exists(self::APC_ACTIVITY_PICTURE . $pid)){
-	        		$picture = apc_fetch(self::APC_ACTIVITY_PICTURE . $pid);
+	        	if(apc_exists($this->apc_activity_picture . $pid)){
+	        		$picture = apc_fetch($this->apc_activity_picture . $pid);
 	        		$picture->setViewed($picture->getViewed()+1);
-	        		apc_store(self::APC_ACTIVITY_PICTURE . $pid, $picture, 43000);
+	        		apc_store($this->apc_activity_picture . $pid, $picture, 43000);
 	        	}
 	        }
 	        return ($n > 0);

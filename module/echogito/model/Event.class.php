@@ -8,6 +8,7 @@ class Event{
 	private $description;
 	private $start_time;
 	private $location;
+	private $organizer;
 	private $facebookid;
 	private $isapproved;
 	
@@ -108,7 +109,17 @@ class Event{
 	public function getIsapproved(){
 		return $this->isapproved;
 	}
+
+
+	public function setOrganizer( $organizer )
+	{
+		$this->organizer = $organizer;
+	}
 	
+	public function getOrganizer()
+	{
+		return $this->organizer;
+	}
 	
 
 	

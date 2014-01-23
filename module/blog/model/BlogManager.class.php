@@ -8,8 +8,7 @@ class BlogManager {
 	private $_db; // Instance of Database
 	private $_apc;
 	
-	const APC_BLOG_POST = 'blog-post-';
-	
+	public $apc_blog_post;
 
 	/**
 	 * getInstance 
@@ -29,7 +28,10 @@ class BlogManager {
 	 */
 	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_blog_post = APC_PREFIX . 'blog-post-';
+		}
     }
     
     
@@ -51,13 +53,11 @@ class BlogManager {
         	$stmt->execute(array( 'title' => $title, 'content' => $content, 'userid' => $userid));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un Post");
-	        	return false;
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un Post.");
 	        }
 	        return true;     
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un Post");
-        	return false;
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un Post.");
         }
     }
      
@@ -78,15 +78,14 @@ class BlogManager {
         	$stmt->execute(array( 'postid' => $postid, 'userid' => $userid, 'comment' => $comment, 'ip' => $ip));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un Commentaire");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un Commentaire.");
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_BLOG_POST . $postid);
+	        	apc_delete($this->apc_blog_post . $postid);
 	        }
-	        return true;//$this->_db->lastInsertId();     
+	        return true;  
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un Commentaire");
-        	return false;
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un Commentaire.");
         }
     }
     
@@ -106,7 +105,7 @@ class BlogManager {
     		$stmt->execute(array( 'id' => $cid));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir un commentaire specifie");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir un commentaire sp&eacute;cifi&eacute;.");
     		}
     		$data = $stmt->fetch(PDO::FETCH_ASSOC);
     		if(empty($data)){
@@ -115,7 +114,7 @@ class BlogManager {
     		$comm = new BlogComment($data);
     		return $comm;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir un commentaire specifie");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir un commentaire sp&eacute;cifi&eacute;.");
     	}
     }
     
@@ -129,8 +128,8 @@ class BlogManager {
      * @throws NullObjectException : this exception is raised when the specified Object didn't exist
      */
     public function getPost($id){
-    	if($this->_apc && apc_exists(self::APC_BLOG_POST . $id)){
-    		return apc_fetch(self::APC_BLOG_POST . $id);
+    	if($this->_apc && apc_exists($this->apc_blog_post . $id)){
+    		return apc_fetch($this->apc_blog_post . $id);
     	}else{  		
 	    	try {
 	    		$sql = "SELECT P.id as id, P.timestamp as date, P.content as content, U.username as author, P.title as title FROM blog_post P, user U WHERE P.id = :id AND U.id = P.userid  LIMIT 1";
@@ -138,7 +137,7 @@ class BlogManager {
 		        $stmt->execute(array( 'id' => $id));
 				if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir un post specifie");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir un post sp&eacute;cifi&eacute;.");
 			    }
 				$data = $stmt->fetch(PDO::FETCH_ASSOC);
 				if(empty($data)){
@@ -147,11 +146,11 @@ class BlogManager {
 		        $post = new BlogPost($data);
 		        $post->setComments($this->getListCommentPost($id));
 		        if($this->_apc){
-		        	apc_store(self::APC_BLOG_POST . $id, $post, 86000);
+		        	apc_store($this->apc_blog_post . $id, $post, 86000);
 		        }
 		     	return $post;
 	    	}catch(PDOException $e){
-	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir un post specifie");
+	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir un post sp&eacute;cifi&eacute;.");
 	        }	
     	}
     }
@@ -171,7 +170,7 @@ class BlogManager {
 	        $stmt->execute();
 			if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les derniers posts");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les derniers posts.");
 		    }
     		$list = array();
 	         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){   	
@@ -179,7 +178,7 @@ class BlogManager {
 	         } 
 	     	return $list;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les derniers posts");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les derniers posts.");
         }	
     }
     
@@ -197,7 +196,7 @@ class BlogManager {
     		$stmt->execute();
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le dernier post");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le dernier post.");
     		}
     		$data = $stmt->fetch(PDO::FETCH_ASSOC);
     		if(empty($data)){
@@ -206,7 +205,7 @@ class BlogManager {
     		$post = new BlogPost($data);
     		return $post;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le dernier post");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le dernier post.");
     	}
     }
     
@@ -225,7 +224,7 @@ class BlogManager {
 	         $stmt->execute();
 	         if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des posts");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des posts.");
 		     }    
 	    	 $list = array();
 	         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){   	
@@ -233,7 +232,7 @@ class BlogManager {
 	         }   
 	         return $list;
       	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des posts");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des posts.");
         }
     }
     
@@ -252,7 +251,7 @@ class BlogManager {
 		         $stmt->execute(array('id' => $postid));
 		         if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires.");
 			     }    
 		         $i = 0;
 		    	 $list = array();
@@ -261,7 +260,7 @@ class BlogManager {
 		         }
 		      	return $list;
 	      	}catch(PDOException $e){
-	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des blogcomments");
+	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires.");
 	        }
     	
     }
@@ -282,14 +281,14 @@ class BlogManager {
 	        $n = $stmt->execute(array('title' => $title, 'content' => $content, 'id' => $id));
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour.");
 		    }
 		    if($this->_apc){
-		    	apc_delete(self::APC_BLOG_POST . $id);
+		    	apc_delete($this->apc_blog_post . $id);
 		    }
 			return ($n > 0);
  		}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour.");
         }
     }
     
@@ -304,18 +303,18 @@ class BlogManager {
     	try {
 	    	if($this->_apc){
 	    		$comm = $this->getComment($comid);
-		       	apc_delete(self::APC_BLOG_POST . $comm->getPostid());
+		       	apc_delete($this->apc_blog_post . $comm->getPostid());
 		   	}
         	$sql = "DELETE FROM blog_comment WHERE id= :id";
 	        $stmt = $this->_db->prepare($sql);
         	$stmt->execute(array( 'id' => $comid));
         	if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer un commentaire");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer un commentaire.");
 	        }
 	        return true;      
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer un commentaire");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer un commentaire.");
         	return false;
         }
     }
@@ -335,14 +334,14 @@ class BlogManager {
         	$stmt->execute(array( 'id' => $pid));
         	if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer un post");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer un post.");
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_BLOG_POST . $pid);
+	        	apc_delete($this->apc_blog_post . $pid);
 	        }
 	        return true;      
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer un post");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer un post.");
         	return false;
         }
     }

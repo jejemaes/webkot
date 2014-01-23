@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ *
+ * @author jeromemaes
+ * 22 janv. 2014
+ */
+
 class Widget {
 	private $_id;
 	private $_name;
@@ -6,6 +13,7 @@ class Widget {
 	private $_infooter;
 	private $_module_name;
 	private $_module_location;
+	private $_classname;
 
 	private $_place;
 	
@@ -62,6 +70,9 @@ class Widget {
 	public function setPlace( $_place ){
 		$this->_place = $_place;
 	}
+	public function setClassname($_classname){
+		$this->_classname = $_classname;
+	}
 	
 
 	
@@ -85,5 +96,8 @@ class Widget {
 	}
 	public function getPlace(){
 		return $this->_place;
+	}
+	public function getClassname(){
+		return $this->_classname;
 	}
 }

@@ -6,8 +6,7 @@ class CommentManager {
 	private $_db; // Instance de Database
 	private $_apc;
 	
-	const APC_ACTIVITY_PICTURE_COMM = "activity-picture-comments-";
-	
+	public $apc_activity_picture_comm;
 
 	/**
 	 * GetInstance 
@@ -28,7 +27,10 @@ class CommentManager {
 	 */
    	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled'))  && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_activity_picture_comm = APC_PREFIX . "activity-picture-comments-";
+		}
     }
     
     
@@ -43,21 +45,21 @@ class CommentManager {
     public function add($data){
     	try {
         	$sql = "INSERT INTO comment(userid,pictureid,comment,ip) VALUES (:userid, :pictureid,:comment ,:ip)";
-	         $stmt = $this->_db->prepare($sql);
+	        $stmt = $this->_db->prepare($sql);
         	$stmt->execute(array( 'userid' => $data['userid'], 'pictureid' => $data['pictureid'], 'comment' => $data['comment'], 'ip' => $data['ip']));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un commentaire");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un commentaire.");
 	        }
     	 	if($this->_apc){
-	        	apc_delete(self::APC_ACTIVITY_PICTURE_COMM . $data['pictureid']);
-    	 		apc_delete(PictureManager::APC_ACTIVITY_LASTCOM);
+	        	apc_delete($this->apc_activity_picture_comm . $data['pictureid']);
+    	 		apc_delete(PictureManager::getInstance()->apc_activity_lastcomm);
     	 		$picture = PictureManager::getInstance()->getPicture($data['pictureid']);
-    	 		apc_delete(PictureManager::APC_ACTIVITY_PICTURES . $picture->getIdactivity());
+    	 		apc_delete(PictureManager::getInstance()->apc_activity_pictures . $picture->getIdactivity());
 	        }
 	        return true;       
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un commentaire");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un commentaire.");
         	return false;
         }
     }
@@ -78,7 +80,7 @@ class CommentManager {
     			$stmt->execute(array( 'id' => $id ));
     			if($stmt->errorCode() != 0){
     				$error = $stmt->errorInfo();
-    				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le Commentaire specifie");
+    				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le Commentaire spŽcifiŽ.");
     			}
     			$data = $stmt->fetch(PDO::FETCH_ASSOC);
     			if(empty($data)){
@@ -87,7 +89,7 @@ class CommentManager {
     			$comm = new Comment($data);
     			return $comm;
     		}catch(PDOException $e){
-    			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le Commentaire specifie");
+    			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le Commentaire spŽcifiŽ.");
     		}
     	
     }
@@ -111,17 +113,17 @@ class CommentManager {
         	$stmt->execute(array( 'id' => $comid));
         	if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une commentaire");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une commentaire.");
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_ACTIVITY_PICTURE_COMM . $tmp->getPictureid());
+	        	apc_delete($this->apc_activity_picture_comm . $tmp->getPictureid());
 	        	apc_delete(PictureManager::APC_ACTIVITY_LASTCOM);
 	        	$picture = PictureManager::getInstance()->getPicture($tmp->getPictureid());
 	        	apc_delete(PictureManager::APC_ACTIVITY_PICTURES . $picture->getIdactivity());
 	        }
 	        return true;      
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer un commentaire");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer un commentaire.");
         	return false;
         }
     }
@@ -135,8 +137,8 @@ class CommentManager {
      * @uses APC
      */
     public function getCommentsPicture($pictid){
-    	if($this->_apc && apc_exists(self::APC_ACTIVITY_PICTURE_COMM . $pictid)){
-    		return apc_fetch(self::APC_ACTIVITY_PICTURE_COMM . $pictid);
+    	if($this->_apc && apc_exists($this->apc_activity_picture_comm . $pictid)){
+    		return apc_fetch($this->apc_activity_picture_comm . $pictid);
     	}else{		
 	    	try{
 		        $sql = "SELECT C.id, C.pictureid, U.username as userid, C.comment, C.date, C.ip, C.rank FROM user U, comment C WHERE (C.userid = U.id) and (C.pictureid in (SELECT pictureid FROM comment WHERE pictureid = :pid)) ORDER BY date ASC";
@@ -144,18 +146,18 @@ class CommentManager {
 		         $stmt->execute(array( 'pid' => $pictid ));
 		         if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires.");
 			     }   
 		         $tab = array();
 		         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){  
 		         	$tab[] = new Comment($data); 
 		         } 
 		         if($this->_apc){
-		         	apc_store(self::APC_ACTIVITY_PICTURE_COMM . $pictid, $tab, 175000);
+		         	apc_store($this->apc_activity_picture_comm . $pictid, $tab, 175000);
 		         } 
 		         return $tab;
 	    	}catch(PDOException $e){
-	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires");
+	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires.");
 	        }
     	}
     }
@@ -175,7 +177,7 @@ class CommentManager {
 	         $stmt->execute(array( 'uid' => $uid ));
 	         if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires.");
 		     }   
 	         $list = array();
 	         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){  
@@ -183,7 +185,7 @@ class CommentManager {
 	         }  
 	         return $list;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires.");
         }
     }
     
@@ -201,7 +203,7 @@ class CommentManager {
 		    $stmt->execute(array( 'aid' => $aid ));
 		    if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-			    throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires");
+			    throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des commentaires.");
 		    }   
 		    $tab = array();
 		    while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -209,7 +211,7 @@ class CommentManager {
 		    }
 		    return $tab; 
 	    }catch(PDOException $e){
-		    throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires");
+		    throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des commentaires.");
 	    }
     }
     
@@ -254,41 +256,17 @@ class CommentManager {
 		    $stmt->execute(array('begin' => $begin . " 00:00:00", 'end' => $end . " 00:00:00"));
 		    if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-			    throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la nombre de commentaires");
+			    throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la nombre de commentaires.");
 		    }
 		    $nb = (int) $stmt->rowCount();   
 		    return $nb;
 	    }catch(PDOException $e){
-		    throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre de commentaire");
+		    throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre de commentaire.");
 	    }
     }
     
     
     
-    
-    /** add a User in th DB
-     * @param array $data : key-array containing all the information to complete the user Object
-     * @return boolean $b : true if the User was added, false otherwise
-     * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
-     * @throws NullObjectException : this exception is raised when the specified Object didn't exist
-     */
-    public function MigrCom($id,$userid,$pictureid,$comment,$rank,$ip,$date){
- 		try {
-        	$sql = "INSERT INTO comment(id, userid, pictureid, comment, rank, ip, date) " .
-        			"VALUES (:id,:userid, :pictureid, :comment, :rank, :ip, :date)";
-	        $stmt = $this->_db->prepare($sql);
-        	$stmt->execute(array('id'=>$id,'userid' => $userid, 'pictureid' => $pictureid, 'comment' => $comment, 'rank' => $rank, 'ip' => $ip, 'date' => $date));
-	        if($stmt->errorCode() != 0){
-		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une MyPicture");
-	        }
-	        return true;    
-        }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une MyPicture");
-        	return false;
-        }
-        
- 	}
-    
+  
 }
 ?>

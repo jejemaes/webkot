@@ -8,7 +8,7 @@ class VideoManager {
 	private $_db; // Instance of Database
 	private $_apc;
 	
-	const APC_VIDEO_LIST = 'video-list';
+	public $apc_video_list;
 
 	/**
 	 * getInstance 
@@ -28,7 +28,10 @@ class VideoManager {
 	 */
 	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_video_list = APC_PREFIX . 'video-list';
+		}
     }
     
     
@@ -54,8 +57,8 @@ class VideoManager {
     	//apply the request wiht max-resutlt = #nbr
     	// if the number isn't the same than the size of the array of Video Object in cache, then relaod it !
     	//+ add throw in case of error
-    	if($this->_apc && apc_exists(self::APC_VIDEO_LIST)){
-    		return apc_fetch(self::APC_VIDEO_LIST);
+    	if($this->_apc && apc_exists($this->apc_video_list)){
+    		return apc_fetch($this->apc_video_list);
     	}else{		
 	    	$videos = array();
 	    	$feedURL = 'https://gdata.youtube.com/feeds/api/users/'.$ytUserId.'/uploads?max-results=50';
@@ -66,7 +69,7 @@ class VideoManager {
 	    		$videos[$video->getId()] = $video;
 	    	}
 	    	if($this->_apc){
-	    		apc_store(self::APC_VIDEO_LIST, $videos, 86000);
+	    		apc_store($this->apc_video_list, $videos, 86000);
 	    	}
 	    	return $videos;
     	}
@@ -97,8 +100,8 @@ class VideoManager {
     
     
     public function flushApc(){
-    	if($this->_apc && apc_exists(self::APC_VIDEO_LIST)){
-	    	return apc_delete(self::APC_VIDEO_LIST);
+    	if($this->_apc && apc_exists($this->apc_video_list)){
+	    	return apc_delete($this->apc_video_list);
     	}else{
 	    	return false;
     	}

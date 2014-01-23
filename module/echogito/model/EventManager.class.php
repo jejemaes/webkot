@@ -39,15 +39,16 @@ class EventManager {
 	 * @param string $location : the location of the event
 	 * @param int $facebookid : the facebook identifier of the event, if there is one
 	 * @param int $isapproved : '0' or '1' for the approvement of the Event
-	 * @param int $catid : the category identifier of the Evetn
+	 * @param int $catid : the category identifier of the Event
+	 * @param string $organizer : the organizer of the event
 	 * @throws SQLException : this exception is raised if the Query is refused
 	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
 	 */
-	public function add($name,$descri,$starttime,$location,$facebookid, $isapproved, $catid){
+	public function add($name,$descri,$starttime,$location,$facebookid, $isapproved, $organizer, $catid){
 		try {
-			$sql = "INSERT INTO echogito_event (name, description, start_time, location, facebookid, isapproved, categoryid) VALUES (:name, :descri, :starttime, :location, :facebookid, :isapproved, :categoryid)";
+			$sql = "INSERT INTO echogito_event (name, description, start_time, location, facebookid, isapproved, categoryid, organizer) VALUES (:name, :descri, :starttime, :location, :facebookid, :isapproved, :categoryid, :organizer)";
 			$stmt = $this->_db->prepare($sql);
-			$stmt->execute(array( 'name' => $name, 'descri' => $descri, 'starttime' => $starttime, 'location' => $location, 'facebookid' => $facebookid, 'isapproved' => $isapproved, 'categoryid' => $catid));
+			$stmt->execute(array( 'name' => $name, 'descri' => $descri, 'starttime' => $starttime, 'location' => $location, 'facebookid' => $facebookid, 'isapproved' => $isapproved, 'categoryid' => $catid, "organizer" => $organizer));
 			var_dump($stmt->errorInfo());
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
@@ -79,7 +80,7 @@ class EventManager {
 			$stmt->execute(array('id' => $id));
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir l'event spécifié.");
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir l'event sp&eacute;cifi&eacute;.");
 			}
 			$data = $stmt->fetch(PDO::FETCH_ASSOC);
 			if(empty($data)){
@@ -88,25 +89,27 @@ class EventManager {
 	        $event = new Event($data);
 			return $event;
 		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir l'event spécifié.");
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir l'event sp&eacute;cifi&eacute;.");
 		}
 	}
 	
 	
 	/**
-	 * get the unapproved event
+	 * get the unapproved event after a given date
+	 * @param string $date : the date (start query period) in the YYY-MM-DD format
 	 * @throws SQLException : this exception is raised if the Query is refused
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made 
 	 * @return array : an array of Event Objects
 	 */
-	public function getUnapprovedEvent(){
+	public function getUnapprovedEvent($date){
 		try {
-			$sql = 'SELECT * FROM echogito_event E WHERE E.isapproved = \'0\' ORDER BY E.start_time ASC';
+			$sql = 'SELECT * FROM echogito_event E WHERE E.isapproved = \'0\' AND start_time > :date ORDER BY E.start_time ASC';
 			$stmt = $this->_db->prepare($sql);
+			$stmt->bindValue(':date', $date );
 			$stmt->execute();
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les events non approuvés.");
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les events non approuv&eacute;s.");
 			}
 			$events = array();
 			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -114,8 +117,14 @@ class EventManager {
 			}
 			return $events;
 		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les events non approuvés.");
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les events non approuv&eacute;s.");
 		}
+	}
+	
+	
+	
+	public function getCountUnapprovedEvent($date){
+		return count($this->getUnapprovedEvent($date));
 	}
 	
 	
@@ -162,7 +171,7 @@ class EventManager {
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made  
 	 * @return array $events : an array of Event Objects
 	 */
-	public function getEventsAfter($date, $takeUnapproved, $limitStart = null, $limitEnd = null){
+	public function getEventsAfter($date, $takeUnapproved, $limitStart = 0, $limitEnd = null){
 		try {
 			if($takeUnapproved){
 				//$sql = 'SELECT * FROM echogito_event E WHERE E.start_time > :date ORDER BY E.start_time ASC';
@@ -181,19 +190,22 @@ class EventManager {
 					WHERE E.start_time > :date AND E.isapproved = \'1\' ORDER BY E.start_time, C.name ASC';
 					
 			}
-			if($limitStart && $limitEnd){
+			if(!empty($limitEnd)){
 				$sql .= ' LIMIT :limitStart, :limitEnd';
 			}
 			$stmt = $this->_db->prepare($sql);
-			$stmt->bindValue(':date', $date );
-			if($limitStart && $limitEnd){
+			if(!empty($limitEnd)){
+				$stmt->bindValue(':date', $date, PDO::PARAM_STR );
 				$stmt->bindValue(':limitStart', $limitStart, PDO::PARAM_INT );
-				$stmt->bindValue(':limitEnd', $limitEnd, PDO::PARAM_INT );
+				$stmt->bindValue(':limitEnd', $limitEnd, PDO::PARAM_INT);
+				$stmt->execute();//array('date'=>$date, 'limitStart' => $limitStart, 'limitEnd' => $limitEnd)
+			}else{
+				$stmt->bindValue(':date', $date, PDO::PARAM_STR );
+				$stmt->execute();
 			}
-			$stmt->execute();
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les events après ".$date.".");
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les events apr&egrave;s ".$date.".");
 			}
 			$events = array();
 			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -213,22 +225,24 @@ class EventManager {
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made  
 	 * @return int $data : the number of Event having a strat_time higher than the given date
 	 */
-	public function getCountEventsAfter($date){
+	public function getCountEventsAfter($date, $takeUnapproved){
 		try {
 			$sql = 'SELECT count(*) FROM echogito_event E WHERE E.start_time > :date';
-			
+			if(!$takeUnapproved){
+				$sql .= ' AND E.isapproved = \'1\'';
+			}
 			$stmt = $this->_db->prepare($sql);
 			$stmt->bindValue(':date', $date );
 			
 			$stmt->execute();
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'event apres une date donnee.");
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'event apres une date donn&eacute;e.");
 			}
 			$data = (int) $stmt->fetchColumn();
 	        return $data;
 		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'event apres une date donnee.");
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'event apres une date donn&eacute;e.");
 		}
 	}
 	
@@ -268,6 +282,29 @@ class EventManager {
 	}
 	
 	/**
+	 * Update the category of an Event in the DB.
+	 * @param int $id : the id of the row (Event)
+	 * @param int $categoryid : the identifier of the category
+	 * @throws SQLException : this exception is raised if the Query is refused
+	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
+	 */
+	public function updateCategoryid($id, $categoryid){
+		try{
+			$sql = "UPDATE echogito_event SET categoryid = :catid WHERE id=:id";
+			$stmt = $this->_db->prepare($sql);
+			$n = $stmt->execute(array('catid' => $categoryid, 'id' => $id));
+			if($stmt->errorCode() != 0){
+				$error = $stmt->errorInfo();
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour de la cat&eacute;gorie.");
+			}
+			return ($n > 0);
+		}catch(PDOException $e){
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour de la cat&eacute;gorie.");
+		}
+	}
+	
+	
+	/**
 	 * Update the Event in the DB.
 	 * @param int s$id : the id of the row (Event)
 	 * @param string $title : the name of the event
@@ -279,11 +316,11 @@ class EventManager {
 	 * @throws SQLException : this exception is raised if the Query is refused
 	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
 	 */
-	public function update($id, $title, $descri, $date, $location, $facebookid, $categoryid){
+	public function update($id, $title, $descri, $date, $location, $facebookid, $categoryid, $organizer){
 		try{
-			$sql = "UPDATE echogito_event SET name = :title, description = :descri, start_time = :date, location = :loc, facebookid = :facebookid, categoryid = :categoryid WHERE id=:id";
+			$sql = "UPDATE echogito_event SET name = :title, description = :descri, start_time = :date, location = :loc, facebookid = :facebookid, categoryid = :categoryid, organizer = :organizer WHERE id=:id";
 			$stmt = $this->_db->prepare($sql);
-			$n = $stmt->execute(array('title' => $title, 'descri' => $descri,'date' => $date, 'loc' => $location, 'facebookid' => $facebookid, 'categoryid' => $categoryid, 'id' => $id));
+			$n = $stmt->execute(array('title' => $title, 'descri' => $descri,'date' => $date, 'loc' => $location, 'facebookid' => $facebookid, 'categoryid' => $categoryid, 'organizer' => $organizer, 'id' => $id));
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
 				throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour.");

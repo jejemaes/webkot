@@ -356,7 +356,7 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 			}
 			$view->pageLog($logs);
 		}else{
-			throw new AccessRefusedException("Vous ne pouvez pas lire les logs du systÃ¨me.");
+			throw new AccessRefusedException("Vous ne pouvez pas lire les logs du systeme.");
 		}
 	}
 	
@@ -370,6 +370,43 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 		
 		if(isset($_GET['action']) && !empty($_GET['action'])){
 			switch ($_GET['action']) {
+				case 'add':
+					if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-add-widget' )) {
+						$message = new Message(1);
+						$wmanager = WidgetManager::getInstance();
+						if(isset($_POST['widget-input-name']) && isset($_POST['widget-input-active']) && isset($_POST['widget-input-infooter'])){
+							if(!empty($_POST['widget-input-name']) && is_numeric($_POST['widget-input-active']) && is_numeric($_POST['widget-input-infooter'])){
+								$wmanager->addWidget($_POST['widget-input-name'], $_POST['widget-input-infooter'], $_POST['widget-input-active'], $_POST['widget-input-class'], $_POST['widget-input-module']);
+								$message->addMessage("Widget ajout avec succes.");
+									
+								$SMM = SessionMessageManager::getInstance();
+								$SMM->setSessionMessage($message);
+								URLUtils::redirection(URLUtils::generateURL($module->getName(), array('part'=>'widgets')));
+							}else{
+								$message->setType(3);
+								$message->addMessage("Au moins un des champs requis est vide !");
+							}
+						}
+						
+						$existing = system_get_directory_content(DIR_WIDGET);
+						$added = $wmanager->getAllGenericWidgets();
+						$classes = array();
+						foreach ($added as $w){
+							$classes[] = $w->getClassname();//str_replace(".class.php", "", $w->getClassname());
+						}
+						$potentials = array();
+						foreach ($existing as $w){
+							if(!in_array(str_replace(".class.php", "", $w), $classes)){
+								$potentials[] = str_replace(".class.php", "", $w);
+							}
+						}
+						
+						$modules = ModuleManager::getInstance()->getAllModule();
+						$view->pageWidgetAddForm($message, $modules, $potentials);
+					}else{
+						throw new AccessRefusedException("Vous ne pouvez pas editer les Widgets.");
+					}
+					break;
 				case "edit":
 					if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-edit-widget' )) {
 						if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
@@ -406,13 +443,7 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 						throw new AccessRefusedException("Vous ne pouvez pas editer les Widgets.");
 					}	
 					break;
-				case "add":
-					if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-add-widget' )) {
-						echo "add";
-					}else{
-						throw new AccessRefusedException("Vous ne pouvez pas editer les Widgets.");
-					}
-					break;
+				
 				case "place":
 					if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-place-widget' )) {	
 						$message = new Message(1);

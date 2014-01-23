@@ -8,7 +8,7 @@ class OptionManager{
 	private $_apc;
 	private $_optionsArray;
 	
-	const APC_OPTIONS = "options";
+	public $apc_options;
 
 	
 	/**
@@ -27,7 +27,10 @@ class OptionManager{
 	
 	public function  __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) && APC_ACTIVE ? true : false);
+		if($this->apc_options){
+			$this->apc_options = APC_PREFIX . "options";
+		}
 		$options = $this->getOptions();
 		$tmp = array();
 		foreach ($options as $option){
@@ -52,8 +55,8 @@ class OptionManager{
 	
 	
 	public function getOptions(){
-		if(false && $this->_apc && apc_exists(self::APC_OPTIONS)){
-			return apc_fetch(self::APC_OPTIONS);
+		if(false && $this->_apc && apc_exists($this->apc_options)){
+			return apc_fetch($this->apc_options);
 		}else{
 			try {
 				$sql = "SELECT * FROM options ORDER BY options.key ASC";
@@ -68,7 +71,7 @@ class OptionManager{
 					$options[] = new Option($data);
 				}
 				if($this->_apc){
-					apc_store(self::APC_OPTIONS, $options, 86000);
+					apc_store($this->apc_options, $options, 86000);
 				}
 				return $options;
 			}catch(PDOException $e){
@@ -110,7 +113,7 @@ class OptionManager{
 				}
 			}
 			if($this->_apc){
-				apc_delete(self::APC_OPTIONS);
+				apc_delete($this->apc_options);
 			}
 			return ($n > 0);
 		}catch(PDOException $e){

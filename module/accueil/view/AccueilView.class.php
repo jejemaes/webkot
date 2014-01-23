@@ -174,7 +174,7 @@ class AccueilView extends View implements iView{
 		}
 		
 		
-        if($video){    	
+        if($video->getId()){    	
 			$HTML .= '  <div class="section">
 	      <div class="container">
 	        <div class="row">

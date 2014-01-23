@@ -9,8 +9,8 @@ class StatManager{
 	private $_apc;
 	
 	
-	const APC_ACTIVITY_TEAM_STAT = "statistics-team-";
-	const APC_ACTIVITY_ACTI_STAT = "statistics-years-total";
+	public $apc_activity_team_stat;
+	public $apc_activity_acti_stat;
 	
 	/**
 	 * getInstance
@@ -30,7 +30,11 @@ class StatManager{
 	 */
 	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled'))  && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_activity_team_stat = APC_PREFIX . "statistics-team-";
+			$this->apc_activity_acti_stat = APC_PREFIX . "statistics-years-total";
+		}
 	}
 	
 	
@@ -69,8 +73,8 @@ class StatManager{
 	 * @return array $stats : an array of StatUser Object
 	 */
 	public function getStatTeam($year){
-		if($this->_apc && apc_exists(self::APC_ACTIVITY_TEAM_STAT . $year)){
-			return apc_fetch(self::APC_ACTIVITY_TEAM_STAT . $year);
+		if($this->_apc && apc_exists($this->apc_activity_team_stat . $year)){
+			return apc_fetch($this->apc_activity_team_stat . $year);
 		}else{
 			try{
 				$sql = 'SELECT startYear as year, username as username, name as name, firstname as firstname, activities as stat FROM statistics_author WHERE startYear = :year';
@@ -78,18 +82,18 @@ class StatManager{
 				$stmt->execute(array( 'year' => $year));
 				if($stmt->errorCode() != 0){
 					$error = $stmt->errorInfo();
-					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les stats de l'Žquipe de l'annŽe " . $year);
+					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les stats de l'&eacute;quipe de l'ann&eacute;e " . $year);
 				}
 				$stats = array();
 	    		while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
 	    			$stats[] = new StatUser($data);
 	    		}
 				if($this->_apc){
-					apc_store(self::APC_ACTIVITY_TEAM_STAT . $year, $stats, 7200);
+					apc_store($this->apc_activity_team_stat . $year, $stats, 7200);
 				}
 	    		return $stats;
 			}catch(PDOException $e){
-				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats de l'Žquipe de l'annŽe " . $year);
+				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats de l'&eacute;quipe de l'ann&eacute;e " . $year);
 			}	
 		}
 	}
@@ -105,9 +109,8 @@ class StatManager{
 	 * @return array $stats : an array of StatActivity Object
 	 */
 	public function getAllStatActivity(){
-		
-		if($this->_apc && apc_exists(self::APC_ACTIVITY_ACTI_STAT)){
-			return apc_fetch(self::APC_ACTIVITY_ACTI_STAT);
+		if($this->_apc && apc_exists($this->apc_activity_acti_stat)){
+			return apc_fetch($this->apc_activity_acti_stat);
 		}else{
 			try{
 				$sql = 'SELECT startYear as year, activities as activities, pictures as pictures, comments as comments FROM statistics_year ORDER BY startYear ASC';
@@ -115,125 +118,20 @@ class StatManager{
 				$stmt->execute();
 				if($stmt->errorCode() != 0){
 					$error = $stmt->errorInfo();
-					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les stats de toutes les annŽes.");
+					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les stats de toutes les ann&eacute;es.");
 				}
 				$stats = array();
 				while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
 					$stats[] = new StatActivity($data);
 				}
 				if($this->_apc){
-					apc_store(self::APC_ACTIVITY_ACTI_STAT, $stats, 7200);
+					apc_store($this->apc_activity_acti_stat, $stats, 7200);
 				}
 				return $stats;
 			}catch(PDOException $e){
-				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats de toutes les annŽes.");
+				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats de toutes les ann&eacute;es.");
 			}
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//####################################
-	
-	/**
-	 * get the number of activity for a given User, in a given Period
-	 * @param int $userid : the user identifier
-	 * @param date $startDate : the beginning of the period
-	 * @param date $endDate : the end of the period
-	 * @throws SQLException : this exception is raised if the Query is refused
-     * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
-	 * @throws NullObjectException : this exception is raised if their is no data for the given parameters
-	 * @return number : the number of Activity for the specified userid, in the given period
-	 */
-	/*public function getStatUser($userid, $startDate, $endDate){
-		try{
-			$sql = 'SELECT count(id) as stat FROM `statistics` WHERE date > :begin AND date < :end AND userid = :userid';
-			$stmt = $this->_db->prepare($sql);
-			$stmt->execute(array( 'userid' => $userid, 'begin' => $startDate, 'end' => $endDate));
-			if($stmt->errorCode() != 0){
-				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les stats d'un user specifie");
-			}
-			$data = $stmt->fetch(PDO::FETCH_ASSOC);
-			if(empty($data)){
-				throw new NullObjectException();
-			}
-			$nb = (int) $data['stat'];
-	        return $nb;		
-		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats d'un user specifie");
-		}
-	}
-	*/
-	
-	/**
-	 * get the Authors of a given Period
-	 * @param date $startDate : the beginning of the period
-	 * @param date $endDate : the end of the period
-	 * @throws SQLException : this exception is raised if the Query is refused
-     * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
-	 * @return array $authors : array of key-array containing each the informations of the author
-	 */
-/*	public function getAuthorsPeriod($startDate, $endDate){
-		try{
-			$sql = 'SELECT distinct userid, username, name, firstname FROM `statistics` WHERE date >= :begin AND date < :end';
-			$stmt = $this->_db->prepare($sql);
-			$stmt->execute(array( 'begin' => $startDate, 'end' => $endDate));
-			if($stmt->errorCode() != 0){
-				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les stats d'un user specifie");
-			}
-			$authors = array();
-    		while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-    			$authors[] = $data;
-    		}
-    		return $authors;	
-		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats d'un user specifie");
-		}
-	}
-*/
-	
-
-	
-	
-	/*
-	public function getStatActivitiesPeriod($startDate, $endDate){	
-		$arr = preg_split("/[-]+/", $startDate);
-		$id = $arr[0];
-		
-		if($this->_apc && apc_exists(self::APC_ACTIVITY_PICT_STAT . $id)){
-			return apc_fetch(self::APC_ACTIVITY_PICT_STAT . $id);
-		}else{
-			try{
-				$sql = 'SELECT count(F.id) as activities, sum(F.pictures) as pictures, sum(F.comments) as comments FROM (SELECT distinct id, title, date, pictures, comments FROM statistics WHERE date >= :begin AND date < :end) as F';
-				$stmt = $this->_db->prepare($sql);
-				$stmt->execute(array( 'begin' => $startDate, 'end' => $endDate));
-				if($stmt->errorCode() != 0){
-					    $error = $stmt->errorInfo();
-				        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une activite specifiee");
-				}
-				$data = $stmt->fetch(PDO::FETCH_ASSOC);
-				if(empty($data)){
-					throw new NullObjectException();
-				}
-				if($this->_apc){
-					apc_store(self::APC_ACTIVITY_PICT_STAT . $id, $data, 172000);
-				}
-	    		return $data;	
-			}catch(PDOException $e){
-				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les stats par annee.");
-			}	
-		}
-	}
-	*/
-
 }

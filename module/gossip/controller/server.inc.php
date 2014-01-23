@@ -15,7 +15,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 					$gmanager = GossipManager::getInstance();
 					$list = $gmanager->getListGossip($limit, $nbr);
 					
-					$html = gossip_html_list($list, $_REQUEST['num']);
+					$html = gossip_html_list($list, $_REQUEST['num'], $module->getName());
 					
 					echo $html;
 				}else{

@@ -21,7 +21,9 @@ class ActivityManager {
 	const APC_ACTIVITY_ACTIVITY = 'activity-activity-';
 	const APC_ACTIVITY_LIST = 'activity-activity-list-';
 	
-
+	public $apc_activity_activity;
+	public $apc_activity_list;
+	
 	/**
 	 * getInstance 
 	 * @return ActivityManager $instance : the instance of ActivityManager
@@ -40,7 +42,11 @@ class ActivityManager {
 	 */
    	public function __construct(){
 		$this->_db = Database::getInstance();
-		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) ? true : false);
+		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled'))  && APC_ACTIVE ? true : false);
+		if($this->_apc){
+			$this->apc_activity_activity = APC_PREFIX . 'activity-activity-';
+			$this->apc_activity_list = APC_PREFIX . 'activity-activity-list-';
+		}
     }
     
     
@@ -59,13 +65,12 @@ class ActivityManager {
         	$stmt->execute(array( 'title' => $title, 'descri' => $descri, 'date' => $date, 'directory' => $directory, 'privilegeid' => $privilegeid));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une activit&eacute;");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une activit&eacute;.");
 	        }
 	        $this->apcDeleteActivityLists();
 	        return $this->_db->getPDOInstance()->lastInsertId();     
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une activit&eacute;");
-        	return false;
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une activit&eacute;.");
         }
     }
     
@@ -85,17 +90,14 @@ class ActivityManager {
         	$stmt->execute(array( 'aid' => $aid, 'uid' => $uid));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un autheur");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un auteur.");
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_ACTIVITY_ACTIVITY . $aid);
-	        	/*$arr = preg_split("/[-]+/", $activity->getDate());
-	        	$id = $arr[0];
-	        	apc_delete(StatManager::APC_ACTIVITY_USER_STAT.$id);*/
+	        	apc_delete($this->apc_activity_activity . $aid);
 	        }
 	        return true;     
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un auteur");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter un auteur.");
         }
     }
 
@@ -113,7 +115,7 @@ class ActivityManager {
     		$stmt->execute(array('activityid' => $aid));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des authors");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des auteurs.");
     		}
     		$authors = array();
     		while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -121,7 +123,7 @@ class ActivityManager {
     		}
     		return $authors;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des authors");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des auteurs.");
     	}
     }
     
@@ -140,11 +142,11 @@ class ActivityManager {
     		$stmt->execute(array( 'aid' => $aid));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activit&eacute;");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activit&eacute;.");
     		}
     		return true;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activit&eacute;");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activit&eacute;.");
     		return false;
     	}
     }
@@ -167,15 +169,15 @@ class ActivityManager {
         	$stmt->execute(array( 'id' => $aid));
         	if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activit&eacute;");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible de supprimer une activit&eacute;.");
 	        }
 	        if($this->_apc){
-	        	apc_delete(self::APC_ACTIVITY_ACTIVITY . $aid);
+	        	apc_delete($this->apc_activity_activity . $aid);
 		       	$this->apcDeleteActivityLists();
 	        }
 	        return true;       
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activit&eacute;");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible de supprimer une activit&eacute;.");
         	return false;
         }
     }
@@ -193,23 +195,23 @@ class ActivityManager {
      */
     public function getActivity($id, $level){
     	try {
-    		if($this->_apc && apc_exists(self::APC_ACTIVITY_ACTIVITY . $id)){
-    			$activity = apc_fetch(self::APC_ACTIVITY_ACTIVITY . $id);
+    		if($this->_apc && apc_exists($this->apc_activity_activity . $id)){
+    			$activity = apc_fetch($this->apc_activity_activity . $id);
     		}else{	
 	    		$sql = "SELECT A.*, P.level as level FROM activity A, privilege P WHERE A.privilege = P.id AND A.id = :id AND P.level <= :level LIMIT 1";
 		       	$stmt = $this->_db->prepare($sql);
 		        $stmt->execute(array( 'id' => $id, 'level' => $level));
 				if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une activit&eacute; specifiee");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une activit&eacute; sp&eacute;cifi&eacute;e.");
 			    }
 				$data = $stmt->fetch(PDO::FETCH_ASSOC);
 				if(empty($data)){
-					throw new NullObjectException("Aucune activit&eacute; n'as &eacute;t&eacute; trouv&eacute;e avec l'identifiant ".$id);
+					throw new NullObjectException("Aucune activit&eacute; n'as &eacute;t&eacute; trouv&eacute;e avec l'identifiant ".$id.".");
 				}
 		        $activity = new Activity($data);
 		        if($this->_apc){
-		        	apc_store(self::APC_ACTIVITY_ACTIVITY . $id, $activity, 86000);
+		        	apc_store($this->apc_activity_activity . $id, $activity, 86000);
 		        }
     		}
 		    //set the pictures
@@ -220,7 +222,7 @@ class ActivityManager {
 	        $activity->setAuthors($this->getAuthors($id));     
 	     	return $activity;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir une activit&eacute; specifiee");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir une activit&eacute; sp&eacute;cifi&eacute;e.");
         }	
     
     }
@@ -234,12 +236,12 @@ class ActivityManager {
      */
     public function getLastActivity($nbr, $level = 0){
     	try {
-		    $sql = 'SELECT A.id as id, A.title as title, A.description as description, A.date as date, A.directory as directory, R.level as level, A.viewed as viewed, count(P.id) as count, A.ispublished as ispublished FROM activity A, picture P, privilege R WHERE R.id = A.privilege AND P.idactivity=A.id AND R.level <= :level AND A.ispublished =\'1\' GROUP BY A.id ORDER BY date DESC LIMIT 0,' . $nbr;
+		    $sql = 'SELECT A.id as id, A.title as title, A.description as description, A.date as date, A.directory as directory, R.level as level, A.viewed as viewed, (SELECT count(P.id) FROM picture P WHERE P.idactivity = A.id) as count, A.ispublished as ispublished FROM activity A, privilege R WHERE R.id = A.privilege AND R.level <= :level AND A.ispublished =\'1\' GROUP BY A.id ORDER BY date DESC LIMIT 0,' . $nbr;
 	    	$stmt = $this->_db->prepare($sql);
 	    	$stmt->execute(array('level' => $level));  
 	    	if($stmt->errorCode() != 0){
 		    	$error = $stmt->errorInfo();
-		    	throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les dernieres activit&eacute;s");
+		    	throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les derni&egrave;res activit&eacute;s.");
 	    	} 
 	    	$manager = PictureManager::getInstance();
 	    	$activi = array();
@@ -251,7 +253,7 @@ class ActivityManager {
 	    	}   
 	    	return $activi;	
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les dernieres activit&eacute;s");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les derni&egrave;res activit&eacute;s.");
         }
     }
     
@@ -265,8 +267,8 @@ class ActivityManager {
      * @uses APC
      */
     public function getListActivity($level){
-    	if($this->_apc && apc_exists(self::APC_ACTIVITY_LIST . $level)){
-    		return apc_fetch(self::APC_ACTIVITY_LIST . $level);
+    	if($this->_apc && apc_exists($this->apc_activity_list . $level)){
+    		return apc_fetch($this->apc_activity_list . $level);
     	}else{		
 	      	try{
 		    	 $sql = "SELECT A.*, P.level FROM activity A, privilege P WHERE P.id = A.privilege AND P.level <= :level AND ispublished = '1' ORDER BY date DESC";
@@ -274,7 +276,7 @@ class ActivityManager {
 		         $stmt->execute(array('level' => $level));
 		         if($stmt->errorCode() != 0){
 				    $error = $stmt->errorInfo();
-			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s publiees");
+			        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s publi&eacute;es.");
 			     }    
 		         $i = 0;
 		    	 $activi = array();
@@ -282,11 +284,11 @@ class ActivityManager {
 		         	$activi[] = new Activity($data);
 		         } 
 		         if($this->_apc){
-		         	apc_store(self::APC_ACTIVITY_LIST . $level, $activi, 43000);
+		         	apc_store($this->apc_activity_list . $level, $activi, 43000);
 		         }  
 		         return $activi;
 	      	}catch(PDOException $e){
-	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s publiees");
+	        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s publi&eacute;es.");
 	        }
     	}
     }
@@ -307,7 +309,7 @@ class ActivityManager {
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s non publi�es");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s non publi&eacute;es.");
     		}
     		$i = 0;
     		$activi = array();
@@ -316,7 +318,7 @@ class ActivityManager {
     		}
     		return $activi;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s non publi�es");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s non publi&eacute;es.");
     	}
     }
     
@@ -335,7 +337,7 @@ class ActivityManager {
 	        $stmt->execute(array('year' => $year."-".BEGINYEAR_MONTH."-".BEGINYEAR_DAY , 'year2' => ($year+1)."-".BEGINYEAR_MONTH."-".BEGINYEAR_DAY , 'level' => $level));   
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s par annee");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des activit&eacute;s par ann&eacute;e.");
 		    }
 	        $manager = PictureManager::getInstance();
 	    	$activi = array();
@@ -347,7 +349,7 @@ class ActivityManager {
 	        }   
 	        return $activi;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s par annee");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des activit&eacute;s par ann&eacute;e.");
         }
     }
     
@@ -366,7 +368,7 @@ class ActivityManager {
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir les dernieres activit&eacute;s");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une liste d'activit&eacute;s.");
     		}
     		$activi = array();
     		while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -374,7 +376,7 @@ class ActivityManager {
     		}
     		return $activi;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir les dernieres activit&eacute;s");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir une liste d'activit&eacute;s.");
     	}
     }
     
@@ -394,12 +396,12 @@ class ActivityManager {
 	    	$stmt->execute(array('begin' => $begin, 'end' => $end, 'level' => $level));
 	    	if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute;");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute;.");
 		    }  
 	        $data = (int) $stmt->fetchColumn();
 	        return $data;
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute;");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute;.");
         }
     }
     
@@ -416,12 +418,12 @@ class ActivityManager {
     		$stmt->execute(array('level' => $level));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute;");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute;.");
     		}
     		$data = (int) $stmt->fetchColumn();
     		return $data;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute;");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute;.");
     	}
     }
     
@@ -439,14 +441,14 @@ class ActivityManager {
 	        $stmt->execute();
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des dossiers");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des dossiers.");
 		    }    
 	        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){   	
 	         	$rep[] = $data['directory'];
 	        }   
 	        return $rep;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des dossiers");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des dossiers.");
         }
     }
     
@@ -466,7 +468,7 @@ class ActivityManager {
     		$stmt->execute(array('directory' => $directory));
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des dossiers");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des dossiers.");
     		}
     		$acti = array();
     		while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -474,7 +476,7 @@ class ActivityManager {
     		}
     		return $acti;
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des dossiers");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des dossiers.");
     	}
     }
    
@@ -493,7 +495,7 @@ class ActivityManager {
 	        $stmt->execute(array( 'text' => '%'.$textsearch.'%' ));
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le resultat de la recherche");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le resultat de la recherche.");
 		    }
 			$activi = array();
 			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){   	
@@ -501,7 +503,7 @@ class ActivityManager {
 	        }   
 	        return $activi;
 		}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le resutlat de la recherche");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le resutlat de la recherche.");
         }
     }
     
@@ -555,12 +557,12 @@ class ActivityManager {
 	        $stmt->execute(array('begin' => $begin, 'end' => $end));
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute; pendant la periode donnee");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir le nombre d'activit&eacute; pendant la p&eacute;riode donn&eacute;e.");
 		    }
 			$nb = (int) $stmt->rowCount();   
 	        return $nb;
     	}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute; pendant la periode donnee");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir le nombre d'activit&eacute; pendant la p&eacute;riode donn&eacute;e.");
         }
     }
    
@@ -584,15 +586,15 @@ class ActivityManager {
 	        $n = $stmt->execute(array('title' => $title, 'descri' => $descri,'date' => $date, 'privilegeid' => $privilegeid, 'id' => $id));
 	        if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'&eacute;ffectuer la mise a jour.");
 		    }
 		    if($this->_apc){
 		    	$this->apcDeleteActivityLists();
-		    	apc_delete(self::APC_ACTIVITY_ACTIVITY . $id);
+		    	apc_delete($this->apc_activity_activity . $id);
 		    }
 			return ($n > 0);
  		}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'&eacute;ffectuer la mise a jour.");
         }
  	}
  	
@@ -611,18 +613,18 @@ class ActivityManager {
 	        $n = $stmt->execute(array('id' => $aid));
 	 		if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
-		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour du nombre de vue");
+		        throw new SQLException($error[2], $error[0], $sql, "Impossible d'&eacute;ffectuer la mise a jour du nombre de vue.");
 		    }
 		    if($this->_apc){
-		    	if(apc_exists(self::APC_ACTIVITY_ACTIVITY . $aid)){
-		    		$activity = apc_fetch(self::APC_ACTIVITY_ACTIVITY . $aid);
+		    	if(apc_exists($this->apc_activity_activity . $aid)){
+		    		$activity = apc_fetch($this->apc_activity_activity . $aid);
 		    		$activity->setViewed($activity->getViewed()+1);
-		    		apc_store(self::APC_ACTIVITY_ACTIVITY . $aid, $activity, 86000);
+		    		apc_store($this->apc_activity_activity . $aid, $activity, 86000);
 		    	}
 		    }
 	        return ($n > 0);
  		}catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour du nmbre de vue");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'&eacute;ffectuer la mise a jour du nombre de vue.");
         }
  	}
  	
@@ -641,19 +643,15 @@ class ActivityManager {
  			$n = $stmt->execute(array('publish' => $publish, 'id' => $aid));
  			if($stmt->errorCode() != 0){
  				$error = $stmt->errorInfo();
- 				throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour du nombre de vue");
+ 				throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour du statut de publication.");
  			}
  			if($this->_apc){
  				$this->apcDeleteActivityLists();
- 				apc_delete(self::APC_ACTIVITY_ACTIVITY . $aid);
- 				/*$arr = preg_split("/[-]+/", $activity->getDate());
- 				$id = $arr[0];
- 				apc_delete(StatManager::APC_ACTIVITY_USER_STAT.$id);
- 				apc_delete(StatManager::APC_ACTIVITY_PICT_STAT.$id);*/
+ 				apc_delete($this->apc_activity_activity . $aid);
  			}
  			return ($n > 0);
  		}catch(PDOException $e){
- 			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour du nmbre de vue");
+ 			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour du statut de publication.");
  		}
  	}
  	
@@ -674,11 +672,11 @@ class ActivityManager {
         	$stmt->execute(array('id'=>$id,'title' => $title, 'description' => $description, 'date' => $date, 'directory' => $directory, 'level' => $level, 'viewed' => $viewed, 'autors' => $autors, 'ispu' => $ispublished));
 	        if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
-	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une MyPicture");
+	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une MyPicture.");
 	        }
 	        return true;    
         }catch(PDOException $e){
-        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une MyPicture");
+        	throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une MyPicture.");
         	return false;
         }
         
@@ -687,7 +685,7 @@ class ActivityManager {
 
     
     /**
-     * Delete the list of activities in APC (one flist per Level)
+     * Delete the list of activities in APC (one flush per Level)
      * @throws SQLException
      * @throws DatabaseException
      * @uses APC
@@ -699,7 +697,7 @@ class ActivityManager {
     		$stmt->execute();
     		if($stmt->errorCode() != 0){
     			$error = $stmt->errorInfo();
-    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des differents levels");
+    			throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des differents levels.");
     		}
     		$i = 0;
     		$levels = array();
@@ -708,12 +706,12 @@ class ActivityManager {
     		}
     		for($i=0 ; $i<count($levels) ; $i++){
     			if($this->_apc){
-    				apc_delete(self::APC_ACTIVITY_LIST . $levels[$i]);
+    				apc_delete($this->apc_activity_list . $levels[$i]);
     			}
     		}
     		
     	}catch(PDOException $e){
-    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des differents levels");
+    		throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des differents levels.");
     	}
     }
     

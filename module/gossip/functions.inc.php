@@ -1,7 +1,7 @@
 <?php
 
 
-function gossip_html_list(array $gossips, $numpage,$modname){
+function gossip_html_list(array $gossips, $numpage, $modname){
 	//$html = '<a id="page-'.$numpage.'"></a>';
 	$html = '<div id="gossip-message"></div>';
 	foreach ($gossips as $gossip){
@@ -26,7 +26,7 @@ function gossip_htm_gossip(Gossip $gossip, $modname){
 		$html .= '<h4><span class="text-muted">Il parait que ... </span><span id="gossip-content-'.$gossip->getId().'">' .$gossip->getContent() . '</span></h4>';
 	}
 	$html .= '<div class="row">';
-	$html .= '<div class="col-lg-12">';
+	$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 	$html .= '<i class="fa fa-user"></i> Publi&eacute; par <a href="'.URLUtils::getUserPageURL($gossip->getUser()).'">'.$gossip->getUser().'</a>';
 	$html .= ' | <i class="fa fa-calendar"></i> le ' . ConversionUtils::timestampUnixToDatetime($gossip->getTimestamp());
 	$html .= ' | <div class="btn-group btn-group-xs">';

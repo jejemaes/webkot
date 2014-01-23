@@ -51,16 +51,12 @@ if(isset($_GET['part']) && !empty($_GET['part']) && ($_GET['part'] == 'category'
 				break;
 		}
 	}else{
-		if(RoleManager::getInstance ()->hasCapabilitySession ( 'echogito-read-category' )){	
-			$SMM = SessionMessageManager::getInstance();
-			$message = $SMM->getSessionMessage();
-			
-			$ecmanager = EventCategoryManager::getInstance();
-			$categories = $ecmanager->getAllEventCategory();
-			$view->pageListCategory($message, $categories);
-		}else{
-			throw new AccessRefusedException("Vous ne pouvez pas lire les cat&eacute;gories.");
-		}
+		$SMM = SessionMessageManager::getInstance();
+		$message = $SMM->getSessionMessage();
+		
+		$ecmanager = EventCategoryManager::getInstance();
+		$categories = $ecmanager->getAllEventCategory();
+		$view->pageListCategory($message, $categories);
 	}
 	
 }else{
@@ -111,10 +107,25 @@ if(isset($_GET['part']) && !empty($_GET['part']) && ($_GET['part'] == 'category'
 				break;
 			case "approve":
 				if(RoleManager::getInstance ()->hasCapabilitySession ( 'echogito-approve-event' )){
-					$message = EventController::approveEventAction($_GET);
+					$message = new Message();
+					if(isset($_POST['echogito-input-id']) && !empty($_POST['echogito-input-id']) && is_numeric($_POST['echogito-input-id']) && isset($_POST['echogito-input-categoryid']) && !empty($_POST['echogito-input-categoryid']) && is_numeric($_POST['echogito-input-categoryid'])){
+						
+						$request = array();
+						$request['id'] = $_POST['echogito-input-id'];
+						$request['categoryid'] = $_POST['echogito-input-categoryid'];
+						
+						$message = EventController::updateCategoryEventAction($request);
+						if($message->isSuccess()){
+							$tmp = EventController::approveEventAction($request);
+							$message->addMessage($tmp->getMessage());
+						}
+					}else{
+						$message->setType(3);
+						$message->addMessage("Au moins un des champs requis est manquant. Opration annule.");
+					}
 					$SMM = SessionMessageManager::getInstance();
 					$SMM->setSessionMessage($message);
-					URLUtils::redirection(URLUtils::getPreviousURL());
+					URLUtils::redirection(URLUtils::generateURL($module->getName(), array("part"=>"event")));
 				}else{
 					throw new AccessRefusedException("Vous ne pouvez pas approuver d'&eacute;v&eacute;nement.");
 				}
@@ -125,18 +136,34 @@ if(isset($_GET['part']) && !empty($_GET['part']) && ($_GET['part'] == 'category'
 	}else{
 		if(isset($_GET['p']) && !empty($_GET['p'])){
 			switch ($_GET['p']) {
+				case 'approve':
+					if(isset($_GET['id']) && is_numeric($_GET['id'])){
+						$SMM = SessionMessageManager::getInstance();
+						$message = $SMM->getSessionMessage();
+						
+						$ecmanager = EventCategoryManager::getInstance();
+						$categories = $ecmanager->getAllEventCategory();
+							
+						$view->pageFormApprove($message, $_GET['id'], $categories);
+					}else{
+						throw new InvalidURLException("Sans identifiant, il sera difficile d'approuver l'event.");
+					}
+					break;
 				case 'past':
 					break;
 				case 'unapproved':
 					$SMM = SessionMessageManager::getInstance();
 					$message = $SMM->getSessionMessage();
 					
+					$ecmanager = EventCategoryManager::getInstance();
+					$categories = $ecmanager->getAllEventCategory();
+					
 					$emanager = EventManager::getInstance();
-					$events = $emanager->getUnapprovedEvent();
-					$view->pageList($message, $events);
+					$events = $emanager->getUnapprovedEvent(date('Y-m-d'));
+					$view->pageList($message, $events, $categories);
 					break;
 				default:
-					URLUtils::redirect(URLUtils::generateURL($module->getName(),array("part"=>"event")));
+					URLUtils::redirection(URLUtils::generateURL($module->getName(),array("part"=>"event")));
 					break;	
 			}
 		}else{		
@@ -149,7 +176,7 @@ if(isset($_GET['part']) && !empty($_GET['part']) && ($_GET['part'] == 'category'
 			
 			$emanager = EventManager::getInstance();
 			$events = $emanager->getEventsAfter(date('Y-m-d'), true, $desc, $limit);
-			$count = $emanager->getCountEventsAfter(date('Y-m-d'));
+			$count = $emanager->getCountEventsAfter(date('Y-m-d'), true);
 			
 			$view->pageListPaging($message, $events, $count, $desc, ($page+1));
 		}

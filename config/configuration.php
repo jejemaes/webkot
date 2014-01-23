@@ -35,6 +35,10 @@ define('RSS_FILE','rss.xml');
 define('CHMOD', 0777);
 
 
+// Active APC with the first constant. If active, you have to define a prefix to avoid collision with other website on the same server
+define('APC_ACTIVE', true);
+define('APC_PREFIX', 'w4_');
 
+// The Facebook variables of the Webkot4 application
 define('FACEBOOK_APPID','516806348339496');
 define('FACEBOOK_SECRET','1163e8dcd6af2e9ed3632b5202bb6d2f');

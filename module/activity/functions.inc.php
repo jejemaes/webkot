@@ -269,7 +269,7 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 				}
 				$HTML .= '</div>';
 				
-				if(RoleManager::getInstance()->hasCapabilitySession('activity-add-comment') && profile){
+				if(RoleManager::getInstance()->hasCapabilitySession('activity-add-comment') && $profile){
 					$HTML .= '<form method="post" id="activity-comment-form" class="activity-comment-form"><span id="activity-modal-loading-comment"></span>Ajouter votre commentaire
 		 								<textarea id="activity-comment-textarea" name="activity-input-comment" class="activity-comment-textarea"></textarea>
 		 						</form>';
@@ -392,7 +392,7 @@ function activity_html_page_lastcomm($modulename, $listComm){
  */
 function activity_html_modal_censure($pid, $buttonClass, $email){
 	//$HTML .= '<a  href="#" class="'.$buttonClass.'" data-toggle="modal" data-target="#activity-censure-modal"><i class="icon-ban-circle"></i> Demande de censure</a>';
-	$HTML .= '<!-- Modal -->
+	$HTML = '<!-- Modal -->
 <div class="modal fade" id="activity-censure-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialogBAD">
     <div class="modal-content">
@@ -467,9 +467,9 @@ function activity_html_modal_comment($currentComment, $actions){
 	$comm .= '<br>';
 	$commentText = ConversionUtils::smiley(ConversionUtils::decoding($currentComment->getComment()));
 	$commentText = preg_replace("
-	  #((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie",
-	  "'<a href=\"$1\" target=\"_blank\">$3</a>$4'",
-	  $commentText
+	  	#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#i", 
+	  	"'<a href=\"$1\" target=\"_blank\">$3</a>$4'",
+		$commentText
 	);
 	$comm .= str_replace("&lt;br /&gt;", "<br/>", $commentText);
 	$comm .= '<hr class="activity-hr-style">';

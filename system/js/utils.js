@@ -72,6 +72,11 @@ SystemUtils = {
 		  return uri;
 	},
 
+	datetimeReadable : function(datetime){
+		variable = datetime.split(" ");
+		date = variable[0].split("-");
+		return date[2]+"-"+date[1]+"-"+date[0]+" &agrave; "+ variable[1];
+	},
 	
 	
 	fctName : function(){

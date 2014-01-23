@@ -181,29 +181,4 @@ class RoleManager {
 		}
 	}
 	
-	
-	
-	
-	
-	/**
-	 * Get the role corresponding to the given param
-	 * @param boolean $isWebkot
-	 * @param boolean $isAdmin
-	 */
-	/*public function getRole($isWebkot,$isAdmin){
-		$manager = SessionManager::getInstance();
-		if($manager->existsSession()){
-			if(!$isWebkot && !$isAdmin){
-				return 'Subscriber';
-			}else{
-				if($isAdmin){
-					return 'Administrator';
-				}else{
-					return 'Webkot';
-				}
-			}
-		}
-		return 'Visitor';
-	}*/
-	
 }

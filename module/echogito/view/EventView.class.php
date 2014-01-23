@@ -38,21 +38,25 @@ class EventView extends View implements iView{
 	 * @param Event $event : the Event Object to display
 	 */
 	public function pageEvent(Event $event){
-		$HTML .= $this->headerView();
+		$HTML = $this->headerView();
 		$HTML .= echogito_html_page_event($this->getModule()->getName(),$event);
 		$this->getTemplate()->setPageSubtitle($event->getName());
 		$this->configureLayout('page-event',$HTML);
 	}
 	
 	public function pageWeekEvents(array $events, $message){
-		$HTML = $message;
 		
-		$HTML .= $this->headerView();
-		
-		$HTML .= '<br><br>';
+		$HTML = $this->headerView();
+		$HTML .= '<br>';
+		$HTML .= '<div id="echogito-message" class="template-message">';
+		$HTML .= $message;
+		$HTML .= '</div>';
+		$HTML .= '<div id="echogito-the-echogito"></div>';
+		/*
+		This is made via JavaScript call to sever
 		$HTML .= '<ul class="nav nav-tabs" id="echogito-tabpanel">';
 		foreach ($events as $key => $value){
-			$HTML .= '<li><a href="#'.$key.'" data-toggle="tab">'.echogito_translate_day_name($key).'</a></li>';
+			$HTML .= '<li><a href="#'.$key.'" data-toggle="tab">'.$key.'</a></li>';
 		}
   		$HTML .= '</ul>';
 
@@ -76,12 +80,18 @@ class EventView extends View implements iView{
 			$HTML .= '</div>';
 		}
 		$HTML .= '</div>';
-
-		$HTML .= '<script>
-		  $(function () {
-		    $(\'#echogito-tabpanel a[href="#'.date('l').'"]\').tab(\'show\')
-		  })
+		*/
+		
+		
+//				echogitoHtmlMakeEchogito(\''.URLUtils::builtServerUrl($this->getModule()->getName(), array("action"=>"getechogito")).'\');
+		$js = '<script>
+			$(document).ready(function() {
+				 echogitoFetchEchogito(\''.URLUtils::builtServerUrl($this->getModule()->getName(), array("action"=>"getechogito")).'\');
+				 $(\'#echogito-tabpanel a[href="#'.echogito_translate_day_name(date('l')).'"]\').tab(\'show\');
+			});
 		</script>';
+				
+		$this->getTemplate()->addJsFooter($js);
 		$this->getTemplate()->setPageSubtitle("Cette semaine");
 		$this->configureLayout('page-echogito',$HTML);
 	}
@@ -92,10 +102,11 @@ class EventView extends View implements iView{
 	 */
 	public function pageLaterEvents(array $list, $count, $desc, $page){
 		
-		$HTML .= $this->headerView();
+		$HTML = $this->headerView();
 		
 		$HTML .= '<br>';
-		$HTML .= '<div class="col-lg-10 col-lg-offset-1">';
+		$HTML .= '<div id="echogito-later-content" class="col-lg-10 col-lg-offset-1">';
+		/*
 		foreach ($list as $key => $events){
 			$HTML .= '<h4>'.echogito_translate_month_name(ConversionUtils::transformDate($key, "F"))." ".substr($key,0,4).'</h4>';
 			//$HTML .= '<table class="table table-hover">';
@@ -104,8 +115,8 @@ class EventView extends View implements iView{
 				$event = $events[$i];
 				//$HTML .= '<tr>';
 				$HTML .= '<div class="row">';
-				$HTML .= '<div class="col-lg-3"><span class="text-muted">'.ConversionUtils::transformDate($event->getStart_time(),"l d/m/Y").'</span></div>';
-				$HTML .= '<div class="col-lg-8">'.$event->getName();
+				$HTML .= '<div class="col-lg-4"><span class="text-muted">'.ConversionUtils::transformDate($event->getStart_time(),"l d/m/Y").'</span></div>';
+				$HTML .= '<div class="col-lg-7">'.$event->getName();
 				if($event->getCategoryid()){
 					$HTML .= '<br><span style="color:'.$event->getCategorycolor().'"><i class="fa fa-folder-open"></i> '.$event->getCategoryname().'</span>';
 				}
@@ -116,25 +127,47 @@ class EventView extends View implements iView{
 			}
 			$HTML .= '</div>';	
 		}
+		*/
+		$url = URLUtils::builtServerUrl($this->getModule()->getName(), array("action" => "later"));
+		//$HTML .= "echogitoFetchLaterEvents('".$url."', page);";
+		$HTML .= '</script>';
 		$HTML .= '</div>';
 		
-		$HTML .= system_html_pagination($this->getModule()->getName(), array("p"=>"later"),$count,$desc,$page, "&eacute;v&eacute;nements");
+		//$HTML .= system_html_pagination($this->getModule()->getName(), array("p"=>"later"),$count,$desc,$page, "&eacute;v&eacute;nements");
+		$callback = "echogitoFetchLaterEvents('".$url."', num);";
+		$HTML .= system_load_plugin(array('bootpag' => array("template" => $this->getTemplate(), "call-on-change" => $callback, 'total' => ceil($count/$desc))));
+		
+		$js = "<script type=\"text/javascript\">
+					$( document ).ready(function() {
+						var uri = new Uri(document.URL);
+						var page = 1;
+						if(uri.anchor()){
+							var anchor = uri.anchor();
+							page = anchor.split('-')[1];
+						}
+						echogitoFetchLaterEvents('".$url."', page);
+						$('#bootpag-page-selection').bootpag({\"page\":page});
+					});
+				</script>";
+		$this->getTemplate()->addJsFooter($js);
 		
 		$this->getTemplate()->setPageSubtitle("Ev&eacute;nements &agrave; venir");
-		$this->configureLayout('page-echogito',$HTML);
+		$this->configureLayout('page-list',$HTML);
 	}
 	
 	
 	public function pageForm($message){
-		$HTML .= $message;
-		$HTML .= echogito_html_double_form($this->getModule()->getName(), $this->getTemplate());
+		$content .= '<div id="echogito-message" class="template-message">';
+		$content .= $message;
+		$content .= '</div>';
+		$content .= echogito_html_double_form($this->getModule()->getName(), $this->getTemplate());
 		$this->getTemplate()->setPageSubtitle("Ajouter un &eacute;v&eacute;nement");
-		$this->configureLayout('page-form',$HTML);
+		$this->configureLayout('page-form',$content);
 	}
 	
 	
 	public function pageCalendarAge(){
-		$HTML .= $this->headerView();
+		$HTML = $this->headerView();
 		$HTML .= '<br>';
 		$HTML .= '<iframe src="http://www.google.com/calendar/embed?showTitle=0&amp;height=800&amp;mode=MONTH&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=age%40fundp.ac.be&amp;color=%23A32929&amp;src=ffialf5uitb78e3a4ailq2u51o%40group.calendar.google.com&amp;color=%23AB8B00&amp;src=r1bunu9fqk7trrk2c27dg2e4a0%40group.calendar.google.com&amp;color=%23B1440E&amp;src=regionales.age%40gmail.com&amp;color=%230D7813&amp;src=laobrn2mf85ilagvbbnn34fklg%40group.calendar.google.com&amp;color=%23705770&amp;src=1cs2q4j7qpg78ok2dup7jqu5m4%40group.calendar.google.com&amp;color=%232952A3&amp;src=3krdj656r7h5dlkgi7eja9oqo0%40group.calendar.google.com&amp;color=%232952A3&amp;src=ihfd4oa9i3fam6jcllphem5bvg%40group.calendar.google.com&amp;color=%232952A3&amp;src=bf804v20e8jr95q6v8chlm4i6s%40group.calendar.google.com&amp;color=%232952A3&amp;src=8n0fsgvlfcdfp80gbdifv176hk%40group.calendar.google.com&amp;color=%232952A3&amp;src=8alnmb61lbslviob94okv28v6k%40group.calendar.google.com&amp;color=%232952A3&amp;src=nn6l6pi6ja7b50q5g60rrbjpsc%40group.calendar.google.com&amp;color=%232952A3&amp;src=cbvipid1pghp5v5ucc2tdukdno%40group.calendar.google.com&amp;color=%232952A3&amp;src=2le23msratjh6j79tmmksj3nm4%40group.calendar.google.com&amp;color=%232952A3&amp;src=u1c3or7lp6rgr41a7dm2fqolgo%40group.calendar.google.com&amp;color=%232952A3" style="border-width:0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>';
 		$this->getTemplate()->setPageSubtitle("Calendrier AGE");
@@ -146,7 +179,7 @@ class EventView extends View implements iView{
 	 * @return string : html code of the header of the view
 	 */
 	private function headerView(){
-		$HTML .= '<br>';
+		$HTML = '<br>';
 		$HTML .= '<div class="row">';
 		$HTML .= '<div class="col-lg-8">';
 		$HTML .= '<img src="'.DIR_MODULE.$this->getModule()->getLocation().'view/img/echogito.png" alt="Logo" class="img-responsive" style="margin:auto;">';
