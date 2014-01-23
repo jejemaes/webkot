@@ -4,7 +4,7 @@
 class AccueilModuleLoader implements iModuleLoader{
 	
 	public static $modulesToLoadFrontend = array('activity','blog','video');
-	public static $modulesToLoadBackend = array('activity','webkot');
+	public static $modulesToLoadBackend = array('activity','webkot','echogito');
 	
 	// FRONTEND
 	public static function loadModel($relativePath){

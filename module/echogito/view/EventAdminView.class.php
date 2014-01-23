@@ -69,11 +69,7 @@ class EventAdminView extends AdminView implements iAdminView{
 		$content .= '</div>';
 		$content .= '</div>';
 		$content .= '</div>';
-		
-		$content .= '<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#echogito-modal-approve">
-  Launch demo modal
-</button>';
-		
+		/*
 		$content .= '<div class="modal fade" id="echogito-modal-approve" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -87,7 +83,7 @@ class EventAdminView extends AdminView implements iAdminView{
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->';
-	
+	*/
 		$t = $this->getTemplate();
 		$t->setContent($content);
 	}

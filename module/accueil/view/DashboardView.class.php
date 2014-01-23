@@ -14,7 +14,7 @@ class DashboardView extends AdminView implements iAdminView{
 	}
 	
 	
-	public function pageHome($message, $list, $username, $slides, $censures){
+	public function pageHome($message, $list, $username, $slides, $censures, $nbrEventNonApproved){
 		$content = '<div>';
 			$content .= '<div class="jumbotron">
 				  <a href="index.php?logout" class="btn btn-default pull-right" role="button"><span class="fa fa-power-off"></span> <br/>Logout</a>
@@ -50,8 +50,8 @@ class DashboardView extends AdminView implements iAdminView{
                     <i class="fa fa-calendar fa fa-5x"></i>
                   </div>
                   <div class="col-xs-6 text-right">
-                    <p class="announcement-heading">??</p>
-                    <p class="announcement-text">Proposition d\'event (Echogito)</p>
+                    <p class="announcement-heading">'.$nbrEventNonApproved.'</p>
+                    <p class="announcement-text">Evenements non approuv&eacute;s</p>
                   </div>
                 </div>
               </div>
@@ -59,7 +59,7 @@ class DashboardView extends AdminView implements iAdminView{
                 <div class="panel-footer announcement-bottom">
                   <div class="row">
                     <div class="col-xs-8">
-                      Non implemente ! (Module Echogito)
+                      <a href="'.URLUtils::generateURL('echogito', array("p" => "unapproved")).'">Voir la liste (Module Echogito)</a>
                     </div>
                     <div class="col-xs-4 text-right">
                       <i class="fa fa-circle-arrow-right"></i>

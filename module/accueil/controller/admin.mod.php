@@ -393,6 +393,9 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 	$cmanager = CensureManager::getInstance();
 	$censures = $cmanager->getUnapprovedCensure();
 	
-	$view->pageHome($message, $todos, $username, $slides, $censures);
+	$emanager = EventManager::getInstance();
+	$nbrEventNonApproved = $emanager->getCountUnapprovedEvent(date('Y-m-d'));
+	
+	$view->pageHome($message, $todos, $username, $slides, $censures, $nbrEventNonApproved);
 }
 
