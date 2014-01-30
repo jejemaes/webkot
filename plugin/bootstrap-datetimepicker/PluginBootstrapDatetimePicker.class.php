@@ -8,7 +8,7 @@ class PluginBootstrapDatetimePicker extends Plugin implements iPlugin{
 	
 	public function __construct(array $options = array()){
 		$default = array (
-				"format" => 'YYYY-MM-DD hh:mm:ss',
+				"format" => 'yyyy-mm-dd hh:ii:ss',
 				"withDate" => true,
 				"withTime" => true,
 				"id" => "datetime-picker-input",
@@ -16,6 +16,7 @@ class PluginBootstrapDatetimePicker extends Plugin implements iPlugin{
 				"template" => null,
 				"value" => ""
 		);
+		
 		$this->setOptions(array_merge($default, $options));
 	}
 	
@@ -23,7 +24,10 @@ class PluginBootstrapDatetimePicker extends Plugin implements iPlugin{
 	public function load(){
 
 		if($this->getOptions()["template"]){
-			$jsCodeH = '<script src="'. DIR_PLUGIN . 'bootstrap-datetimepicker/js/moment.js"></script>';
+			$jsCodeH = '<script src="'. DIR_PLUGIN . 'bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>';
+			$this->getOptions()["template"]->addJSFooter($jsCodeH);
+				
+			$jsCodeH = '<script src="'. DIR_PLUGIN . 'bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js"></script>';
 			$this->getOptions()["template"]->addJSFooter($jsCodeH);
 			
 			$jsCodeH = '<script src="'. DIR_PLUGIN . 'bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>';
@@ -32,23 +36,17 @@ class PluginBootstrapDatetimePicker extends Plugin implements iPlugin{
 			$withDate = (!$this->getOptions()["withDate"] ? "pickDate: false," : "pickDate: true,");
 			$withTime = (!$this->getOptions()["withTime"] ? "pickTime: false," : "pickTime: true,");
 			
+			
 			$js = '<script type="text/javascript">
-					$(\'#datetimepicker\').datetimepicker();
-					  $(function() {
 					    $("#'.$this->getOptions()["id"].'").datetimepicker({
-					      '.$withDate.'
-					      '.$withTime.'
-					      pick12HourFormat: false,
-					      language: "fr",
-					      icons: {
-							time: "fa fa-clock-o",
-							date: "fa fa-calendar",
-							up: "fa fa-arrow-up",
-							down: "fa fa-arrow-down"
-						}
+					        format: "'.$this->getOptions()["format"].'",
+					        weekStart: 1,
+					        autoclose: true,
+					        todayBtn: true,
+					        pickerPosition: "bottom-left"
 					    });
-					  });
-				</script>';
+					</script> ';
+			
 			$this->getOptions()["template"]->addJSFooter($js);
 			
 			$style = '<link rel="stylesheet" type="text/css" href="'. DIR_PLUGIN . 'bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"></link>';	
@@ -57,12 +55,18 @@ class PluginBootstrapDatetimePicker extends Plugin implements iPlugin{
 		}
 		
 		$html = '
-			<div class="input-group date" id="'.$this->getOptions()["id"].'">
-				<input type="text" class="form-control" name="'.$this->getOptions()["name"].'" data-format="'.$this->getOptions()["format"].'" value="'.$this->getOptions()["value"].'"/>
+			<div class="input-group date">
+				<input id="'.$this->getOptions()["id"].'" type="text" class="form-control form_datetime" name="'.$this->getOptions()["name"].'" data-format="'.$this->getOptions()["format"].'" value="'.$this->getOptions()["value"].'" readonly/>
 				<span class="input-group-addon">
 					<span data-icon-element="" class="fa fa-calendar"></span>
 				</span>
 			</div>';
+	
+		
+		$html2 = '<div class="input-append date">
+    <input size="16" type="text" value="" readonly class="form_datetime">
+    <span class="add-on"><i class="fa fa-calendar"></i></span>
+</div>';
 		
 		return $html;
 	}

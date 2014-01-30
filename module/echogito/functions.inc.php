@@ -226,7 +226,7 @@ function echogito_html_traditionnal_form($modulename, $template){
 <div class="form-group">
   <label class="col-md-6 control-label" for="echogito-input-date">Date</label>  
   <div class="col-md-6">
-  '.system_load_plugin(array('bootstrap-datetimepicker' => array("template"=> $template, "id" => "echogito-div-date", "name" => "echogito-input-date", "format" => "YYYY-MM-DD hh:mm:ss", "withTime" => true, "withDate" => true))).'
+  '.system_load_plugin(array('bootstrap-datetimepicker' => array("template"=> $template, "id" => "echogito-div-date", "name" => "echogito-input-date", "format" => "yyyy-mm-dd hh:ii:ss", "withTime" => true, "withDate" => true))).'
   </div>
 </div>
 
