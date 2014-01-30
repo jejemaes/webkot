@@ -268,7 +268,7 @@ class ActivityAdminView extends AdminView implements iAdminView{
 		
 		$content .= '<div class="panel panel-default">';
 			$content .= ' <div class="panel-heading">';
-				$content .= '<h2 class="panel-title">Comparaison avec l\'ann&eacute;e pass&eacute;e au meme moment</h2>';
+				$content .= '<h2 class="panel-title">Comparaison avec l\'ann&eacute;e pass&eacute;e au m&ecirc;me moment</h2>';
 			$content .= '</div>';
 			$content .= '<div class="panel-body">';
 			$content .= '<p class="text-info">Nous sommes le '.date('d-m-Y').'.</p>';
@@ -284,7 +284,7 @@ class ActivityAdminView extends AdminView implements iAdminView{
 			$content .= '<div class="panel-body">';
 				$content .= '<div id="stat-div-graph"></div>';
 				$content .= '<hr>';
-				$content .= activity_html_stat_acti_table($statActi, true);
+				$content .= activity_admin_html_stat_acti_table($statActi, true);
 			$content .= '</div>';
 		$content .= '</div>';
 		

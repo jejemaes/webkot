@@ -1,5 +1,6 @@
 <?php
 
+// activity_html_stat_acti_table
 
 
 /**
@@ -853,7 +854,12 @@ function activity_admin_html_list_directories($list){
 }
 
 
-
+/**
+ * 
+ * @param unknown $year
+ * @param unknown $stats
+ * @return string
+ */
 function activity_admin_html_stat_table($year, $stats){
 	$HTML = '<div class="col-lg-3 col-md-3">';
 	$HTML .= '<h4 class="text-center">Ann&eacute;e '.$year.'</h4>';

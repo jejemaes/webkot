@@ -154,7 +154,7 @@ class Template extends AbstractAdminTemplate implements iAdminTemplate{
 		        <div class="col-md-4 col-md-offset-7">
 		            <div class="panel panel-default">
 		                <div class="panel-heading">
-		                    <span class="fa fa-lock"></span> Webkot Admin Panel</div>
+		                    <span class="fa fa-lock"></span> Webkot Administration Panel</div>
 		                <div class="panel-body">
 		                    <form class="form-horizontal" role="form" method="POST">
 		                    <div class="form-group">
@@ -175,7 +175,7 @@ class Template extends AbstractAdminTemplate implements iAdminTemplate{
 		                    <div class="form-group last">
 		                        <div class="col-sm-offset-3 col-sm-9">
 		                            <button type="submit" class="btn btn-success btn-sm">
-		                                Sign in</button>
+		                                Login</button>
 		                                 <button type="reset" class="btn btn-default btn-sm">
 		                                Reset</button>
 		                        </div>
@@ -183,7 +183,7 @@ class Template extends AbstractAdminTemplate implements iAdminTemplate{
 		                    </form>
 		                </div>
 		                <div class="panel-footer">
-		                	Admin only !
+		                	<a href="'.URL.'">Retour sur le site</a>
 						</div>
 		            </div>
 		        </div>

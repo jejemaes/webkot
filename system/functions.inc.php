@@ -651,8 +651,7 @@ function system_generate_password($length = 8) {
 function system_send_mail($subject, $message, $to, $from, $headers = 'Reply-To: admin@webkot.be'){
 	$omanager = OptionManager::getInstance();
 	$title = $omanager->getOption("site-title");
-	
-	
+
 	if(SENDMAIL_ACTIVE){
 		
 		$headers='From: ' .$from. "\r\n" .
