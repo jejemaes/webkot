@@ -39,6 +39,7 @@ class UserView extends View implements iView{
 	
 	
 	public function ListProfilePage(array $users, $count, $page, $desc){
+		$HTML = '<div class="row">';
 		$fields = array(
 				'Id' => 'getId',
 				'Username' => array('getUsername',array('index.php?mod=user&amp;profile=','getId')),
@@ -46,9 +47,10 @@ class UserView extends View implements iView{
 				'Pr&eacute;nom' => 'getFirstname'
 		);
 		
-		$HTML = system_html_list_object($users, $fields);
+		$HTML .= system_html_list_object($users, $fields);
 		
 		$HTML .= '<hr>' . system_html_pagination($this->getModule()->getName(), array(),$count,$desc,$page, "utilisateurs");
+		$HTML .= '</div>';
 		
 		$this->configureLayout('page-profile',$HTML);
 		$this->getTemplate()->setPageSubtitle("Liste des Utilisateurs publiques");
@@ -57,6 +59,7 @@ class UserView extends View implements iView{
 	
 	
 	public function UserProfilePage(User $user, $isMyProfile = false){
+		$HTML = '<div class="row">';
 		$HTML .= '<div id="user-div-message"></div>';
 		if($isMyProfile){		
 			if($user->getMailwatch()){
@@ -90,6 +93,7 @@ class UserView extends View implements iView{
 			$mailwatch = "Non";
 		}
 		$HTML .= '<b>Je souhaite recevoir un mail lorsqu\'une activit&eacute; est ajout&eacute;e sur le Webkot : </b><span id="user-label-mailwatch">' . $mailwatch . '</span></p><br>';
+		$HTML .= '</div>';
 		
 		$this->configureLayout('page-list',$HTML);
 		$this->getTemplate()->setPageSubtitle("Profil de " . $user->getUsername());
@@ -100,8 +104,10 @@ class UserView extends View implements iView{
 	
 	
 	public function pageInscription($action, $user, $message){
-		$HTML = $message;
+		$HTML = '<div class="row">';
+		$HTML .= $message;
 		$HTML .= user_form_register($action, $user);
+		$HTML .= '</div>';
 		$this->configureLayout('page-inscription',$HTML);
 		if($user->getId()){
 			$this->getTemplate()->setPageSubtitle("Edition du profile");
@@ -112,15 +118,18 @@ class UserView extends View implements iView{
 	
 	
 	public function pageLostPassword($action, $message){
-		$HTML = $message;
+		$HTML = '<div class="row">';
+		$HTML .= $message;
 		$HTML .= "Introduisez votre email de votre compte (celui utilis&eacute; par votre compte Webkot), un nouveau mot de passe sera g&eacute;n&eacute;r&eacute; et envoy&eacute; &agrave; l'adresse mail introduite. Vous pouvez donc vous connectez avec ce nouveau mot de passe et le modifier.";
 		$HTML .= user_form_lostpassword($this->getModule()->getName());
+		$HTML .= '</div>';
 		$this->configureLayout('page-inscription',$HTML);
 		$this->getTemplate()->setPageSubtitle("Mot de passe perdu");
 	}
 	
 	public function pageFacebookConnect($fbuser, $message){
-		$HTML = $message;
+		$HTML = '<div class="row">';
+		$HTML .= $message;
 		$HTML .= "C'est la premi�re fois que vous vous connectez sur le Webkot via Facebook. Deux sc&eacute;narios s'offrent � vous :";
 		$HTML .= "<ul>";
 		$HTML .= "<li>Si vous avez d&eacute;j� un compte sur le Webkot, remplissez le formulaire avec vos identifiants Webkot. Cela vous permettera de vous connecter sur votre compte Webkot via Facebook, tout en conservant vos anciennes donn&eacute;es.</li>";
@@ -128,6 +137,7 @@ class UserView extends View implements iView{
 		$HTML .= "</ul>";
 		$HTML .= user_form_facebookconnect($this->getModule()->getName(), $fbuser);
 		$HTML .= '<br><a href="index.php?logout=index.php" class="btn btn-warning">Annuler</a>';
+		$HTML .= '</div>';
 		$this->configureLayout('page-inscription',$HTML);
 		$this->getTemplate()->setPageSubtitle("Facebook Connect");
 	}

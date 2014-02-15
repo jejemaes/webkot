@@ -34,10 +34,12 @@ class PageView extends View implements iView{
 
 	
 	public function pagePage(Page $page, Message $message, $additionnalcontent){	
+		$HTML = '<div class="row">';
 		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= $page->getContent();
 		$HTML .= $message;
 		$HTML .= $additionnalcontent;
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		$this->configureLayout('page-page',$HTML);
 		$this->getTemplate()->setPageSubtitle($page->getTitle());
@@ -45,12 +47,14 @@ class PageView extends View implements iView{
 	
 	
 	public function pageListPage(array $pages){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= '<ul>';
 		foreach ($pages as $page){
 			$HTML .= '<li><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("id" => $page->getId())).'">'.$page->getTitle().'</a></li>';
 		}
 		$HTML .= '</ul>';
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
 		$this->configureLayout('page-list',$HTML);

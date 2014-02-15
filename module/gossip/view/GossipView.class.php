@@ -37,7 +37,8 @@ class GossipView extends View implements iView{
 
 
 	public function pageList(array $list, $nbrpage, $numpage, $message){
-		$HTML = '<div class="col-lg-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		
 		system_load_plugin(array('social-ring' => array("template" => $this->getTemplate(), "level" => 0, "appId" => OptionManager::getInstance()->getOption("facebook-appid"))));
 		 
@@ -104,14 +105,17 @@ class GossipView extends View implements iView{
 		$HTML .= system_load_plugin(array('bootpag' => array("template" => $this->getTemplate(), "call-on-change" => $callback, 'total' => $nbrpage)));
 		
 		$HTML .= '</div>';
+		$HTML .= '</div>';
 		
 		$this->configureLayout('page-list',$HTML);
 		$this->getTemplate()->setPageSubtitle("La liste");
 	}
 
 	public function pagePotin(Gossip $gossip){
-		$html = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$html = '<div class="row">';
+		$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$html .= gossip_htm_gossip($gossip, $this->getModule()->getName());
+		$html .= '</div>';
 		$html .= '</div>';
 		$this->configureLayout('page-gossip',$html);
 		$this->getTemplate()->setPageSubtitle("Un potin ...");

@@ -13,6 +13,7 @@ function activityOverlayPage(baseUrl, link, title){
 	console.log("begin of the uri transformation");
 	serveruri.addQueryParam('action', uri.getQueryParamValues('p'));
 	
+	
 	if(varp == "picture"){
 		serveruri.addQueryParam('id',uri.getQueryParamValues('id'));
 	}

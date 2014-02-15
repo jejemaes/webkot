@@ -2,13 +2,12 @@
 
 
 function video_html_list_video($modname, array $videos){
-	$html = '<div class="col-lg-12">';
-	$html .= '<h4>Liste des vid&eacute;os</h4>';
+	$html = '<h4>Liste des vid&eacute;os</h4>';
 	$nbr = 4;
 	$i=0;
 	$html.= '<div class="row">';
 	foreach ($videos as $video){
-		$html .= '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 video-margin-bottom">';
+		$html .= '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 video-margin-bottom">';
 			$html .= '<div class="thumbnail">';
 			$html .= '<div class="video-div-thumbnail">';
 				$html .= '<a href="'.URLUtils::generateURL($modname, array("id" => $video->getId())).'">';
@@ -31,6 +30,5 @@ function video_html_list_video($modname, array $videos){
 		
 	}
 	$html.= '</div><!-- end of Row -->';
-	$html .= '</div>';
 	return $html;
 }

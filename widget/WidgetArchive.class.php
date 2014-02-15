@@ -18,10 +18,10 @@ class WidgetArchive extends Widget implements iWidget{
 			$nb = (int) (count($list) / 2);
 			$nb = $nb + (count($list) % 2);
 			$html = '<div class="row">';
-			$html .= '<div class="col-lg-6">';
+			$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
 			$html .= system_html_action_list(array_slice($list, 0, $nb),"list-unstyled");
 			$html .= '</div>';
-			$html .= '<div class="col-lg-6">';
+			$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
 			$html .= system_html_action_list(array_slice($list, $nb, (count($list) - $nb)), "list-unstyled");
 			$html .= '</div>';
 			$html .= '</div>';

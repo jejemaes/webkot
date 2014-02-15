@@ -41,7 +41,7 @@ class BlogView extends View implements iView{
 	public function PostPage(BlogPost $post, Message $message){
 		$comments = $post->getComments();
 		$HTML = '<div class="row">';
-		$HTML .= '<div class="col-lg-12">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 			$HTML .= '<h4>'.$post->getTitle().'</h4>';
 		
 			// infos about the post
@@ -123,7 +123,7 @@ class BlogView extends View implements iView{
 		for($i=0 ; $i<count($posts) ; $i++){
 			$post = $posts[$i];
 			$HTML .= '
-			<div class="col-lg-12">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="row">
 					<div class="col-lg-12">
 						<h4><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("post" => $post->getId())).'">'.$post->getTitle().'</a></h4>';

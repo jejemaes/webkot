@@ -38,18 +38,23 @@ class EventView extends View implements iView{
 	 * @param Event $event : the Event Object to display
 	 */
 	public function pageEvent(Event $event){
-		$HTML = $this->headerView();
+		$HTML .= '<div class="row">';
+		$HTML .= $this->headerView();
 		$HTML .= echogito_html_page_event($this->getModule()->getName(),$event);
+		$HTML .= '</div>';
 		$this->getTemplate()->setPageSubtitle($event->getName());
 		$this->configureLayout('page-event',$HTML);
 	}
 	
 	public function pageWeekEvents(array $events, $message){
-		$HTML = $this->headerView();
+		$HTML .= '<div class="row">';
+		$HTML .= $this->headerView();
 		$HTML .= '<div id="echogito-message" class="template-message">';
 		$HTML .= $message;
 		$HTML .= '</div>';
 		$HTML .= '<div id="echogito-the-echogito"></div>';
+		
+		$HTML .= '</div>';
 		/*
 		This is made via JavaScript call to sever
 		$HTML .= '<ul class="nav nav-tabs" id="echogito-tabpanel">';
@@ -99,8 +104,8 @@ class EventView extends View implements iView{
 	 * @param array $events : array of array of Event Object (sorted by echogito_sort_by_month())
 	 */
 	public function pageLaterEvents(array $list, $count, $desc, $page){
-		
-		$HTML = $this->headerView();
+		$HTML .= '<div class="row">';
+		$HTML .= $this->headerView();
 		
 		$HTML .= '<div id="echogito-later-content" class="col-lg-10 col-lg-offset-1">';
 		/*
@@ -130,6 +135,8 @@ class EventView extends View implements iView{
 		$HTML .= '</script>';
 		$HTML .= '</div>';
 		
+		$HTML .= '</div>';
+		
 		//$HTML .= system_html_pagination($this->getModule()->getName(), array("p"=>"later"),$count,$desc,$page, "&eacute;v&eacute;nements");
 		$callback = "echogitoFetchLaterEvents('".$url."', num);";
 		$HTML .= system_load_plugin(array('bootpag' => array("template" => $this->getTemplate(), "call-on-change" => $callback, 'total' => ceil($count/$desc))));
@@ -154,18 +161,22 @@ class EventView extends View implements iView{
 	
 	
 	public function pageForm($message){
+		$content .= '<div class="row">';
 		$content .= '<div id="echogito-message" class="template-message">';
 		$content .= $message;
 		$content .= '</div>';
 		$content .= echogito_html_double_form($this->getModule()->getName(), $this->getTemplate());
+		$content .= '</div>';
 		$this->getTemplate()->setPageSubtitle("Ajouter un &eacute;v&eacute;nement");
 		$this->configureLayout('page-form',$content);
 	}
 	
 	
 	public function pageCalendarAge(){
-		$HTML = $this->headerView();
+		$HTML .= '<div class="row">';
+		$HTML .= $this->headerView();
 		$HTML .= '<iframe src="http://www.google.com/calendar/embed?showTitle=0&amp;height=800&amp;mode=MONTH&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=age%40fundp.ac.be&amp;color=%23A32929&amp;src=ffialf5uitb78e3a4ailq2u51o%40group.calendar.google.com&amp;color=%23AB8B00&amp;src=r1bunu9fqk7trrk2c27dg2e4a0%40group.calendar.google.com&amp;color=%23B1440E&amp;src=regionales.age%40gmail.com&amp;color=%230D7813&amp;src=laobrn2mf85ilagvbbnn34fklg%40group.calendar.google.com&amp;color=%23705770&amp;src=1cs2q4j7qpg78ok2dup7jqu5m4%40group.calendar.google.com&amp;color=%232952A3&amp;src=3krdj656r7h5dlkgi7eja9oqo0%40group.calendar.google.com&amp;color=%232952A3&amp;src=ihfd4oa9i3fam6jcllphem5bvg%40group.calendar.google.com&amp;color=%232952A3&amp;src=bf804v20e8jr95q6v8chlm4i6s%40group.calendar.google.com&amp;color=%232952A3&amp;src=8n0fsgvlfcdfp80gbdifv176hk%40group.calendar.google.com&amp;color=%232952A3&amp;src=8alnmb61lbslviob94okv28v6k%40group.calendar.google.com&amp;color=%232952A3&amp;src=nn6l6pi6ja7b50q5g60rrbjpsc%40group.calendar.google.com&amp;color=%232952A3&amp;src=cbvipid1pghp5v5ucc2tdukdno%40group.calendar.google.com&amp;color=%232952A3&amp;src=2le23msratjh6j79tmmksj3nm4%40group.calendar.google.com&amp;color=%232952A3&amp;src=u1c3or7lp6rgr41a7dm2fqolgo%40group.calendar.google.com&amp;color=%232952A3" style="border-width:0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>';
+		$HTML .= '</div>';
 		$this->getTemplate()->setPageSubtitle("Calendrier AGE");
 		$this->configureLayout('page-echogito',$HTML);
 	}
@@ -178,10 +189,10 @@ class EventView extends View implements iView{
 		$HTML = '<br>';
 		if(ECHOGITO_ACTIVE){	
 			$HTML .= '<div class="row">';
-			$HTML .= '<div class="col-lg-8">';
+			$HTML .= '<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">';
 			$HTML .= '<img src="'.DIR_MODULE.$this->getModule()->getLocation().'view/img/echogito.png" alt="Logo" class="img-responsive" style="margin:auto;">';
 			$HTML .= '</div>';
-			$HTML .= '<div class="col-lg-4">';
+			$HTML .= '<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">';
 			$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array()).'" class="btn btn-default"><i class="fa fa-home"></i> Home</a> ';
 			$HTML .= ' <a href="'.URLUtils::generateURL($this->getModule()->getName(), array("action" => "submit")).'" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a></p>';
 			$HTML .= '<p class="text-center"><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p" => "later")).'" class="btn btn-success"><i class="fa fa-list"></i> Ev&eacute;nements &agrave; venir</a></p>';

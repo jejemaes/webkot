@@ -45,6 +45,7 @@ class ChallengeView extends View implements iView{
 	 * @param Challenge $challenge : the challenge
 	 */
 	public function pageChallengeForm(Challenge $challenge, Message $message){	
+		$HTML .= '<div class="row">';
 		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= $message->__toString();
 		$HTML .= $challenge->getDescription();
@@ -87,6 +88,7 @@ class ChallengeView extends View implements iView{
 		$challengeForm->addJFormPage ( $page );
 		$HTML .= $challengeForm;
 		$HTML .= '</div>';
+		$HTML .= '</div>';
 		
 		$this->getTemplate()->setPageSubtitle($challenge->getQuestion());
 		$this->configureLayout('page-challenge',$HTML);
@@ -98,6 +100,7 @@ class ChallengeView extends View implements iView{
 	 * @param String $text : the text instead of the form
 	 */
 	public function pageChallengeText(Challenge $challenge, $text, Message $message){
+		$HTML .= '<div class="row">';
 		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= $message->__toString();
 		$HTML .= $challenge->getDescription();
@@ -105,6 +108,7 @@ class ChallengeView extends View implements iView{
 		$HTML .= '<b>La question est : </b>' . $challenge->getQuestion() . '<br>';
 		$HTML .= '<i>Attention, le concours se termine  le ' . ConversionUtils::timestampToDatetime($challenge->getEnd_date()) . '</i><br><br>';
 		$HTML .= '<br>' . $text;
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
 		$this->configureLayout('page-challenge',$HTML);

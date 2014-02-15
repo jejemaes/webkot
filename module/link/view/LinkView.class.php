@@ -37,7 +37,8 @@ class LinkView extends View implements iView{
 
 
 	public function pageLink(array $links){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$i=0;
 		while($i < count($links)){
 			$link = $links[$i];
@@ -56,6 +57,7 @@ class LinkView extends View implements iView{
 			}
 			$HTML .= '</table>';
 		}
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		$this->configureLayout('page-link',$HTML);
 		$this->getTemplate()->setPageSubtitle("La liste des liens");

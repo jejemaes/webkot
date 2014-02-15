@@ -43,7 +43,8 @@ class WebkotView extends View implements iView{
 	
 	
 	public function pageActualWebkotTeam(array $team,$texts){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		foreach ($texts as $key => $value){
 			$HTML .= '<h4>'.$key.'</h4>';
 			$HTML .= '<div style="margin-left:20px;">'.$value.'</div>';
@@ -52,6 +53,7 @@ class WebkotView extends View implements iView{
 		$HTML .= '<h4>Qui sommes-nous ?</h4>';
 		$HTML .= webkot_html_team($team);
 		$HTML .= '</div>';
+		$HTML .= '</div>';
 		
 		$this->configureLayout('page-actual',$HTML);
 		$this->getTemplate()->setPageSubtitle("L'&eacute;quipe actuelle");
@@ -59,7 +61,7 @@ class WebkotView extends View implements iView{
 	
 	
 	public function pageOldWebkotTeam(array $oldteams){
-		$HTML = "";
+		$HTML = '<div class="row">';
 		$i = 0 ;
 		while($i<(count($oldteams)-1)){
 			$mem = $oldteams[$i];
@@ -84,6 +86,7 @@ class WebkotView extends View implements iView{
 				
 			$i = $j;
 		}
+		$HTML .= '</div>';
 		$this->configureLayout('page-old',$HTML);
 		$this->getTemplate()->setPageSubtitle("Les Vieux du Webkot");
 	}

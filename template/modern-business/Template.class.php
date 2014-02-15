@@ -70,7 +70,7 @@ class Template extends AbstractTemplate implements iTemplate{
     					<!-- CSS Template -->
     					<link href="'.DIR_TEMPLATE.'modern-business/css/modern-business.css" rel="stylesheet">
     					<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-    					<link href="'.DIR_TEMPLATE.'modern-business/css/style.css" rel="stylesheet">'."\n";
+    					<link href="'.DIR_TEMPLATE.'modern-business/css/style.css" rel="stylesheet">';
 			$html .= $this->renderArray($this->getCssTags());
 			$html .= "\n".'<!-- Additionnal JS Code Header-->'."\n";
 			$html .= $this->renderArray($this->getJsHeaderTags());
@@ -84,7 +84,7 @@ class Template extends AbstractTemplate implements iTemplate{
 			      <div class="container">
 			        <div class="navbar-header">
 			          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-			            <span class="sr-only">Toggle navigation</span>
+			            <span class="sr-only">'.$options['site-title'].'</span>
 			            <span class="icon-bar"></span>
 			            <span class="icon-bar"></span>
 			            <span class="icon-bar"></span>
@@ -96,6 +96,8 @@ class Template extends AbstractTemplate implements iTemplate{
 					</div><!-- /.navbar-collapse -->
       			</div><!-- /.container -->
     		</nav>';
+			
+			
 			
 			//content frame & layout
 			if($this->getLayout() == "layout2col" || $this->getLayout() == "layout1col"){
@@ -112,8 +114,10 @@ class Template extends AbstractTemplate implements iTemplate{
 						$html .= '</div>';
 					$html .= '</div><!-- /.row -->';
 					$html .= '<div class="row">';
-						$html .= '<div class="col-lg-8 well">';
+						$html .= '<div class="col-lg-8">';
+						$html .= '<div class="well">';
 						$html .= $this->getContent();
+						$html .= '</div>';
 						$html .= '</div>';
 						$html .= '<div class="col-lg-4">';
 		   				$html .= $this->getSidebarHtml();
@@ -129,12 +133,14 @@ class Template extends AbstractTemplate implements iTemplate{
 						$html .= '</div>';
 					$html .= '</div><!-- /.row -->';
 					$html .= '<div class="row">';
-						$html .= '<div class="col-lg-12 well">';
+						$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+						$html .= '<div class="well">';
 						$html .= $this->getContent();
 						$html .= '</div>';
-						$html .= '<div class="row">';
+						$html .= '</div>';	
+					$html .= '</div><!-- /.row -->';
+					$html .= '<div class="row">';
 						$html .= $this->getBottombarHtml();
-						$html .= '</div>';
 					$html .= '</div><!-- /.row -->';
 				}
 				$html .= '</div><!-- /.container -->';
@@ -384,7 +390,7 @@ class Template extends AbstractTemplate implements iTemplate{
 		foreach ($this->getWidgetSidebar() as $widget){
 			if($i != 0){
 				$str = $widget->__toString();
-				$code .= '<div class="col-lg-'.$n.'">
+				$code .= '<div class="col-lg-'.$n.' col-md-'.$n.' col-sm-12 col-xs-12">
 								<div class="template-widget-bottom">
 									<div class="SiteBarBoxContainerHead"><h4>'.$widget->getName().'</h4></div>
 									<div class="SiteBarBoxContainer">

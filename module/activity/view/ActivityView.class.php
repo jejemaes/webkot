@@ -45,8 +45,10 @@ class ActivityView extends View implements iView{
 	 * @param array $list
 	 */
 	public function pageList(array $list){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= activity_html_page_activity_list($list, $this->getModule()->getName());
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
 		$this->configureLayout('page-list',$HTML);
@@ -59,9 +61,15 @@ class ActivityView extends View implements iView{
 	 * @param Activity $activity
 	 */
 	public function pageActivity(Activity $activity){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-		$HTML .= activity_html_page_activity($activity, $this->getModule(), $this->getTemplate());	
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		
+		$HTML .= activity_html_page_activity($activity, $this->getModule(), $this->getTemplate(), true);	
 		$HTML .= '</div>';
+		$HTML .= '</div>';
+		
+		$js = activity_get_js_page_overlay($activity->getTitle(), 'activity', true);
+		$this->getTemplate()->addJsFooter($js);
 		
 		$this->getTemplate()->setPageSubtitle($activity->getTitle());
 		$this->configureLayout('page-activity',$HTML);
@@ -91,8 +99,10 @@ class ActivityView extends View implements iView{
 	
 	
 	public function pageTop10(array $mostView, array $mostCommented, $year){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= activity_html_page_top10($this->getModule(), $mostView, $mostCommented, $year);
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		$HTML .= activity_get_js_page_overlay('Top10 des photos de ' .$year, $this->getModule()->getName(), true);
 		
@@ -108,9 +118,11 @@ class ActivityView extends View implements iView{
 	 * @param int $desc : the offset (number of past activity)
 	 */
 	public function pageArchive($list, $count, $page, $desc, $year){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= activity_html_page_media_activity($list, $this->getModule());
 		$HTML .= system_html_pagination($this->getModule()->getName(), array("p" => "archive", "year" => $year),$count,$desc,$page, "activit&eacute;");
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
 		$this->configureLayout('page-archive', $HTML);
@@ -125,7 +137,8 @@ class ActivityView extends View implements iView{
 	 * @param int $desc : the offset (number of past activity)
 	 */
 	public function pageArchiveOld(){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		//$HTML .= '<h3>Les activit&eacute;s 2002-2003</h3>';
 		$HTML .= '<img src="'.DIR_MODULE.$this->getModule()->getLocation().'view/img/webkot_logo_v2.png" alt="Logo v2" class="img-center" />';
 		$HTML .= '<br><br>';
@@ -135,6 +148,7 @@ class ActivityView extends View implements iView{
 		$HTML .= '<h4><a href="'.ACTIVITY_DIR_ARCHIVE2002.'rep3/index.html">Partie 4 <small> (de Bal de la Saint Nicolas à Souper Clôture Festival)</a></small></h4><hr>';
 		$HTML .= '<h4><a href="'.ACTIVITY_DIR_ARCHIVE2002.'rep2/index.html">Partie 5 <small> (de Soirée Vice Versa Bio à Souper de Passation Info)</a></small></h4><hr>';
 		$HTML .= '<h4><a href="'.ACTIVITY_DIR_ARCHIVE2002.'rep1/index.html">Partie 6 <small> (de Bunker Médecine à Bunker Forfaitaire CIR)</a></small></h4><hr>';
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 	
 		$year = 2002;
@@ -151,7 +165,8 @@ class ActivityView extends View implements iView{
 	 * @param unknown $page
 	 */
 	public function pageListMyPicture($list, $count, $desc, $page){	
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= '<div id="activity-mypicture-message"></div>';
 		$HTML .= '<table class="table">';
 		for($i=0 ; $i<count($list) ; $i++){
@@ -175,6 +190,7 @@ class ActivityView extends View implements iView{
 		$HTML .= system_html_pagination($this->getModule()->getName(), array("p" => "mypictures"),$count,$desc,$page, "photos");
 			
 		$HTML .= '</div>';
+		$HTML .= '</div>';
 		// built the js code for the overlay
 		$HTML .= activity_get_js_page_overlay('Mes Photos', $this->getModule()->getName(), true);
 		
@@ -187,7 +203,8 @@ class ActivityView extends View implements iView{
 	 * @param array $censures : array of Picture Object
 	 */
 	public function pageListCensured(array $censures){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		
 		$HTML .= '<h4>Liste des photos censur&eacute;es</h4>';
 		
@@ -223,6 +240,7 @@ class ActivityView extends View implements iView{
 		$HTML .= '</table>';
 		
 		$HTML .= '</div>';
+		$HTML .= '</div>';
 		
 		$HTML .= activity_get_js_page_overlay("Les censur&eacute;es", $this->getModule()->getName(), true);
 		
@@ -233,11 +251,13 @@ class ActivityView extends View implements iView{
 	
 	
 	public function pageLastComm(array $pictures){
-		$HTML = '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+		$HTML = '<div class="row">';
+		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= '<h4>Liste des dernieres photos comment&eacute;es</h4>';
 				
 		$HTML .= activity_html_page_lastcomm($this->getModule()->getName(), $pictures);
 
+		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
 		$this->getTemplate()->setPageSubtitle("Derniers commentaires");

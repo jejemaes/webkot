@@ -120,15 +120,15 @@ function echogitoHtmlListEvent(events){
 		}
 		html += '<div class="row">';
 	//	html += '<div class="col-lg-4"><span class="text-muted">'+SystemUtils.datetimeReadable(event.start_time)+'</span></div>';
-		html += '<div class="col-lg-4"><span class="text-muted">'+echogitoDatetimeReadable(event.start_time)+'</span></div>';
-		html += '<div class="col-lg-7"><strong>'+event.name+'</strong>';
+		html += '<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12"><span class="text-muted">'+echogitoDatetimeReadable(event.start_time)+'</span></div>';
+		html += '<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12"><strong>'+event.name+'</strong>';
 		html += ', organis&eacute; par '+event.organizer;
 		if(event.categoryid){
 			html += '<br><span style="color:'+event.categorycolor+'"><i class="fa fa-folder-open"></i> '+event.categoryname+'</span>';
 		}
 		html += '</div>';
-		html += '<div class="col-lg-1"><a class="btn btn-primary btn-sm" href="'+event.event_url+'">&#187; Lire plus</a></div>';
-		html += '</div><hr>';
+		html += '<div class="col-lg-1 col-md-1 col-sm-12 col-xs-12"><a class="btn btn-primary btn-sm" href="'+event.event_url+'">&#187; Lire plus</a></div>';
+		html += '</div><hr class="clearfix">';
 		
 		i++;
 	}

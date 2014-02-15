@@ -70,7 +70,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				break;
 		}	
 	}else{
-		if(ECHOGITO_ACTIVE){		
+		if(ECHOGITO_ACTIVE){
 			if (RoleManager::getInstance ()->hasCapabilitySession ( 'echogito-read-event' )) {			
 				$events = array();
 				$SMM = SessionMessageManager::getInstance();

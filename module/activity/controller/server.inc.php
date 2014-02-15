@@ -444,7 +444,9 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 				
 				if($message->isSuccess()){
 					// orders : get the next and previous picture id
-					$orders = activity_get_neighbor_pictures($activity->getPictures(),$picture);
+					$orders = activity_get_neighbor_pictures($activity->getPictures(), $picture);
+					$orders['previous'] = ($orders['previous'] ? URLUtils::generateURL($module->getName(), array("p" => "picture", "id" => $orders['previous'])) : false);
+					$orders['next'] = ($orders['next'] ? URLUtils::generateURL($module->getName(), array("p" => "picture", "id" => $orders['next'])) : false);
 					
 					// get the current module
 					$module = ModuleManager::getInstance()->getModule($_REQUEST['module']);
@@ -459,7 +461,7 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 					$album['href'] = URLUtils::generateURL($module->getName(), array("p" => "activity", "id" => $activity->getId()));
 					$album['count'] = count($activity->getPictures());
 					
-					echo activity_html_page_picture($module, $activity, $picture, $profile, $album, $orders, $actions, true);
+					echo activity_html_page_picture($module, $activity, $picture, $profile, $album, $orders, $actions, true, true);
 				}else{
 					echo $message->toJSON();
 				}

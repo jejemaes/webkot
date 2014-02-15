@@ -209,7 +209,7 @@ function echogito_html_traditionnal_form($modulename, $template){
 <div class="form-group">
   <label class="col-md-6 control-label" for="echogito-input-title">Titre</label>  
   <div class="col-md-6">
-  <input id="echogito-input-title" name="echogito-input-title" type="text" placeholder="Organisateur" class="form-control input-md" required="">
+  <input id="echogito-input-title" name="echogito-input-title" type="text" placeholder="Titre" class="form-control input-md" required="">
     
   </div>
 </div>
@@ -234,7 +234,7 @@ function echogito_html_traditionnal_form($modulename, $template){
 <div class="form-group">
   <label class="col-md-6 control-label" for="echogito-input-location">Location</label>  
   <div class="col-md-6">
-  <input id="echogito-input-location" name="echogito-input-location" type="text" placeholder="location" class="form-control input-md" required="">
+  <input id="echogito-input-location" name="echogito-input-location" type="text" placeholder="Location" class="form-control input-md" required="">
     
   </div>
 </div>
@@ -243,7 +243,7 @@ function echogito_html_traditionnal_form($modulename, $template){
 <div class="form-group">
   <label class="col-md-6 control-label" for="echogito-input-organizer">Organisateur</label>  
   <div class="col-md-6">
-  <input id="echogito-input-organizer" name="echogito-input-organizer" type="text" placeholder="titre" class="form-control input-md" required="">
+  <input id="echogito-input-organizer" name="echogito-input-organizer" type="text" placeholder="Organisateur" class="form-control input-md" required="">
     
   </div>
 </div>

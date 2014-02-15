@@ -9,8 +9,8 @@
  * @param Module $module : the current Module
  * @return string : the html code
  */
-function activity_html_page_activity(Activity $activity, Module $module, iGeneralTemplate $template){
-	$HTML = '<div>';
+function activity_html_page_activity(Activity $activity, Module $module, iGeneralTemplate $template, $jsactive = false){
+	//$HTML = '<div>';
 	$HTML .= '<h4>'.$activity->getTitle().'</h4>';
 
 	// infos
@@ -27,11 +27,15 @@ function activity_html_page_activity(Activity $activity, Module $module, iGenera
 	$HTML .= '</small>';
 
 	$HTML .= '<p>'.$activity->getDescription().'</p>';
-	$HTML .= '</div>';
-
+	
 	//SocialRing plugin
 	$HTML .= system_load_plugin(array('social-ring' => array("level" => $activity->getLevel(), "template" => $template, "appId" => OptionManager::getInstance()->getOption("facebook-appid"))));
 
+	$jsclass = '';
+	if($jsactive){
+		$jsclass = ACTIVITY_JS_CLASS_CALL_ANCHOR;
+	}
+	
 	$HTML .= '<table class="activity-table-center">';
 	$size = count($activity->getPictures());
 	for($i = 0; $i < $size;){
@@ -44,12 +48,12 @@ function activity_html_page_activity(Activity $activity, Module $module, iGenera
 				//$href = "javascript:activityMakeModal('".$currentPict->getId()."')";
 				$href = "index.php?mod=activity&p=picture&id=".$currentPict->getId();
 				if($currentPict->getIscensured()){
-					$HTML .= '<a href="'.$href.'"><img class="img-responsive activity-img-censured activity-img-hover" src="'.DIR_MODULE . $module->getLocation() .'/view/img/censure-small.jpg" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
+					$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-censured activity-img-hover" src="'.DIR_MODULE . $module->getLocation() .'/view/img/censure-small.jpg" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
 				}else{
 					if($currentPict->getNbcomments() > 0){
-						$HTML .= '<a href="'.$href.'"><img class="img-responsive activity-img-commented activity-img-hover" src="'.$path.'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
+						$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-commented activity-img-hover" src="'.$path.'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
 					}else{
-						$HTML .= '<a href="'.$href.'"><img class="img-responsive activity-img-hover" src="' . $path .'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'" /></a>';
+						$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-hover" src="' . $path .'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'" /></a>';
 					}
 				}
 			}
@@ -58,6 +62,8 @@ function activity_html_page_activity(Activity $activity, Module $module, iGenera
 		$HTML .= '</tr>';
 	}
 	$HTML .= '</table>';
+	
+	//$HTML .= '</div>';
 
 	return $HTML;
 }
@@ -289,7 +295,6 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 			$HTML .= '</div><!-- end of activity-content-box -->';		
 		$HTML .= '</div>';
 	$HTML .= '</div><!-- end of col-lg-3 -->' . "\n";
-	$HTML .= '</div><!-- end of row-fluid -->';
 	$HTML .= '</div><!-- end of row-fluid -->';
 	return $HTML;
 	
