@@ -58,7 +58,7 @@ class GossipView extends View implements iView{
 		
 		$HTML .= '<!-- Modal -->
   <div class="modal fade" id="gossip-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialogBAD">
+    <div class="modal-dialog">
       <div class="modal-content">    
         <div class="modal-body">
 	         <form class="form-horizontal" method="POST" action="'.URLUtils::generateURL($this->getModule()->getName(), array("action" => "add")).'">

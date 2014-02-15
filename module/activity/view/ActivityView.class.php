@@ -68,8 +68,8 @@ class ActivityView extends View implements iView{
 		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
-		$js = activity_get_js_page_overlay($activity->getTitle(), 'activity', true);
-		$this->getTemplate()->addJsFooter($js);
+		//$js = activity_get_js_page_overlay($activity->getTitle(), 'activity', true);
+		//$this->getTemplate()->addJsFooter($js);
 		
 		$this->getTemplate()->setPageSubtitle($activity->getTitle());
 		$this->configureLayout('page-activity',$HTML);

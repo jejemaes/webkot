@@ -60,9 +60,7 @@ class Template extends AbstractTemplate implements iTemplate{
 			$html .= '	<!-- Bootstrap core CSS -->
     					<link href="'.DIR_TEMPLATE.'modern-business/css/bootstrap.min.css" rel="stylesheet">
     					<link href="'.DIR_TEMPLATE.'modern-business/css/bootstrap_2.3.2_form.css" rel="stylesheet">
-    					<link href="'.DIR_TEMPLATE.'modern-business/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
-    					<link href="'.DIR_TEMPLATE.'modern-business/css/bootstrap-modal.css" rel="stylesheet">
-
+    					
     					<!-- Bootstrap core JS -->
     					<script src="'.DIR_TEMPLATE.'modern-business/js/jquery.js"></script>
     				  	<script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap.min.js"></script>
@@ -197,8 +195,8 @@ class Template extends AbstractTemplate implements iTemplate{
 			
 			$html .= '<!-- Bootstrap edge JavaScript -->
     				  <!-- <script src="'.DIR_TEMPLATE.'modern-business/js/modern-business.js"></script>-->
-					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalmanager.js"></script>
-					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modal.js"></script>';
+					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalmanagerKK.js"></script>
+					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalKK.js"></script>';
 			$html .= "\n".'<!-- Additionnal JS Code Footer -->'."\n";
 			$html .= $this->renderArray($this->getJsFooterTags());
 		$html .= '</body>';

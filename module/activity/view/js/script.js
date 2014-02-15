@@ -32,7 +32,7 @@ function activityOverlayPage(baseUrl, link, title){
 		serveruri.addQueryParam('year',uri.getQueryParamValues('year'));
 	}
 	console.log("end of transformation uri : from index.php to server.php");
-	
+
 	// check if the modal exist
 	if (($("#activity-picture-modal").length == 0)){
 		 // create the modal
@@ -54,7 +54,26 @@ function activityOverlayPage(baseUrl, link, title){
 		body.html('<div class="row-fluid">LOADING ...</div>');*/
 		//modal.append(header).append(body);
 		//console.log("body-->"+body);
-		modal = '<div id="activity-picture-modal" class="modal fade" tabindex="-1" data-width="80%" style="display: none;" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="activity-picture-modal-title">'+title+'</h4></div><div class="modal-body" id="activity-picture-modal-content"> LOADING ... </div></div>';
+		
+		var modal = '<div class="modal fade" id="activity-picture-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+			modal += '<div class="modal-dialog modal-lg">';
+			modal += '<div class="modal-content">';
+			modal += '<div class="modal-header">';
+			modal += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			modal += '<h4 class="modal-title" id="activity-picture-modal-title">'+title+'</h4>';
+			modal += '</div>';
+			modal += '<div class="modal-body" id="activity-picture-modal-content">';
+			modal += '...';
+			modal += '</div>';
+			/*modal += '<div class="modal-footer">';
+			modal += '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+			modal += '<button type="button" class="btn btn-primary">Save changes</button>';
+			modal += '</div>';*/
+			modal += '</div>';
+			modal += '</div>';
+			modal += '</div>';
+		
+		
 		$("body").append(modal);
 	}
 	
@@ -62,12 +81,14 @@ function activityOverlayPage(baseUrl, link, title){
 	console.log("before the check if the modal is visible");
 	if(!($("#activity-picture-modal").is(":visible"))){	
 		console.log("the modal is not visible");
-		$("#activity-picture-modal").modal({
-			show: true
-		});
+		try{
+			
+			$("#activity-picture-modal").modal('show');
+		}catch(e){
+			console.log(e);
+		}
 		console.log("the modal is now visible");
 	}
-	
 	//set the content of the modal
 	console.log("update the content of the modal");
 	$.ajax({
