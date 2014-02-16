@@ -202,10 +202,14 @@ function media_admin_html_catergory_form($modname, $action){
 }
 
 
-
-
-function options_admin_html_form($modname,$options){
-	$HTML = '<h3>Liste des options du site</h3>';
+/**
+ * the list (a big form) of all the options
+ * @param string $modname : the name of the module
+ * @param array $options : array of Option objects
+ * @return string : the html code
+ */
+function system_admin_html_options_list($modname,$options){
+	$HTML = '<a href="'.URLUtils::generateURL($modname, array('part'=>'options', 'action'=>'add')).'" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a>';
 	$HTML .= '<form class="form-horizontal" method="post" action="'.URLUtils::generateURL($modname, array("part" => "options")).'">
 	<fieldset>
 	

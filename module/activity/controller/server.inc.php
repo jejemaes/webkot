@@ -398,35 +398,54 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 				throw new AccessRefusedException("Vous n'avez pas les autorisations requises pour retourner une photo.");
 			}
 			break;
+		case "getimage":
+			if(RoleManager::getInstance()->hasCapabilitySession('activity-read-picture')){
+				if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])){
+					
+					$types = array("hd","medium","small");
+					$type = (isset($_REQUEST['type']) && in_array($_REQUEST['type'], $types) ? $_REQUEST['type'] : "small");
 		
+					$pmanager = PictureManager::getInstance();
+					$picture = $pmanager->getPicture($_REQUEST['id']);
+					
+					$amanager = ActivityManager::getInstance();
+					$activity = $amanager->getActivity($picture->getIdactivity(), system_session_privilege());
+					
+					$path = activity_path_picture($module->getLocation(), $activity->getDirectory(), $picture, $type);
+						
+					$im = file_get_contents($path); 
+					header('content-type: image/gif'); 
+					echo $im;
+				}else{
+					echo '{"message" : {"type" : "error", "content" : "Au moins un des champs requis est vide."}}';
+				}
+			}else{
+				echo '{"message" : {"type" : "error", "content" : "Vous n\'avez pas les autorisations requises pour retourner une photo."}}';
+			}
+			break;
 		case "download":
 			if(RoleManager::getInstance()->hasCapabilitySession('activity-read-picture')){
 				if(isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])){	
 					$pmanager = PictureManager::getInstance();
 					$picture = $pmanager->getPicture($_REQUEST['id']);
 					
-					if(!$picture->getIscensured()){		
-						$amanager = ActivityManager::getInstance();
-						$activity = $amanager->getActivity($picture->getIdactivity());
-
-						if(file_exists(DIR_HD_PICTURES . $activity->getDirectory() . "/". $picture->getFilename())){
-							header('Content-Description: File Transfer');
-							header('Content-Type: image/jpeg');
-							header('Content-Disposition: attachment; filename='.$picture->getFilename());
-							header('Content-Transfer-Encoding: binary');
-							header('Expires: 0');
-							header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-							header('Pragma: public');
-							header('Content-Length: ' . filesize(DIR_HD_PICTURES . $activity->getDirectory() . "/". $picture->getFilename()));
-							ob_clean();
-							flush();
-							readfile(DIR_HD_PICTURES . $activity->getDirectory() . "/". $picture->getFilename());	
-						}else{
-							echo "ERREUR : Le fichier est introuvable !";	
-						}
-					}else{
-						echo "La photo est censuree. Vous ne pouvez pas la voir, surtout en HD !";
-					}
+					$amanager = ActivityManager::getInstance();
+					$activity = $amanager->getActivity($picture->getIdactivity(), system_session_privilege());
+						
+					$path = activity_path_picture($module->getLocation(), $activity->getDirectory(), $picture, 'hd');
+					
+					header('Content-Description: File Transfer');
+					header('Content-Type: image/jpeg');
+					header('Content-Disposition: attachment; filename='.$_REQUEST['id'].'.jpg');
+					header('Content-Transfer-Encoding: binary');
+					header('Expires: 0');
+					header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+					header('Pragma: public');
+					header('Content-Length: ' . filesize($path));
+					ob_clean();
+					flush();
+					readfile($path);
+				
 				}else{
 					echo '{"message" : {"type" : "error", "content" : "Au moins un des champs requis est vide."}}';
 				}

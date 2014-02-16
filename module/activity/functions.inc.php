@@ -1,7 +1,5 @@
 <?php
 
-// activity_html_stat_acti_table
-
 
 /**
  * built the html code for the given Activity
@@ -44,9 +42,9 @@ function activity_html_page_activity(Activity $activity, Module $module, iGenera
 			$HTML .= '<td>';
 			if($i<$size){
 				$currentPict = $activity->getPictures()[$i];
-				$path = activity_path_thumbnail($module->getLocation(), $activity->getDirectory(),$currentPict->getFilename());
-				//$href = "javascript:activityMakeModal('".$currentPict->getId()."')";
-				$href = "index.php?mod=activity&p=picture&id=".$currentPict->getId();
+				$href = URLUtils::generateURL($module->getName(), array('p' => 'picture', 'id' => $currentPict->getId()));
+				//activity_path_thumbnail($module->getLocation(), $activity->getDirectory(),$currentPict->getFilename());
+				$path = URLUtils::builtServerUrl($module->getName(), array('action' => 'getimage', 'type' => 'small', 'id' => $currentPict->getId()));
 				if($currentPict->getIscensured()){
 					$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-censured activity-img-hover" src="'.DIR_MODULE . $module->getLocation() .'/view/img/censure-small.jpg" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
 				}else{
@@ -92,7 +90,8 @@ function activity_html_page_top10($module, $mostView, $mostCommented,$year = "ev
 		if($i == 8){
 			$class = "col-lg-offset-3 col-md-offset-3";
 		}
-		$path = activity_path_thumbnail($module->getLocation(), $p->getDirectory(), $p->getFilename());
+		//$path = activity_path_thumbnail($module->getLocation(), $p->getDirectory(), $p->getFilename());
+		$path = URLUtils::builtServerUrl($module->getName(), array('action' => 'getimage', 'type' => 'small', 'id' => $p->getId()));	
 		$html .= '<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 '.$class.'" style="text-align:center;">';
 		$html .= '<a href="'.URLUtils::generateURL($module->getName(),array("p" => "top10","type" => "view", "year" => $year, "index" => ($i+1))).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.$path.'" class="img-responsive activity-img-hover activity-img-center"></a>';
 		$html .= '<p class="text-center">' . $p->getViewed() . ' Vues</p>';
@@ -115,7 +114,8 @@ function activity_html_page_top10($module, $mostView, $mostCommented,$year = "ev
 		if($i == 8){
 			$class = "col-lg-offset-3 col-md-offset-3";
 		}
-		$path = activity_path_thumbnail($module->getLocation(), $p->getDirectory(), $p->getFilename());
+		//$path = activity_path_thumbnail($module->getLocation(), $p->getDirectory(), $p->getFilename());
+		$path = URLUtils::builtServerUrl($module->getName(), array('action' => 'getimage', 'type' => 'small', 'id' => $p->getId()));
 		$html .= '<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 '.$class.'"  style="text-align:center;">';
 		$html .= '<a href="'.URLUtils::generateURL($module->getName(),array("p" => "top10","type" => "commented", "year" => $year, "index" => ($i+1))).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.$path.'" class="img-responsive activity-img-hover activity-img-center"></a>';
 		$html .= '<p class="text-center">' . $p->getNbcomments() . ' Commentaires</p>';
@@ -142,7 +142,8 @@ function activity_html_page_media_activity(array $list, $module){
 	        $html .= '<br>';
 				$html .= '<a class="text-center" href="'.URLUtils::generateURL($module->getName(), array("p" => "activity", "id" => $act->getId())).'">';
 				$pict = activity_get_random_picture($act);
-				$html .= '<img class="img-rounded img-responsive activity-img-hover activity-img-center" src="'.activity_path_thumbnail($module->getLocation(), $act->getDirectory(), $pict->getFilename()).'">';
+				$path = URLUtils::builtServerUrl($module->getName(), array('action' => 'getimage', 'type' => 'small', 'id' => $pict->getId()));
+				$html .= '<img class="img-rounded img-responsive activity-img-hover activity-img-center" src="'.$path.'">';
 				$html .= '</a>';   
 	        $html .= '</div>';
 		// activity informations
@@ -193,7 +194,7 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 		$HTML .= '<div class="activity-picture-content" id="photo">';
 		$HTML .= '<div class="activity-picture-inner-content carousel img-responsive">';
 			// the picture
-			$path = activity_path_picture($module->getLocation(), $activity->getDirectory(), $picture);
+			$path = activity_path_picture($module->getLocation(), $activity->getDirectory(), $picture, 'medium');
 			$class = "img-polaroid";
 			if(count($picture->getComments()) > 0){
 				$class = "activity-img-commented";
@@ -201,7 +202,8 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 			if($picture->getIscensured()){
 				$class = "activity-img-censured";
 			}
-			$HTML .=  "\n\t" . '<img src="'.$path.'" alt="Photo" id="activity-the-picture" class="img-responsive '.$class.'" style="margin:auto"/>';
+			$url = URLUtils::builtServerUrl($module->getName(), array('action' => 'getimage', 'type' => 'medium', 'id' => $picture->getId()));
+			$HTML .=  "\n\t" . '<img src="'.$url.'" alt="Photo" id="activity-the-picture" class="img-responsive '.$class.'" style="margin:auto"/>';
 			
 			//the pager of the picture
 			$jsclass = '';
@@ -327,13 +329,13 @@ function activity_html_page_activity_list(array $list, $modulename){
 		$mod = 2;
 		while(($i < $count) && ($currentmonth == ConversionUtils::getDateMonth($act->getDate()))){
 			if($mod == 1){
-				$out = $out . '<td><span class="activity-small-date">' . ConversionUtils::dateToDateshort($act->getDate())  . ' - </span><span class="activity-list-item"><a href="'. URLUtils::generateURL($modulename, array("p" => "activity", "id" => $act->getId())) .'" >' . $act->getTitle() . '</a></span></td>';
-				//$out .= '</tr><tr>';
+				$out = $out . '<td><span class="activity-small-date">' . ConversionUtils::dateToDateshort($act->getDate())  . ' - </span> <a href="'. URLUtils::generateURL($modulename, array("p" => "activity", "id" => $act->getId())) .'" >' . $act->getTitle() . '</a></td>';
+				//$out .= '<td>'.$act->getTitle().'</td>';
 				$out .= '</tr>';
 				$mod = 2;
 			}else{
 				$out .= '<tr>';
-				$out = $out . '<td><span class="activity-small-date">' . ConversionUtils::dateToDateshort($act->getDate()) . ' - </span><span class="activity-list-item"><a href="'. URLUtils::generateURL($modulename, array("p" => "activity", "id" => $act->getId())) .'" >' . $act->getTitle() . '</a></span></td>';
+				$out = $out . '<td><span class="activity-small-date">' . ConversionUtils::dateToDateshort($act->getDate()) . ' - </span> <a href="'. URLUtils::generateURL($modulename, array("p" => "activity", "id" => $act->getId())) .'" >' . $act->getTitle() . '</a></td>';
 				$mod = 1;
 			}
 			$i++;
@@ -485,13 +487,67 @@ function activity_html_modal_comment($currentComment, $actions){
 
 
 
-
+/*
+ DEPRECIATED
 function activity_path_thumbnail($moduleloc, $directory, $filename){
 	if(file_exists(DIR_PICTURES . $directory . "/small/" .$filename)){
 		return DIR_PICTURES . $directory . "/small/" .$filename;
 	} 
 	return DIR_MODULE . $moduleloc . "view/img/missing-small.jpg";
 }
+*/
+/**
+ * return the path of a given picture (file exists or is censured)
+ * @param String $moduleloc : the directory of the Activity Module
+ * @param String $directory : the directory of the Actvity Object of the given picture
+ * @param Picture $picture : the Picture Object
+ * @param string $type : the type of the Picture (hd, small, medium)
+ * @return string $path : the path to the file the user can see
+ */
+function activity_path_picture($moduleloc, $directory, Picture $picture, $type = "small"){
+	if($type == 'small'){	
+		$path = DIR_PICTURES . $directory ."/small/". $picture->getFilename();
+
+		if($picture->getIscensured()){
+			if(RoleManager::getInstance()->hasCapabilitySession('activity-read-censured')){
+				if(!file_exists($path)){
+					$path = DIR_MODULE . $moduleloc . "view/img/missing-small.jpg";
+				}
+			}else{
+				$path = DIR_MODULE . $moduleloc ."view/img/censure-small.jpg";
+			}
+		}else{
+			if(!file_exists($path)){
+				$path = DIR_MODULE . $moduleloc . "view/img/missing-small.jpg";
+			}
+		}
+	}else{	
+		switch ($type){
+			case 'hd':
+				$path = DIR_HD_PICTURES . $directory ."/". $picture->getFilename();
+				break;
+			case 'medium':
+			default:
+				$path = DIR_PICTURES . $directory ."/". $picture->getFilename();
+				break;
+		}
+		if($picture->getIscensured()){
+			if(RoleManager::getInstance()->hasCapabilitySession('activity-read-censured')){
+				if(!file_exists($path)){
+					$path = DIR_MODULE . $moduleloc . "view/img/missing.jpg";
+				}
+			}else{
+				$path = DIR_MODULE . $moduleloc ."view/img/censure.jpg";
+			}
+		}else{
+			if(!file_exists($path)){
+				$path = DIR_MODULE . $moduleloc . "view/img/missing.jpg";
+			}
+		}
+	}
+	return $path;
+}
+
 
 /**
  * return the path of a given picture (file exists or is censured)
@@ -500,11 +556,12 @@ function activity_path_thumbnail($moduleloc, $directory, $filename){
  * @param Picture $picture : the Picture Object
  * @return string $path : the path to the file the user can see
  */
-function activity_path_picture($moduleloc, $directory, Picture $picture){
+/*
+function activity_path_picture_hd($moduleloc, $directory, Picture $picture){
 	if($picture->getIscensured()){
 		if(RoleManager::getInstance()->hasCapabilitySession('activity-read-censured')){
-			if(file_exists(DIR_PICTURES . $directory ."/". $picture->getFilename())){
-				$path = DIR_PICTURES . $directory ."/". $picture->getFilename();
+			if(file_exists(DIR_HD_PICTURES . $directory ."/". $picture->getFilename())){
+				$path = DIR_HD_PICTURES . $directory ."/". $picture->getFilename();
 			}else{
 				$path = DIR_MODULE . $moduleloc . "view/img/missing.jpg";
 			}
@@ -512,8 +569,8 @@ function activity_path_picture($moduleloc, $directory, Picture $picture){
 			$path = DIR_MODULE . $moduleloc ."view/img/censure.jpg";
 		}
 	}else{
-		if(file_exists(DIR_PICTURES . $directory ."/". $picture->getFilename())){
-			$path = DIR_PICTURES . $directory ."/". $picture->getFilename();
+		if(file_exists(DIR_HD_PICTURES . $directory ."/". $picture->getFilename())){
+			$path = DIR_HD_PICTURES . $directory ."/". $picture->getFilename();
 		}else{
 			$path = DIR_MODULE . $moduleloc . "view/img/missing.jpg";
 		}
@@ -521,7 +578,7 @@ function activity_path_picture($moduleloc, $directory, Picture $picture){
 	return $path;
 }
 
-
+*/
 
 /**
  * Compute the number of comment by adding the number of every given ActivityPicture

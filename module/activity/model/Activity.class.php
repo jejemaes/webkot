@@ -68,11 +68,6 @@ class Activity {
 	}
 	
 	
-	public function toCover(){
-		$str = '<p class="activity_date">' . (string)$this->getDate() . '</p> - ' . (string)$this->getTitle() . '<br>' . (string)$this->getDescription();
-		return $str;
-	}
-	
     
     // SETTERS & GETTERS
 	public function setId($id){

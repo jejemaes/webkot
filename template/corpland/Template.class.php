@@ -50,24 +50,33 @@ class Template extends AbstractTemplate implements iTemplate{
 		$html = '<!DOCTYPE html>
 					<html lang="en">';
 			$html .= '<meta charset="UTF-8">';
-			///$html .= '<meta name=viewport content="width=device-width, initial-scale=1">';
+			$html .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 			$html .= '<title>'.$options['site-title'] . ' : '.$this->getPageTitle().'</title>	';
 		
 		//###### HEADER
 		$html .= '<head>';
 			$html .= $options['site-metatags'];
-			$html .= '	<!-- Bootstrap core CSS -->
-    					<link href="'.DIR_TEMPLATE.'modern-business/css/bootstrap.min.css" rel="stylesheet">
+			$html .= '  <!-- GOOGLE FONT-->
+						<link href="http://fonts.googleapis.com/css?family=Roboto:400,300,700italic,700,500&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+						<!-- Bootstrap core CSS -->
+    					<link href="'.DIR_TEMPLATE.'corpland/css/bootstrap.css" rel="stylesheet">
+    					<link href="'.DIR_TEMPLATE.'corpland/css/custom.css" rel="stylesheet">
     					<link href="'.DIR_TEMPLATE.'modern-business/css/bootstrap_2.3.2_form.css" rel="stylesheet">
-    					
-    					<!-- Bootstrap core JS -->
-    					<script src="'.DIR_TEMPLATE.'modern-business/js/jquery.js"></script>
-    				  	<script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap.min.js"></script>
-    				  		
-    					<!-- CSS Template -->
-    					<link href="'.DIR_TEMPLATE.'modern-business/css/modern-business.css" rel="stylesheet">
+    							
     					<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-    					<link href="'.DIR_TEMPLATE.'modern-business/css/style.css" rel="stylesheet">';
+    					<!--[if lt IE 7]>
+						<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome-ie7.min.css" rel="stylesheet">
+						<![endif]-->
+					    <!-- Fav and touch icons -->
+    					
+						<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+						<!--[if lt IE 9]>
+						      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+						<![endif]-->
+    							
+    					<!-- Bootstrap core JS -->
+    					<script src="'.DIR_TEMPLATE.'corpland/js/jquery.js"></script>
+    				  	<script src="'.DIR_TEMPLATE.'corpland/js/bootstrap.min.js"></script>';
 			$html .= $this->renderArray($this->getCssTags());
 			$html .= "\n".'<!-- Additionnal JS Code Header-->'."\n";
 			$html .= $this->renderArray($this->getJsHeaderTags());
@@ -75,7 +84,182 @@ class Template extends AbstractTemplate implements iTemplate{
 		
 		//###### BODY
 		$html .= '<body>';	
+		
+		$html .= '<div class="wrap">';
+		$html .= '<section>';
 			//menu
+			$html .= '
+				<nav id="topnav" class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+				      <div class="container">
+				        <div class="navbar-header">
+				          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				            <span class="sr-only">'.$options['site-title'].'</span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+				          </button>
+				          <a class="navbar-brand" href="'.URL.'">'.$options['site-title'].'</a>
+				        </div>
+					    <div class="collapse navbar-collapse navbar-ex1-collapse">
+					        '.$this->getMenuHTML(). $this->getWidgetNavbarHtml() . '
+						</div><!-- /.navbar-collapse -->
+	      			</div><!-- /.container -->
+	    		</nav>';
+		$html .= '</section>';
+		
+		$html .= '<section><div class="text-left col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
+		$html .= $this->getHtmlSlides();
+		$html .= '</div></section>';
+		// header page
+		$html .= '<section>
+			<div class="jumbotron">
+				<div class="container">
+					<div class="row">
+						<div style="height:200px;">
+						<div class="text-left col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+							
+							<h2>
+								This template built with Bootstrap 3.0. version.
+							</h2> <a class="btn btn-primary btn-lg" href="index.html#">SIGN UP NOW!</a>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>';
+		//Content
+		$html .= '<section class="content-box">';
+		$html .= '<div class="container">';
+		
+		//layout2col
+		if($this->getLayout() == "layout2col"){	
+			$html .= '<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="page-header">
+						<h3>
+							'.$this->getPageTitle().' <small>'.$this->getPageSubtitle().'</small>
+						</h3>
+					</div>
+				</div>
+			</div>';
+			$html .= '<div class="row">
+				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+					<div style="margin: 20px">'.$this->getContent().'</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+					<div class="">'.$this->getSidebarHtml().'</div>
+				</div>
+			</div>';
+			
+		}
+		
+		//layout1col
+		if($this->getLayout() == "layout1col"){
+			$html .= '<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="page-header">
+						<h3>
+							'.$this->getPageTitle().' <small>'.$this->getPageSubtitle().'</small>
+						</h3>
+					</div>
+				</div>
+			</div>';
+			$html .= '<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div style="margin: 20px">'.$this->getContent().'</div>
+				</div>
+			</div>';
+		}
+		
+		// portfolio
+		if($this->getLayout() == "layoutportfolio"){
+			$html .= $this->getContent();
+			/*$htmlZ .= '<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					'.$this->getContent().'
+				</div>
+			</div>';*/
+		}
+				
+		$html .= '</div>';
+		$html .= '</section>';
+	// footer
+	$html .= '<section class="custom-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							<ul class="list-unstyled">
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+							</ul>
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							<ul class="list-unstyled">
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+							</ul>
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							<ul class="list-unstyled">
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+								<li>
+									 <a>Link anchor</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 text-right">
+					 <address> <strong>Twitter, Inc.</strong><br /> 795 Folsom Ave, Suite 600<br /> San Francisco, CA 94107<br /> <abbr title="Phone">P:</abbr> (123) 456-7890</address> <address> <strong>Full Name</strong><br /> <a href="mailto:#">first.last@example.com</a></address>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>';
+		
+		
+			/*
+			 
+			 //menu
 			$html .= '
 			<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			      <div class="container">
@@ -145,12 +329,8 @@ class Template extends AbstractTemplate implements iTemplate{
 			
 			
 			if($this->getLayout() == "layoutportfolio"){
-				
-				$html .= $this->getHtmlSlides();
 				$html .= $this->getContent();
 			}
-			
-			
 			
 			
 			//footer
@@ -191,14 +371,15 @@ class Template extends AbstractTemplate implements iTemplate{
 					 	</footer>';
 			$html .= '</div>';
 			$html .= '</div>';
-			
 		
 			
 			$html .= '<!-- Bootstrap edge JavaScript -->
     				  <!-- <script src="'.DIR_TEMPLATE.'modern-business/js/modern-business.js"></script>-->
 					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalmanagerKK.js"></script>
-					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalKK.js"></script>';
-			$html .= "\n".'<!-- Additionnal JS Code Footer -->'."\n";
+					  <script src="'.DIR_TEMPLATE.'corpland/js/bootstrap.js"></script>';
+		*/
+		
+			$html .= '<!-- Additionnal JS Code Footer -->';
 			$html .= $this->renderArray($this->getJsFooterTags());
 		$html .= '</body>';
 		
@@ -423,6 +604,9 @@ class Template extends AbstractTemplate implements iTemplate{
 	}
 	
 	
+	
+	
+
 	private function getHtmlSlides(){
 		$html = "";
 		$slides = $this->getSlides();
@@ -437,7 +621,7 @@ class Template extends AbstractTemplate implements iTemplate{
 				$html .= '<li data-target="#accueil-carousel" data-slide-to="'.($i+1).'" '.$class.'></li>';
 			}
 			$html .= '</ol>';
-		
+	
 			$html .= '<!-- Wrapper for slides --><div class="carousel-inner">';
 			for($i=0 ; $i<count($slides) ; $i++){
 				$slide = $slides[$i];
@@ -454,7 +638,7 @@ class Template extends AbstractTemplate implements iTemplate{
 				$html .= '</div>';
 			}
 			$html .= '</div>';
-		
+	
 			$html .= '<!-- Controls -->
 	        <a class="left carousel-control" href="#accueil-carousel" data-slide="prev">
 	          <span class="icon-prev"></span>
@@ -462,7 +646,7 @@ class Template extends AbstractTemplate implements iTemplate{
 	        <a class="right carousel-control" href="#accueil-carousel" data-slide="next">
 	          <span class="icon-next"></span>
 	        </a>';
-		
+	
 			$html .= '</div>';
 		}
 		return $html;

@@ -1,16 +1,24 @@
 <?php
-
+/**
+ * Class describing a Template for the Frontend
+ *
+ * @author jeromemaes
+ * 16 fŽvr. 2014
+ */
 
 interface iTemplate extends iGeneralTemplate{
-	
-	
-	public function setIsHomepage($isHomepage);
 	
 	
 	public function setLayout($layout);
 	
 	
 	public function setOptions($options);
+	
+	/**
+	 * set the slides for the page
+	 * @param array $slides : array of slide Objects
+	 */
+	public function setSlides(array $slides);
 	
 	
 	public function setWidgetSidebar(array $widgets);

@@ -13,8 +13,21 @@ class ActivityController{
 		$activity = new Activity();
 		$message = new Message();
 		if(isset($request['activity-input-title']) && isset($request['activity-input-description']) && isset($request['activity-input-date']) && isset($request['activity-input-directory']) && isset($request['activity-input-level'])){
+			//$activity->setLevel($request['activity-input-level']); !! privilege fout la merde !!
+			$activity->setTitle($request['activity-input-title']);
+			$activity->setDescription($request['activity-input-description']);
+			$activity->setDate($request['activity-input-date']);
+			
+			$authorsArray = array();
+			$authors = $request['activity-input-authors'];
+			for($i=0 ; $i<count($authors) ; $i++){
+				$u = new User();
+				$u->setId($authors[$i]);
+				$authorsArray[] = $u;		
+			}
+			$activity->setAuthors($authorsArray);
+				
 			if(!empty($request['activity-input-title']) && !empty($request['activity-input-description']) && !empty($request['activity-input-date']) && !empty($request['activity-input-directory'])  && !empty($request['activity-input-authors'])){
-		
 				// check the directory name
 				if (! preg_match ( "#^[0-9]{4}-[0-9]{2}-[0-9]{2}_[a-zA-Z0-9_-]+$#", $request ['activity-input-directory'] )) {
 					$message->setType(3);
@@ -45,17 +58,23 @@ class ActivityController{
 							//creation of the activity, and add the authors
 							$aid = $managerA->add($request['activity-input-title'],$request['activity-input-description'],$request['activity-input-date'],$request['activity-input-directory'],$request['activity-input-level']);
 							$message->addMessage("L'activit&eacute; a &eacute;t&eacute; ajoutée avec succ&egrave;s, et porte l'identifiant " . $aid);
-		
+								
+							$authorsArray = array();
 							$authors = $request['activity-input-authors'];
 							for($i=0 ; $i<count($authors) ; $i++){
 								try{
 									$managerA->addAuthors($aid,$authors[$i]);
 									$message->addMessage($authors[$i] . ' est auteur.');
+									
+									$u = new User();
+									$u->setId($authors[$i]);
+									$authorsArray[] = $u;
 								}catch(Exception $e){
 									$message->addMessage($authors[$i] . ' N\'A PAS &eacute;t&eacute; AJOUTE comme auteur.');
 									$message->setType(3);
 								}
 							}
+							$activity->setAuthors($authorsArray);
 						}else{
 							$message->setType(3);
 							$message->addMessage("Les activit&eacute;s ");
@@ -104,6 +123,16 @@ class ActivityController{
 				$activity->setDate($request['activity-input-date']);
 				$activity->setDirectory($request['activity-input-directory']);
 				$activity->setLevel($request['activity-input-level']);
+					
+				$authorsArray = array();
+				$authors = $request['activity-input-authors'];
+				for($i=0 ; $i<count($authors) ; $i++){
+					$u = new User();
+					$u->setId($authors[$i]);
+					$authorsArray[] = $u;
+				}
+				$activity->setAuthors($authorsArray);
+				
 				if(!empty($request['activity-input-title']) && !empty($request['activity-input-description']) && !empty($request['activity-input-date']) && !empty($request['activity-input-directory']) && !empty($request['activity-input-authors'])){
 					try{
 						//creation of the activity, and ad the authors

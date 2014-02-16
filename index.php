@@ -86,8 +86,8 @@ $options["site-closed-message"] = $omanager->getOption('site-closed-message');
 $options["site-metatags"] = $omanager->getOption('site-metatags');
 
 //###### TEMPALTE
+//include DIR_TEMPLATE . 'corpland/load.inc.php';
 include DIR_TEMPLATE . 'modern-business/load.inc.php';
-//include DIR_TEMPLATE . 'default/load.inc.php';
 $template = new Template($options);
 $template->addStyle('<link rel="alternate" type="application/rss+xml" title="Webkot.be : les dernieres activites" href="'.RSS_FILE.'" />');
 system_load_js_file(DIR_SYST_JS, $template);

@@ -42,7 +42,9 @@ class AccueilView extends View implements iView{
 	
 	public function pageHome(array $slides, array $activities, array $listComm, array $posts, Video $video){
 		
-		if(count($slides) > 0){		
+		$this->getTemplate()->setSlides($slides);
+		
+		/*if(count($slides) > 0){		
 			$HTML = '<div id="accueil-carousel" class="carousel slide">';
 			$HTML .= '<ol class="carousel-indicators">';
 			for($i=0 ; $i<count($slides) ; $i++){
@@ -81,8 +83,9 @@ class AccueilView extends View implements iView{
 			
 			$HTML .= '</div>';
 		}
-
+*/
 		
+		$HTML = "";
 		if(count($activities) > 0){	
 			// first activity
 			$activity = $activities[0];
@@ -101,14 +104,14 @@ class AccueilView extends View implements iView{
 			$infos .= '</small>';
 			
 			$HTML .= '  <div class="section well">
-	      <div class="container">
+	      <div class="accueil-container">
 	        <div class="row">
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 	            <h2>'.$activity->getTitle().'</h2>
 	            '.$infos.'
 	            <p>'.$activity->getDescription().'</p>
 	            <a class="btn btn-primary pull-right" href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'">Voir <i class="fa fa-angle-right"></i></a>
-	            <div class="clearfix"></div><br>
+	            <div class="clearfix"></div>
 	          </div>
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 	            <a href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'"><img class="img-responsive accueil-img-hover" src="'.DIR_PICTURES . $activity->getDirectory() . "/" .$picture->getFilename().'"></a>
@@ -119,7 +122,7 @@ class AccueilView extends View implements iView{
 			
 			
 			$HTML .= '<div class="section">
-	      <div class="container">
+	      <div class="accueil-container">
 	        <div class="row">';
 			
 			for($i=1 ; $i < count($activities) ; $i++){
@@ -147,7 +150,7 @@ class AccueilView extends View implements iView{
 	            $HTML .= '<div class="clearfix"></div>';
 	          	$HTML .= '</div>';
 			}
-	
+			$HTML .= '<div class="clearfix"></div>';
 	        $HTML .= '</div><!-- /.row -->
 	      </div><!-- /.container -->
 	    </div><!-- /.section -->';
@@ -155,7 +158,7 @@ class AccueilView extends View implements iView{
 		
 		if(!empty($listComm)){		
 			$HTML .= '<div class="section well">
-	      <div class="container">
+	      <div class="accueil-container">
 	        <div class="row">
 	          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
 	            <h2>Les derni&egrave;res photos comment&eacute;es</h2>
@@ -175,8 +178,8 @@ class AccueilView extends View implements iView{
 		
 		
         if($video->getId()){    	
-			$HTML .= '  <div class="section">
-	      <div class="container">
+			$HTML .= '<div class="section">
+	      <div class="accueil-container">
 	        <div class="row">
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 	            <h2>'.$video->getTitle().'</h2>

@@ -82,13 +82,20 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$manager = ActivityManager::getInstance();
 					$level = system_session_privilege();
 					$activity = $manager->getActivity($_GET['id'], $level);
+
+					$omanager = OptionManager::getInstance();
+					$delay = $omanager->getOption('activity-lock-day');
+					$diff = system_date_difference_day(date("Y-m-d H:i:s"), $activity->getDate());
 					// Comments are waiting for the lock. @see TODO 76
-					//if(!$activity->getIspublished()){
+					if($diff <= $delay || !$activity->getIspublished()){
 						$view->pageFormManagePicture($activity);
-					/*}else{
+					}else{
 						$message = new Message(3);
-						$message->addMessage("L'activite est deja publiee : vous ne pouvez y rajouter des photos !");
-					}*/
+						$message->addMessage("L'activit&eacute; <i>'".$activity->getTitle()."'</i> est d&eacute;ja publi&eacute;e depuis <strong>plus de ".$delay." jours</strong> : vous ne pouvez plus y ajouter de photos !");
+						$SMM = SessionMessageManager::getInstance();
+						$SMM->setSessionMessage($message);
+						URLUtils::redirection(URLUtils::generateURL($module->getName(), array()));
+					}
 				}
 			}else{
 				throw new AccessRefusedException("Vous ne pouvez pas manager les photos de l'activité.");

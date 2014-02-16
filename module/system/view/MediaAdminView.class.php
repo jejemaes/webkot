@@ -55,22 +55,7 @@ class MediaAdminView extends AdminView implements iAdminView{
 		$t = $this->getTemplate();
 		$t->setContent($content);
 	}
-	
-	
-	
-	public function pageOptionsForm($options,$message){
-		$content .= '<div class="row">';
-		$content .= '<div class="col-lg-12">';
-		$content .= '<div class="well">';
-		$content .= $message;
-		$content .= options_admin_html_form($this->getModule()->getName(),$options);
-		$content .= '</div>';
-		$content .= '</div>';
-		$content .= '</div>';
-		$t = $this->getTemplate();
-		$t->setContent($content);
-	}
-	
+
 	
 	public function pageModuleList($modules, $message){
 		$content .= '<div class="row">';

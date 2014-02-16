@@ -41,6 +41,7 @@ class SystemModuleLoader implements iModuleLoader{
 	public static function loadAdminView($relativePath){
 		system_include_file($relativePath . 'view/MediaAdminView.class.php');
 		system_include_file($relativePath . 'view/WidgetAdminView.class.php');
+		system_include_file($relativePath . 'view/OptionAdminView.class.php');
 	}
 
 	public static function loadAdminFunctions($relativePath){
@@ -48,6 +49,7 @@ class SystemModuleLoader implements iModuleLoader{
 	}
 
 	public static function getAdminController($relativePath){
+		system_include_file($relativePath . 'controller/OptionController.class.php');
 		return $relativePath . 'controller/backend.inc.php';
 	}
 

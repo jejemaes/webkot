@@ -276,70 +276,99 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 		}
 
 	}
-	
-	
-	
+		
 	
 
 	// OPTIONS
 	if($_GET['part'] == 'options'){
+		
+		$view = new OptionAdminView($template, $module);
+		
 		$omanager = OptionManager::getInstance();
 		$options = $omanager->getOptions();
 		
-		if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-edit-option' )) {
+		if(isset($_GET['action']) && !empty($_GET['action'])){
 			$message = new Message(1);
-			if(isset($_POST["option-input"]) && !empty($_POST['option-input'])){
-				foreach($_POST['option-input'] as $key => $value){
-					switch ($omanager->getOptionObject($key)->getType ()) {
-						case 'boolean' :
-							if(!($_POST['option-input'][$key] == "true") && !($_POST['option-input'][$key] == "false")){
-								$message->setType(3);
-								$message->addMessage($key . " n 'est pas un boolean." . $_POST['option-input'][$key]);
-							}
-							break;
-						case 'integer' :
-							if(empty($_POST['option-input'][$key]) || !is_numeric($_POST['option-input'][$key])){
-								$message->setType(3);
-								$message->addMessage($key . " n 'est pas un entier.");
-							}
-							break;
-						case 'string' :
-						case 'text':
-							if(empty($_POST['option-input'][$key])){
-								$message->setType(3);
-								$message->addMessage($key . " est vide.");
-							}
-							break;
-						default :
-							if(empty($_POST['option-input'][$key])){
-								$message->setType(3);
-								$message->addMessage($key . " est vide.");
-							}
-							break;
+			switch ($_GET['action']){
+				case 'add':
+					if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-edit-option' )) {	
+						list($message, $option) =OptionController::addAction($_POST);
+						
+						if(($message->isSuccess())){
+							$SMM = SessionMessageManager::getInstance();
+							$SMM->setSessionMessage($message);
+							URLUtils::redirection(URLUtils::generateURL($module->getName(), array('part'=>'options')));
+						}else{
+							$view->pageOptionForm($message, $option, $omanager->getTypeList());
+						}
+					}else{
+						throw new AccessRefusedException("Vous ne pouvez pas ajouter d'option. Dommage hein :p");
 					}
-				}
-				if($message->getType() == 1){
-					try{
-						$omanager->update($_POST['option-input']);
-						$message->addMessage("La mise a jour des Options a ete effectuee avec succes. La nouvelle configuration prend effet des maintenant.");
-					}catch(SQLException $sqle){
-						$message = new Message(3);
-						$message->addMessage("Une erreur s'est produite, la mise a jour de vos options a echoue.");
-						$message->addMessage($sqle->getMessage());
-					}catch(DatabaseExcetion $dbe){
-						$message = new Message(3);
-						$message->addMessage("Une erreur s'est produite, la mise a jour de vos options a echoue.");
-						$message->addMessage($dbe->getMessage());
+					break;
+				default:
+					$message = new Message(3);
+					$message->addMessage("Action inconnue");
+					break;
+			}
+		}else{	
+			if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-edit-option' )) {
+				$SMM = SessionMessageManager::getInstance();
+				$message = $SMM->getSessionMessage();
+				if(isset($_POST["option-input"]) && !empty($_POST['option-input'])){
+					foreach($_POST['option-input'] as $key => $value){
+						switch ($omanager->getOptionObject($key)->getType ()) {
+							case 'boolean' :
+								if(!($_POST['option-input'][$key] == "true") && !($_POST['option-input'][$key] == "false")){
+									$message->setType(3);
+									$message->addMessage($key . " n 'est pas un boolean." . $_POST['option-input'][$key]);
+								}
+								break;
+							case 'integer' :
+								if(empty($_POST['option-input'][$key]) || !is_numeric($_POST['option-input'][$key])){
+									$message->setType(3);
+									$message->addMessage($key . " n 'est pas un entier.");
+								}
+								break;
+							case 'string' :
+							case 'text':
+								if(empty($_POST['option-input'][$key])){
+									$message->setType(3);
+									$message->addMessage($key . " est vide.");
+								}
+								break;
+							default :
+								if(empty($_POST['option-input'][$key])){
+									$message->setType(3);
+									$message->addMessage($key . " est vide.");
+								}
+								break;
+						}
 					}
-				}else{
-					$message->addMessage("Les options n'ont pas ete mise a jour. L'ancienne configuration est toujours active.");
-				}
-				$options = $omanager->getOptions();
-			}		
-			$view->pageOptionsForm($options, $message);
-		}else{
-			throw new AccessRefusedException("Vous ne pouvez pas editer les options.");
+					if($message->getType() == 1){
+						try{
+							$omanager->update($_POST['option-input']);
+							$message->addMessage("La mise a jour des Options a ete effectuee avec succes. La nouvelle configuration prend effet des maintenant.");
+						}catch(SQLException $sqle){
+							$message = new Message(3);
+							$message->addMessage("Une erreur s'est produite, la mise a jour de vos options a echoue.");
+							$message->addMessage($sqle->getMessage());
+						}catch(DatabaseExcetion $dbe){
+							$message = new Message(3);
+							$message->addMessage("Une erreur s'est produite, la mise a jour de vos options a echoue.");
+							$message->addMessage($dbe->getMessage());
+						}
+					}else{
+						$message->addMessage("Les options n'ont pas ete mise a jour. L'ancienne configuration est toujours active.");
+					}
+					$options = $omanager->getOptions();
+				}		
+				$view->pageOptionList($options, $message);
+			}else{
+				throw new AccessRefusedException("Vous ne pouvez pas editer les options.");
+			}
 		}
+		
+		
 		
 	}
 	
@@ -377,7 +406,7 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 						if(isset($_POST['widget-input-name']) && isset($_POST['widget-input-active']) && isset($_POST['widget-input-infooter'])){
 							if(!empty($_POST['widget-input-name']) && is_numeric($_POST['widget-input-active']) && is_numeric($_POST['widget-input-infooter'])){
 								$wmanager->addWidget($_POST['widget-input-name'], $_POST['widget-input-infooter'], $_POST['widget-input-active'], $_POST['widget-input-class'], $_POST['widget-input-module']);
-								$message->addMessage("Widget ajout avec succes.");
+								$message->addMessage("Widget ajout&eacute; avec succes.");
 									
 								$SMM = SessionMessageManager::getInstance();
 								$SMM->setSessionMessage($message);

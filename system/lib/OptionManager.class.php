@@ -40,6 +40,36 @@ class OptionManager{
 	}
 	
 	
+	/**
+	 * add an Option
+	 * @param string $key : the name of the option (id)
+	 * @param string $value : the value of the option
+	 * @param text $descri : the description
+	 * @param string $type : the name of the type of the option
+	 * @throws SQLException
+	 * @throws DatabaseException
+	 * @uses APC
+	 */
+	public function add($key, $value, $descri, $type){
+		try {
+			$sql = "INSERT INTO options(options.key, value, description, type) VALUES (:key, :value, :descri, :type)";
+			$stmt = $this->_db->prepare($sql);
+			$tab = array('key' => $key, 'value' => $value, 'descri' => $descri, 'type' => $type);
+			$stmt->execute($tab);
+			if($stmt->errorCode() != 0){
+				$error = $stmt->errorInfo();
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter une option.");
+			}
+			if($this->_apc){
+				apc_delete($this->apc_options);
+			}
+			return true;
+		}catch(PDOException $e){
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'ajouter une option.");
+		}
+	
+	}
+	
 	public function getOption($key){
 		if(array_key_exists($key, $this->getOptionsArray())){
 			if($this->getOptionObject($key)->getType() == 'boolean'){
@@ -64,7 +94,7 @@ class OptionManager{
 				$stmt->execute();
 				if($stmt->errorCode() != 0){
 					$error = $stmt->errorInfo();
-					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des Options");
+					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des Options.");
 				}
 				$options = array();
 				while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -75,7 +105,7 @@ class OptionManager{
 				}
 				return $options;
 			}catch(PDOException $e){
-				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des Options");
+				throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des Options.");
 			}
 		}
 	}
@@ -109,7 +139,7 @@ class OptionManager{
 				$n = $stmt->execute(array('value' => $value, 'key' => $key));
 				if($stmt->errorCode() != 0){
 					$error = $stmt->errorInfo();
-					throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour");
+					throw new SQLException($error[2], $error[0], $sql, "Impossible d'effectuer la mise a jour.");
 				}
 			}
 			if($this->_apc){
@@ -117,10 +147,18 @@ class OptionManager{
 			}
 			return ($n > 0);
 		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour");
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'effectuer la mise a jour.");
 		}
 	}
 
+	
+	/**
+	 * return the list of type an Option can be
+	 * @return array of string
+	 */
+	public function getTypeList(){
+		return array("text", "string", "integer","boolean");
+	}
 	
 	
 }

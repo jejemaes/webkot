@@ -10,9 +10,9 @@ abstract class AbstractTemplate implements iTemplate{
 	private $jsHeaderTags;
 	private $jsFooterTags;
 	
-	private $isHomepage;
 	private $layout;
 	private $options;
+	private $slides;
 	private $menuContent;
 	private $content;
 	
@@ -107,16 +107,16 @@ abstract class AbstractTemplate implements iTemplate{
 		$this->jsFooterTags = $jsFooterTags;
 	}
 	
-	public function setIsHomepage( $isHomepage ){
-		$this->isHomepage = $isHomepage;
-	}
-	
 	public function setLayout( $layout ){
 		$this->layout = $layout;
 	}
 	
 	public function setOptions( $options ){
 		$this->options = $options;
+	}
+	
+	public function setSlides(array $slides){
+		$this->slides = $slides;
 	}
 	
 	public function setMenuContent(array $menuContent ){
@@ -155,10 +155,6 @@ abstract class AbstractTemplate implements iTemplate{
 		return $this->jsFooterTags;
 	}
 	
-	public function getIsHomepage(){
-		return $this->isHomepage;
-	}
-	
 	public function getLayout(){
 		return $this->layout;
 	}
@@ -181,6 +177,10 @@ abstract class AbstractTemplate implements iTemplate{
 	
 	public function getWidgetFooter(){
 		return $this->widgetsFooter;
+	}
+	
+	public function getSlides(){
+		return $this->slides;
 	}
 	
 }

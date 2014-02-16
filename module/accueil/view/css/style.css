@@ -5,6 +5,13 @@
     filter:alpha(opacity=40);
 }
 
+.accueil-container{
+	margin-right: auto;
+	margin-left: auto;
+	padding-left: 25px;
+	padding-right: 25px;	
+}
+
 
 .accueil-portfolio-picture{
 	margin-bottom: 30px;
@@ -25,31 +32,3 @@
 	text-align:center;
 }
 
-
-
-/* Half Page Height Carousel Customization */
-.carousel {
-  height: 50%;
-}
-
-.item,
-.active,
-.carousel-inner {
-  height: 100%;
-}
-
-.fill {
-  width: 100%;
-  height: 100%;
-  background-position: center;
-  background-size: cover;
-}
-
-/* Responsive Styles */
-@media (max-width: 767px) {
-
-.carousel {
-  height: 70%; /* increases the carousel height so it looks good on phones */
-}
-
-}

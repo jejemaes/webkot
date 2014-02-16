@@ -351,6 +351,24 @@ function system_session_privilege(){
 //################################
 
 /**
+ * get the diffenrece (in days) between 2 dates (whatever the format)
+ * @param unknown $date1
+ * @param unknown $date2
+ * @return number : the number of day between the 2 dates
+ */
+function system_date_difference_day($date1, $date2){
+	$d1 = date_parse($date1);
+	$d2 = date_parse($date2);
+	
+	$time1 = mktime($d1['hour'], $d1['minute'], $d1['second'], $d1['month'], $d1['day'], $d1['year']);
+	$time2 = mktime($d2['hour'], $d2['minute'], $d2['second'], $d2['month'], $d2['day'], $d2['year']);
+	
+	$diff = $time1 - $time2;
+	
+	return ($diff / (24 * 60 * 60));
+}
+
+/**
  * get list of the sub directories of the given directory
  * @param unknown $directory
  */
