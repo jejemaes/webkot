@@ -21,7 +21,7 @@ class AccueilView extends View implements iView{
 	 */
 	private function configureLayout($state, $content){
 		$lname = $this->getModule()->getLayout($state);
-		$this->getTemplate()->addJSFooter('<script src="'.DIR_MODULE.$this->getModule()->getName().'/view/js/home.js"></script>');
+		//$this->getTemplate()->addJSFooter('<script src="'.DIR_MODULE.$this->getModule()->getName().'/view/js/home.js"></script>');
 		$this->getTemplate()->setLayout($lname);
 		$this->getTemplate()->setContent($content);
 		$this->getTemplate()->setPageTitle($this->getModule()->getDisplayedName());

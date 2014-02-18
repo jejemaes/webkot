@@ -53,7 +53,6 @@ body {
 
 
 .template-carousel {
-  @extends .carousel;
   height : 50%;
 }
 

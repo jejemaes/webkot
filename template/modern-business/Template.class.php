@@ -425,7 +425,7 @@ class Template extends AbstractTemplate implements iTemplate{
 		$html = "";
 		$slides = $this->getSlides();
 		if(count($slides) > 0){
-			$html .= '<div id="accueil-carousel" class="template-carousel slide">';
+			$html .= '<div id="template-carousel" class="carousel template-carousel slide">';
 			$html .= '<ol class="carousel-indicators">';
 			for($i=0 ; $i<count($slides) ; $i++){
 				$class = "";
@@ -463,6 +463,12 @@ class Template extends AbstractTemplate implements iTemplate{
 		
 			$html .= '</div>';
 		}
+		
+		$html .= "<script>// Activates the Carousel
+			$('.carousel').carousel({
+			  interval: 5000
+			})
+		</script>";
 		return $html;
 	}
 	

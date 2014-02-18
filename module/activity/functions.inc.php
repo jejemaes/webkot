@@ -271,7 +271,7 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 					$listCom = $picture->getComments();
 					for($i=0 ; $i<count($picture->getComments()) ; $i++){
 						$currentComment = $listCom[$i];
-						$HTML  .= activity_html_modal_comment($currentComment,$actions);
+						$HTML .= activity_html_modal_comment($currentComment,$actions);
 					}
 				}else{
 					$HTML  .= "Il n'y a pas de commentaire sur cette photo.";
@@ -301,7 +301,8 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 	
 	// Censure submittion Form Modal
 	$email = "";
-	if(SessionManager::getInstance()->existsUserSession()){
+	$smanager = SessionManager::getInstance();
+	if($smanager->existsUserSession()){
 		$profile = $smanager->getUserprofile();
 		$email = $profile->getMail();
 	}
