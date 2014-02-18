@@ -102,6 +102,7 @@ class Template extends AbstractTemplate implements iTemplate{
 				$html .= '<img src="'.DIR_TEMPLATE . 'modern-business/img/dessinLogo.png">';
 				$html .= '</div>';
 				
+				$html .= '<div class="template-content-box">';
 				$html .= '<div class="container">';
 				//layout2col
 				if($this->getLayout() == "layout2col"){	
@@ -141,13 +142,15 @@ class Template extends AbstractTemplate implements iTemplate{
 					$html .= '</div><!-- /.row -->';
 				}
 				$html .= '</div><!-- /.container -->';
+				$html .= '</div>';//end of template-content-box
 			}
 			
 			
 			if($this->getLayout() == "layoutportfolio"){
-				
 				$html .= $this->getHtmlSlides();
+				$html .= '<div class="template-content-boxDD">';
 				$html .= $this->getContent();
+				$html .= '</div>';
 			}
 			
 			
@@ -193,11 +196,6 @@ class Template extends AbstractTemplate implements iTemplate{
 			$html .= '</div>';
 			
 		
-			
-			$html .= '<!-- Bootstrap edge JavaScript -->
-    				  <!-- <script src="'.DIR_TEMPLATE.'modern-business/js/modern-business.js"></script>-->
-					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalmanagerKK.js"></script>
-					  <script src="'.DIR_TEMPLATE.'modern-business/js/bootstrap-modalKK.js"></script>';
 			$html .= "\n".'<!-- Additionnal JS Code Footer -->'."\n";
 			$html .= $this->renderArray($this->getJsFooterTags());
 		$html .= '</body>';
@@ -427,7 +425,7 @@ class Template extends AbstractTemplate implements iTemplate{
 		$html = "";
 		$slides = $this->getSlides();
 		if(count($slides) > 0){
-			$html .= '<div id="accueil-carousel" class="carousel slide">';
+			$html .= '<div id="accueil-carousel" class="template-carousel slide">';
 			$html .= '<ol class="carousel-indicators">';
 			for($i=0 ; $i<count($slides) ; $i++){
 				$class = "";

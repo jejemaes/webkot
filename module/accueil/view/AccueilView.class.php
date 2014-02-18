@@ -104,7 +104,7 @@ class AccueilView extends View implements iView{
 			$infos .= '</small>';
 			
 			$HTML .= '  <div class="section well">
-	      <div class="accueil-container">
+	      <div class="container">
 	        <div class="row">
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 	            <h2>'.$activity->getTitle().'</h2>
@@ -122,7 +122,7 @@ class AccueilView extends View implements iView{
 			
 			
 			$HTML .= '<div class="section">
-	      <div class="accueil-container">
+	      <div class="container">
 	        <div class="row">';
 			
 			for($i=1 ; $i < count($activities) ; $i++){
@@ -158,7 +158,7 @@ class AccueilView extends View implements iView{
 		
 		if(!empty($listComm)){		
 			$HTML .= '<div class="section well">
-	      <div class="accueil-container">
+	      <div class="container">
 	        <div class="row">
 	          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
 	            <h2>Les derni&egrave;res photos comment&eacute;es</h2>
@@ -172,14 +172,13 @@ class AccueilView extends View implements iView{
 	      </div><!-- /.container -->
 	    </div><!-- /.section -->';
 	        
-	        $HTML .= activity_get_js_page_overlay('Dernieres photos comment&eacute;es', 'activity', true);
-	        	  
+	        $HTML .= activity_get_js_page_overlay('Dernieres photos comment&eacute;es', 'activity', true); 
 		}
 		
 		
         if($video->getId()){    	
 			$HTML .= '<div class="section">
-	      <div class="accueil-container">
+	      <div class="container">
 	        <div class="row">
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 	            <h2>'.$video->getTitle().'</h2>

@@ -35,8 +35,10 @@ class PictureController{
 					$profile = $smanager->getUserprofile();
 					$email = $profile->getMail();
 				}
-				$label = activity_html_modal_censure($picture->getId(), "", $email);//URLUtils::generateURL('page', array("id"=>"contact"));
-				$actionCommon['<i class="fa fa-ban"></i> Demander censure' . $label] = "javascript:activityShowModal('activity-censure-modal');";
+				//$label = activity_html_modal_censure($picture->getId(), "", $email);//URLUtils::generateURL('page', array("id"=>"contact")); 
+				// --> the html code of the modal is added in the activity_html_page_picture function
+				$actionCommon['<i class="fa fa-ban"></i> Demander censure'] = "javascript:activityShowModal('activity-censure-modal');";
+				//$actionCommon['<button data-toggle="modal" data-target="#activity-censure-modal">Demande de censure</button>'] = "#"; //"javascript:activityShowModal('activity-censure-modal');";
 			
 				$adminActions = array();
 				if(RoleManager::getInstance()->hasCapabilitySession("activity-can-censure")){

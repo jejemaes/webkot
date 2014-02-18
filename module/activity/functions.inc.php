@@ -298,6 +298,15 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 		$HTML .= '</div>';
 	$HTML .= '</div><!-- end of col-lg-3 -->' . "\n";
 	$HTML .= '</div><!-- end of row-fluid -->';
+	
+	// Censure submittion Form Modal
+	$email = "";
+	if(SessionManager::getInstance()->existsUserSession()){
+		$profile = $smanager->getUserprofile();
+		$email = $profile->getMail();
+	}
+	$HTML .= activity_html_modal_censure($picture->getId(), "", $email);
+	
 	return $HTML;
 	
 }
@@ -312,44 +321,41 @@ function activity_html_page_picture(Module $module, Activity $activity, Picture 
 function activity_html_page_activity_list(array $list, $modulename){
 	$nommois = activity_get_month_table();
 	$count = count($list);
-
-	$out = '<table class="activity-table-twocol">';
-
-	for($i = 0 ; $i < $count ; $i++){
-		$act = $list[$i];
-		$currentmonth = ConversionUtils::getDateMonth($act->getDate());
-		$out .= '
-			<tr>
-				<td>
-					<h4><i class="fa fa-camera"></i>  ' .$nommois[(int)ConversionUtils::getDateMonth($act->getDate())]. ' ' . ConversionUtils::getDateYear($act->getDate()). '</h4>
-				</td>
-				<td></td>
-			</tr>
-			';
-		$mod = 2;
-		while(($i < $count) && ($currentmonth == ConversionUtils::getDateMonth($act->getDate()))){
-			if($mod == 1){
-				$out = $out . '<td><span class="activity-small-date">' . ConversionUtils::dateToDateshort($act->getDate())  . ' - </span> <a href="'. URLUtils::generateURL($modulename, array("p" => "activity", "id" => $act->getId())) .'" >' . $act->getTitle() . '</a></td>';
-				//$out .= '<td>'.$act->getTitle().'</td>';
-				$out .= '</tr>';
-				$mod = 2;
-			}else{
-				$out .= '<tr>';
-				$out = $out . '<td><span class="activity-small-date">' . ConversionUtils::dateToDateshort($act->getDate()) . ' - </span> <a href="'. URLUtils::generateURL($modulename, array("p" => "activity", "id" => $act->getId())) .'" >' . $act->getTitle() . '</a></td>';
-				$mod = 1;
-			}
-			$i++;
-			$act = $list[$i];
+	
+	$activities_to_display = array();
+	$i = 0;
+	$html = "";
+	$month = "";
+	while($i < $count){
+		$activity = $list[$i];
+		$current = $nommois[(int)ConversionUtils::getDateMonth($activity->getDate())]. ' ' . ConversionUtils::getDateYear($activity->getDate());
+		if($month != $current){
+			if($month != ""){	
+				$html .= '<div class="row">';
+				$html .= '<div class="col-lg-12">';
+				$html .= '<h4><i class="fa fa-camera"></i> ' . $month . '</h4>';
+				$html .= '</div>';
+				$html .= '</div>';
+	
+				$nb = (int) (count($activities_to_display) / 2);
+				$nb = $nb + (count($activities_to_display) % 2);
+				$html .= '<div class="row">';
+				$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
+				$html .= activity_html_mini_list(array_slice($activities_to_display, 0, $nb), $modulename, "list-unstyled");
+				$html .= '</div>';
+				$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
+				$html .= activity_html_mini_list(array_slice($activities_to_display, $nb, (count($activities_to_display) - $nb)), $modulename, "list-unstyled");
+				$html .= '</div>';
+				$html .= '</div>';
+			}	
+			$month = $current;
+			$activities_to_display = array();
 		}
-		if($mod == 1){
-			$out .= '<td></td></tr>';
-		}
-		$i--;
-		$act = $list[$i];
-		//$out .= '</tr>';
+		$activities_to_display[] = $activity;
+		
+		$i++;
 	}
-	$out .= '</table>';
-	return $out;
+	return $html;
 }
 
 /**
@@ -402,8 +408,8 @@ function activity_html_modal_censure($pid, $buttonClass, $email){
 	//$HTML .= '<a  href="#" class="'.$buttonClass.'" data-toggle="modal" data-target="#activity-censure-modal"><i class="icon-ban-circle"></i> Demande de censure</a>';
 	$HTML = '<!-- Modal -->
 <div class="modal fade" id="activity-censure-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialogBAD">
-    <div class="modal-content">
+  <div class="modal-dialog">
+	<div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Demande de censure pour la photo <i>'.$pid.'</i></h4>
@@ -485,6 +491,23 @@ function activity_html_modal_comment($currentComment, $actions){
 	return $comm;
 }
 
+/**
+ * get the code of a list (html li tag) of a list of Activity
+ * @param array $list
+ * @param unknown $classTag
+ * @return string
+ */
+function activity_html_mini_list(array $list, $moduleName, $classTag){
+	$html = "<ul class=\"".$classTag."\">";
+	foreach ($list as $activity){
+		$html .= "<li>";
+		$html .= '<strong><small>' . ConversionUtils::dateToDateshort($activity->getDate()) . '</small> &middot; </strong>';
+		$html .= "<a href=\"".URLUtils::generateURL($moduleName, array('p' => 'activity', 'id' => $activity->getId()))."\">".$activity->getTitle()."</a>";
+		$html .= "</li>";
+	}
+	$html .= "</ul>";
+	return $html;
+}
 
 
 /*

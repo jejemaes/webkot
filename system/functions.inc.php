@@ -639,6 +639,7 @@ function system_html_action_list(array $list, $class = null){
 	return $html;
 }
 
+
 /**
  * generate a random password with a given length (8 by default)
  * @param number $length : the lenght of the desired random password

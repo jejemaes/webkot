@@ -50,8 +50,11 @@ body {
 
 
 /* Half Page Height Carousel Customization */
-#accueil-carousel.carousel {
-  height: 55%;
+
+
+.template-carousel {
+  @extends .carousel;
+  height : 50%;
 }
 
 .item,

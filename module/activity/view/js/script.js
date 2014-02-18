@@ -416,7 +416,12 @@ function activityDeleteFavorite(newUrl,pid){
 
 
 function activityShowModal(id){
-	$('#'+id).modal('show');
+	console.log('before show');
+	$('#'+id).modal({
+		  keyboard: false,
+		  show : true
+	});
+	console.log('after shown');
 }
 
 function activityMakeModalNonState(url, module, action, pid){				
