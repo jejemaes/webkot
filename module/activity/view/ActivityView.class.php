@@ -60,16 +60,18 @@ class ActivityView extends View implements iView{
 	 * built the page for the given activity
 	 * @param Activity $activity
 	 */
-	public function pageActivity(Activity $activity){
+	public function pageActivity(Activity $activity, $jsactive = true){
 		$HTML = '<div class="row">';
 		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		
-		$HTML .= activity_html_page_activity($activity, $this->getModule(), $this->getTemplate(), true);	
+		$HTML .= activity_html_page_activity($activity, $this->getModule(), $this->getTemplate(), $jsactive);	
 		$HTML .= '</div>';
 		$HTML .= '</div>';
 		
-		//$js = activity_get_js_page_overlay($activity->getTitle(), 'activity', true);
-		//$this->getTemplate()->addJsFooter($js);
+		if($jsactive){
+			$js = activity_get_js_page_overlay($activity->getTitle(), 'activity', true);
+			$this->getTemplate()->addJsFooter($js);
+		}
 		
 		$this->getTemplate()->setPageSubtitle($activity->getTitle());
 		$this->configureLayout('page-activity',$HTML);
@@ -168,25 +170,27 @@ class ActivityView extends View implements iView{
 		$HTML = '<div class="row">';
 		$HTML .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 		$HTML .= '<div id="activity-mypicture-message"></div>';
+		$HTML .= '<div class="table-responsive">';
 		$HTML .= '<table class="table">';
 		for($i=0 ; $i<count($list) ; $i++){
 			$pict = $list[$i];
 			$HTML .= '<tr id="activity-mypicture-'.$pict->getId().'">';
 			$class = ($pict->getIscensured() ? "activity-img-censured" : "img-polaroid");
-			//$HTML .= '<td><a href="javascript:activityMakeModal('.$pict->getId().')" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.activity_path_thumbnail($this->getModule()->getName()."/", $pict->getDirectory(), $pict->getFilename()).'" class="'.$class.' activity-img-hover"></a></td>';
-			$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p"=>"mypicture","id"=>$pict->getId())).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.activity_path_thumbnail($this->getModule()->getName()."/", $pict->getDirectory(), $pict->getFilename()).'" class="'.$class.' activity-img-hover"></a></td>';
+			//$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array('p' => 'activity', 'id' => $)) .'">'. $pict->getTitle().'</a>, le '.ConversionUtils::dateToDateFr($pict->getDate());		
+			$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p"=>"mypicture","id"=>$pict->getId())).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.activity_path_picture($this->getModule()->getName()."/", $pict->getDirectory(), $pict).'" class="'.$class.' activity-img-hover"></a></td>';
 				
 			$HTML .= '<td><b>'.$pict->getTitle().'</b>, le '.ConversionUtils::dateToDateFr($pict->getDate());
 			if($pict->getAddeddate()){
 				$HTML .= '<br><i>Ajout&eacute;e le '.ConversionUtils::timestampToDatetime($pict->getAddeddate()).'</i></td>';
 			}
-			$HTML .= '<td><a href="javascript:activityDeleteFavorite(\'server.php?module='.$this->getModule()->getName().'&action=delfav\','.$pict->getId().');" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</a>  ';
-			$HTML .= '<a target="_blank" href="'.URLUtils::builtServerUrl($this->getModule()->getName(),array("action" => "download", "id" => $pict->geTId())).'" class="btn btn-default"><i class="fa fa-download"></i> Download</a>';
+			$HTML .= '<td><a href="javascript:activityDeleteFavorite(\'server.php?module='.$this->getModule()->getName().'&action=delfav\','.$pict->getId().');" class="btn btn-danger template-tooltip" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash-o"></i> </a>  ';
+			$HTML .= '<a target="_blank" href="'.URLUtils::builtServerUrl($this->getModule()->getName(),array("action" => "download", "id" => $pict->geTId())).'" class="btn btn-default template-tooltip" data-toggle="tooltip" data-placement="top" title="T&eacute;l&eacute;charger"><i class="fa fa-download"></i> </a>';
 				
 			$HTML .= '</td>' ;
 			$HTML .= '</tr>';
 		}
 		$HTML .= '</table>';
+		$HTML .= '</div>';//end of <div class="table-responsive">
 		$HTML .= system_html_pagination($this->getModule()->getName(), array("p" => "mypictures"),$count,$desc,$page, "photos");
 			
 		$HTML .= '</div>';

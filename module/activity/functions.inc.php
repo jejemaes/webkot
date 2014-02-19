@@ -34,6 +34,38 @@ function activity_html_page_activity(Activity $activity, Module $module, iGenera
 		$jsclass = ACTIVITY_JS_CLASS_CALL_ANCHOR;
 	}
 	
+	$pictures = $activity->getPictures();
+	$size = count($activity->getPictures());
+	$HTML .= '<div class="row">';
+	$HTML .= '<div class="col-lg-12 col-lg-offset-1">';
+	$HTML .= '<div class="row">';
+	for($i=0 ; $i<count($pictures) ; $i++){
+		$picture = $pictures[$i];
+		$HTML .= '<div class="col-lg-2">';
+		$href = URLUtils::generateURL($module->getName(), array('p' => 'picture', 'id' => $picture->getId()));
+		$path = URLUtils::builtServerUrl($module->getName(), array('action' => 'getimage', 'type' => 'small', 'id' => $picture->getId()));
+		if($picture->getIscensured()){
+			$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-censured activity-img-hover" src="'.$path .'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
+		}else{
+			if($picture->getNbcomments() > 0){
+				$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-commented activity-img-hover" src="'.$path.'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'"/></a>';
+			}else{
+				$HTML .= '<a href="'.$href.'" class="'.$jsclass.'"><img class="img-responsive activity-img-hover" src="' . $path .'" alt="Photo '.($i+1) . '/'. $size .'" title="'.($i+1) . '/'. $size .'" /></a>';
+			}
+		}
+		
+		$HTML .= '</div>';
+		if(($i+1) % 5 == 0){
+			$HTML .= '</div>';
+			$HTML .= '<div class="row">';
+		}
+	}
+	$HTML .= '</div>';
+	$HTML .= '</div>';
+	$HTML .= '</div>';
+	
+	/*
+	 $HTML .= '<div class="table-responsive">';
 	$HTML .= '<table class="activity-table-center">';
 	$size = count($activity->getPictures());
 	for($i = 0; $i < $size;){
@@ -60,9 +92,8 @@ function activity_html_page_activity(Activity $activity, Module $module, iGenera
 		$HTML .= '</tr>';
 	}
 	$HTML .= '</table>';
-	
-	//$HTML .= '</div>';
-
+	$HTML .= '</div>';
+*/
 	return $HTML;
 }
 
@@ -1096,7 +1127,7 @@ function activity_admin_html_table_censures_list(array $list, $modname){
 
 //FUNCTIONS RSS
 function &init_news_rss(&$xml_file){
-	$root = $xml_file->createElement("rss"); // création de l'élément
+	$root = $xml_file->createElement("rss"); // cr&eacute;ation de l'&eacute;l&eacute;ment
 	$root->setAttribute("version", "2.0"); // on lui ajoute un attribut
 	$root = $xml_file->appendChild($root); // on l'insère dans le nœud parent (ici root qui est "rss")
 
@@ -1105,7 +1136,7 @@ function &init_news_rss(&$xml_file){
 
 	$desc = $xml_file->createElement("description");
 	$desc = $channel->appendChild($desc);
-	$text_desc = $xml_file->createTextNode("Restez informés de toutes les activités couvertes par le Webkot sur le Campus Namurois !"); // on insère du texte entre les balises <description></description>
+	$text_desc = $xml_file->createTextNode("Restez inform&eacute;s de toutes les activit&eacute;s couvertes par le Webkot sur le Campus Namurois !"); // on insère du texte entre les balises <description></description>
 	$text_desc = $desc->appendChild($text_desc);
 
 	$link = $xml_file->createElement("link");
@@ -1115,7 +1146,7 @@ function &init_news_rss(&$xml_file){
 
 	$title = $xml_file->createElement("title");
 	$title = $channel->appendChild($title);
-	$text_title = $xml_file->createTextNode("Webkot.be : Les activités");
+	$text_title = $xml_file->createTextNode("Webkot.be : Les activites");
 	$text_title = $title->appendChild($text_title);
 
 	return $channel;

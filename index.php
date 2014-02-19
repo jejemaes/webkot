@@ -91,7 +91,7 @@ include DIR_TEMPLATE . 'modern-business/load.inc.php';
 $template = new Template($options);
 $template->addStyle('<link rel="alternate" type="application/rss+xml" title="Webkot.be : les dernieres activites" href="'.RSS_FILE.'" />');
 system_load_js_file(DIR_SYST_JS, $template);
-$analystics = "<script async='async'>
+$analystics = "<script async=\"async\">
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
