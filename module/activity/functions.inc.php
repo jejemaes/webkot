@@ -400,18 +400,16 @@ function activity_html_page_lastcomm($modulename, $listComm){
 	if(!empty($listComm)){
 		$HTML = '<div class="row">';
 		$i=1;
-		foreach ($listComm as $commented){
-			if(!$commented->getIscensured()){
-				if(file_exists(DIR_PICTURES . $commented->getDirectory(). '/small/'. $commented->getFilename())){
-					$path = DIR_PICTURES . $commented->getDirectory(). '/small/'. $commented->getFilename();
-				}else{
-					$path = DIR_MODULE . 'activity/view/img/missing-small.jpg';
-				}
-			}else{
-				$path = DIR_MODULE . 'activity/view/img/censure-small.jpg';
+		foreach ($listComm as $commented){	
+			$path = URLUtils::builtServerUrl($modulename, array('action' => 'getimage', 'type' => 'small', 'id' => $commented->getId()));
+		
+			$class = "img-polaroid";
+			if($commented->getIscensured()){
+				$class = "activity-img-censured";
 			}
+			
 			$HTML .= '<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">';
-			$HTML .= '<a href="'.URLUtils::generateURL($modulename,array("p"=>"lastcomm","index"=>$i)).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img class="img-responsive img-thumbnail accueil-portfolio-picture accueil-img-hover" src="'. $path .'"></a>';
+			$HTML .= '<a href="'.URLUtils::generateURL($modulename,array("p"=>"lastcomm", "index"=>$i)).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img class="img-responsive accueil-portfolio-picture accueil-img-hover '.$class.'" src="'. $path .'"></a>';
 			$HTML .= '</div>';
 				
 			if($i % 6 == 0){
@@ -419,11 +417,8 @@ function activity_html_page_lastcomm($modulename, $listComm){
 			}
 			$i++;
 		}
-	
-		$HTML .= '</div><!-- /.row -->';
-		 
+		$HTML .= '</div><!-- /.row -->'; 
 		$HTML .= activity_get_js_page_overlay('Derni&egrave;res photos comment&eacute;es', 'activity', true);
-	
 	}
 	return $HTML;
 }

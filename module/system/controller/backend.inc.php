@@ -314,6 +314,7 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 			if (RoleManager::getInstance ()->hasCapabilitySession ( 'system-edit-option' )) {
 				$SMM = SessionMessageManager::getInstance();
 				$message = $SMM->getSessionMessage();
+				$message->setType(1);
 				if(isset($_POST["option-input"]) && !empty($_POST['option-input'])){
 					foreach($_POST['option-input'] as $key => $value){
 						switch ($omanager->getOptionObject($key)->getType ()) {
@@ -344,7 +345,7 @@ if(isset($_GET['part']) && !empty($_GET['part'])){
 								break;
 						}
 					}
-					if($message->getType() == 1){
+					if($message->isSuccess()){
 						try{
 							$omanager->update($_POST['option-input']);
 							$message->addMessage("La mise a jour des Options a ete effectuee avec succes. La nouvelle configuration prend effet des maintenant.");

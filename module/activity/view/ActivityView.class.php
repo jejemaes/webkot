@@ -176,8 +176,11 @@ class ActivityView extends View implements iView{
 			$pict = $list[$i];
 			$HTML .= '<tr id="activity-mypicture-'.$pict->getId().'">';
 			$class = ($pict->getIscensured() ? "activity-img-censured" : "img-polaroid");
-			//$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array('p' => 'activity', 'id' => $)) .'">'. $pict->getTitle().'</a>, le '.ConversionUtils::dateToDateFr($pict->getDate());		
-			$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p"=>"mypicture","id"=>$pict->getId())).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.activity_path_picture($this->getModule()->getName()."/", $pict->getDirectory(), $pict).'" class="'.$class.' activity-img-hover"></a></td>';
+			//$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array('p' => 'activity', 'id' => $)) .'">'. $pict->getTitle().'</a>, le '.ConversionUtils::dateToDateFr($pict->getDate());	
+			//$path = activity_path_picture($this->getModule()->getLocation(), $pict->getDirectory(), $pict, 'medium');
+			$url = URLUtils::builtServerUrl($this->getModule()->getName(), array('action' => 'getimage', 'type' => 'small', 'id' => $pict->getId()));
+			
+			$HTML .= '<td><a href="'.URLUtils::generateURL($this->getModule()->getName(), array("p"=>"mypicture","id"=>$pict->getId())).'" class="'.ACTIVITY_JS_CLASS_CALL_ANCHOR.'"><img src="'.$url.'" class="'.$class.' activity-img-hover"></a></td>';
 				
 			$HTML .= '<td><b>'.$pict->getTitle().'</b>, le '.ConversionUtils::dateToDateFr($pict->getDate());
 			if($pict->getAddeddate()){

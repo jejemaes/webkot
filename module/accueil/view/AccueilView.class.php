@@ -35,7 +35,8 @@ class AccueilView extends View implements iView{
 		// add module css
 		$template = $this->getTemplate();
 		$template->addStyle('<link href="'.$viewdirectory.'css/style.css" rel="stylesheet"/>');
-	
+		$template->addStyle('<link href="'.DIR_MODULE.'activity/view/css/style.css" rel="stylesheet"/>');
+		
 		$template->setPageSubtitle($this->getModule()->getDisplayedName());
 	}
 	
@@ -103,7 +104,7 @@ class AccueilView extends View implements iView{
 			$infos .= ' | <i class="fa fa-eye-open"></i> '.$activity->getViewed().' '.$view;
 			$infos .= '</small>';
 			
-			$HTML .= '  <div class="section well">
+			$HTML .= '  <div class="accueil-section well">
 	      <div class="container">
 	        <div class="row">
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -114,14 +115,14 @@ class AccueilView extends View implements iView{
 	            <div class="clearfix"></div>
 	          </div>
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-	            <a href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'"><img class="img-responsive accueil-img-hover" src="'.DIR_PICTURES . $activity->getDirectory() . "/" .$picture->getFilename().'"></a>
+	            <a href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'"><img class="img-responsive accueil-img-hover" src="'.URLUtils::builtServerUrl('activity', array('action' => 'getimage', 'type' => 'medium', 'id' => $picture->getId())).'"></a>
 	          </div>
 	        </div><!-- /.row -->
 	      </div><!-- /.container -->
 	    </div><!-- /.section-colored -->';
 			
 			
-			$HTML .= '<div class="section">
+			$HTML .= '<div class="accueil-section">
 	      <div class="container">
 	        <div class="row">';
 			
@@ -157,7 +158,7 @@ class AccueilView extends View implements iView{
 		}
 		
 		if(!empty($listComm)){		
-			$HTML .= '<div class="section well">
+			$HTML .= '<div class="accueil-section well">
 	      <div class="container">
 	        <div class="row">
 	          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
@@ -177,7 +178,7 @@ class AccueilView extends View implements iView{
 		
 		
         if($video->getId()){    	
-			$HTML .= '<div class="section">
+			$HTML .= '<div class="accueil-section">
 	      <div class="container">
 	        <div class="row">
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

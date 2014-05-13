@@ -12,11 +12,13 @@ class ActivityController{
 	public static function addAction(array $request){
 		$activity = new Activity();
 		$message = new Message();
+		
 		if(isset($request['activity-input-title']) && isset($request['activity-input-description']) && isset($request['activity-input-date']) && isset($request['activity-input-directory']) && isset($request['activity-input-level'])){
 			//$activity->setLevel($request['activity-input-level']); !! privilege fout la merde !!
 			$activity->setTitle($request['activity-input-title']);
 			$activity->setDescription($request['activity-input-description']);
 			$activity->setDate($request['activity-input-date']);
+			$activity->setDirectory(strtolower($request['activity-input-directory']));
 			
 			$authorsArray = array();
 			$authors = $request['activity-input-authors'];
@@ -33,7 +35,7 @@ class ActivityController{
 					$message->setType(3);
 					$message->addMessage( "Le repertoire indique doit au format <i>YYYY-MM-DD_activity_name</i> et ne doit pas contenir de caractere speciaux ou accentues." );
 				}
-		
+				$request['activity-input-directory'] = strtolower($request['activity-input-directory']);
 				if($message->isEmpty()){
 					try{
 						// creation of directory

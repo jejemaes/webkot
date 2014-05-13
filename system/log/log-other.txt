@@ -75,3 +75,18 @@ TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/s
 #3 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/system/functions.inc.php(256): RoleManager::getInstance()
 #4 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/admin/index.php(65): system_session_login()
 #5 {main}
+
+#################### DatabaseException ##################
+DATE : 2014-04-15 21:29
+CODE : 2002
+MESSAGE : SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/Applications/AMPPS/mysql/tmp/mysql.sock' (2)
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/system/lib/Database.class.php
+LINE : 35
+PDO MESSAGE : 
+DESCRIPTION : MySQL ne reponds pas (PDOException). Impossible d'instancier la connection a la base de donnees.
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/system/lib/Database.class.php(49): Database->__construct()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/system/lib/RoleManager.class.php(27): Database::getInstance()
+#2 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/system/lib/RoleManager.class.php(17): RoleManager->__construct()
+#3 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/system/functions.inc.php(245): RoleManager::getInstance()
+#4 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4/index.php(71): system_session_login()
+#5 {main}
