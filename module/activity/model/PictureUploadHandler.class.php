@@ -148,7 +148,7 @@ class PictureUploadHandler extends UploadHandler {
 				return $exif["CreateDate"];
 			}
 			$exif = exif_read_data($path,'FILE');
-			return date("Y:m:d H:i:s",$exif[FileDateTime]);
+			return date("Y:m:d H:i:s",$exif['FileDateTime']);
 		}
 	}
 	

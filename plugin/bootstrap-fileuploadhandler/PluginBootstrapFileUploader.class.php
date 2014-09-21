@@ -20,54 +20,53 @@ class PluginBootstrapFileUploader extends Plugin implements iPlugin{
 		if($this->getOptions()["template"]){
 			$template = $this->getOptions()["template"];
 			
-			// Import CSS
-			// blueimp Gallery styles
-			$template->addStyle('<link rel="stylesheet" href="http://blueimp.github.io/Gallery/'.DIR_PLUGIN.'bootstrap-fileuploadhandler/css/blueimp-gallery.min.css">');
-			// CSS to style the file input field as button and adjust the Bootstrap progress bars 
-			$template->addStyle('<link rel="stylesheet" href="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/css/jquery.fileupload.css">');
-			$template->addStyle('<link rel="stylesheet" href="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/css/jquery.fileupload-ui.css">');
+			// CSS Files
+			$css = array('css/jquery.fileupload.css', 'css/jquery.fileupload-ui.css', 'css/style.css');
+			for ($i = 0; $i < count($css); $i++) {
+				$template->addStyle('<link rel="stylesheet" href="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/'.$css[$i].'">');
+			}
+			
 			// CSS adjustments for browsers with JavaScript disabled 
 			$template->addStyle('<noscript><link rel="stylesheet" href="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/css/jquery.fileupload-noscript.css"></noscript>');
 			$template->addStyle('<noscript><link rel="stylesheet" href="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/css/jquery.fileupload-ui-noscript.css"></noscript>');
-			
+
 					
 					
 			// Import JavaScript
 			$js = '<script id="template-upload" type="text/x-tmpl">
-					{% for (var i=0, file; file=o.files[i]; i++) { %}
-					    <tr class="template-upload fade">
-					        <td>
-					            <span class="preview"></span>
-					        </td>
-					        <td>
-					            <p class="name">{%=file.name%}</p>
-					            <strong class="error text-danger"></strong>
-					        </td>
-					        <td>
-					            <p class="size">Processing...</p>
-					            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-					        </td>
-					        <td>
-					            {% if (!i && !o.options.autoUpload) { %}
-					                <button class="btn btn-primary start" disabled>
-					                    <i class="glyphicon glyphicon-upload"></i>
-					                    <span>Start</span>
-					                </button>
-					            {% } %}
-					            {% if (!i) { %}
-					                <button class="btn btn-warning cancel">
-					                    <i class="glyphicon glyphicon-ban-circle"></i>
-					                    <span>Cancel</span>
-					                </button>
-					            {% } %}
-					        </td>
-					    </tr>
-					{% } %}
-					</script>';	
+				{% for (var i=0, file; file=o.files[i]; i++) { %}
+				    <tr class="template-upload fade">
+				        <td>
+				            <span class="preview"></span>
+				        </td>
+				        <td>
+				            <p class="name">{%=file.name%}</p>
+				            <strong class="error text-danger"></strong>
+				        </td>
+				        <td>
+				            <p class="size">Processing...</p>
+				            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+				        </td>
+				        <td>
+				            {% if (!i && !o.options.autoUpload) { %}
+				                <button class="btn btn-primary start" disabled>
+				                    <i class="glyphicon glyphicon-upload"></i>
+				                    <span>Start</span>
+				                </button>
+				            {% } %}
+				            {% if (!i) { %}
+				                <button class="btn btn-warning cancel">
+				                    <i class="glyphicon glyphicon-ban-circle"></i>
+				                    <span>Cancel</span>
+				                </button>
+				            {% } %}
+				        </td>
+				    </tr>
+				{% } %}
+				</script>';		
 			$template->addJSFooter($js);
 			
-			$js1 = '<!-- The template to display files available for download -->
-				<script id="template-download" type="text/x-tmpl">
+			$js1 = '<script id="template-download" type="text/x-tmpl">
 				{% for (var i=0, file; file=o.files[i]; i++) { %}
 				    <tr class="template-download fade">
 				        <td>
@@ -110,79 +109,150 @@ class PluginBootstrapFileUploader extends Plugin implements iPlugin{
 				{% } %}
 				</script>';
 			$template->addJSFooter($js1);
+			/*
+			$online = array(
+					'//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js',
+					'//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js',
+					'//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js',
+					'//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js',
+			);
+			*/
+			$scripts = array(
+				// other lib, must be loaded first !
+				'js/other_lib/tmpl.min.js',
+				'js/other_lib/load-image.all.min.js',
+				'js/other_lib/canvas-to-blob.min.js',
+				'js/other_lib/jquery.blueimp-gallery.min.js',
+				// plugin js
+				'js/vendor/jquery.ui.widget.js', 
+				'js/jquery.iframe-transport.js',
+				'js/jquery.fileupload.js',
+				'js/jquery.fileupload-process.js',
+				'js/jquery.fileupload-image.js',
+				'js/jquery.fileupload-audio.js',
+				'js/jquery.fileupload-video.js',
+				'js/jquery.fileupload-validate.js',
+				'js/jquery.fileupload-ui.js',
+				//'js/main.js'
+					
+			);
 			
-			// The jQuery UI widget factory, can be omitted if jQuery UI is already included
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/vendor/jquery.ui.widget.js"></script>');
-			// The Templates plugin is included to render the upload/download listings
-			$template->addJSFooter('<script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>');
-			// The Load Image plugin is included for the preview images and image resizing functionality
-			$template->addJSFooter('<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>');
-			// The Canvas to Blob plugin is included for image resizing functionality
-			$template->addJSFooter('<script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>');
-			// blueimp Gallery script
-			$template->addJSFooter('<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>');
-			// The Iframe Transport is required for browsers without support for XHR file uploads
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.iframe-transport.js"></script>');
-			// The basic File Upload plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload.js"></script>');
-			// The File Upload processing plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload-process.js"></script>');
-			// The File Upload image preview & resize plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload-image.js"></script>');
-			// The File Upload audio preview plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload-audio.js"></script>');
-			// The File Upload video preview plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload-video.js"></script>');
-			// The File Upload validation plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload-validate.js"></script>');
-			// The File Upload user interface plugin
-			$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/js/jquery.fileupload-ui.js"></script>');
+			for ($i = 0; $i < count($scripts); $i++) {
+				$template->addJSFooter('<script src="'.DIR_PLUGIN.'bootstrap-fileuploadhandler/'.$scripts[$i].'"></script>');
+			}
+		
 			
 			$js2 = "<script>
-					$(function () {
-					    'use strict';
-					
-					    // Initialize the jQuery File Upload widget:
-					    $('#fileupload').fileupload({
-					        // Uncomment the following to send cross-domain cookies:
-					        //xhrFields: {withCredentials: true},
-					        //url: 'server/php/'
-					        url: '".$this->getOptions()["url"]."' 
-					    });
-					
-					    // Enable iframe cross-domain access via redirect option:
-					    $('#fileupload').fileupload(
-					        'option',
-					        'redirect',
-					        window.location.href.replace(
-					            /\/[^\/]*$/,
-					            '/cors/result.html?%s'
-					        )
-					    );
-					
-					    // Load existing files:
-					        $('#fileupload').addClass('fileupload-processing');
-					        $.ajax({
-					            // Uncomment the following to send cross-domain cookies:
-					            //xhrFields: {withCredentials: true},
-					            url: $('#fileupload').fileupload('option', 'url'),
-					            dataType: 'json',
-					            context: $('#fileupload')[0]
-					        }).always(function () {
-					            $(this).removeClass('fileupload-processing');
-					        }).done(function (result) {
-					            $(this).fileupload('option', 'done')
-					                .call(this, $.Event('done'), {result: result});
-					        });
-					
-					});
-					
-					</script>";
+				$(function () {
+				    'use strict';
+				
+				    // Initialize the jQuery File Upload widget:
+				    $('#fileupload').fileupload({
+				        // Uncomment the following to send cross-domain cookies:
+				        //xhrFields: {withCredentials: true},
+				        url: '".$this->getOptions()["url"]."'
+				    });
+				
+				    // Enable iframe cross-domain access via redirect option:
+				    $('#fileupload').fileupload(
+				        'option',
+				        'redirect',
+				        window.location.href.replace(
+				            /\/[^\/]*$/,
+				            '/cors/result.html?%s'
+				        )
+				    );
+				
+				    if (window.location.hostname === 'blueimp.github.io') {
+				        // Demo settings:
+				        $('#fileupload').fileupload('option', {
+				            url: '//jquery-file-upload.appspot.com/',
+				            // Enable image resizing, except for Android and Opera,
+				            // which actually support image resizing, but fail to
+				            // send Blob objects via XHR requests:
+				            disableImageResize: /Android(?!.*Chrome)|Opera/
+				                .test(window.navigator.userAgent),
+				            maxFileSize: 5000000,
+				            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+				        });
+				        // Upload server status check for browsers with CORS support:
+				        if ($.support.cors) {
+				            $.ajax({
+				                url: '//jquery-file-upload.appspot.com/',
+				                type: 'HEAD'
+				            }).fail(function () {
+				                $('<div class=\"alert alert-danger\"/>')
+				                    .text('Upload server currently unavailable - ' +
+				                            new Date())
+				                    .appendTo('#fileupload');
+				            });
+				        }
+				    } else {
+				        // Load existing files:
+				        $('#fileupload').addClass('fileupload-processing');
+				        $.ajax({
+				            // Uncomment the following to send cross-domain cookies:
+				            //xhrFields: {withCredentials: true},
+				            url: $('#fileupload').fileupload('option', 'url'),
+				            dataType: 'json',
+				            context: $('#fileupload')[0]
+				        }).always(function () {
+				            $(this).removeClass('fileupload-processing');
+				        }).done(function (result) {
+				            $(this).fileupload('option', 'done')
+				                .call(this, $.Event('done'), {result: result});
+				        });
+				    }
+				
+				});</script>";
 			$template->addJSFooter($js2);
 				
 		}
 		
 		
+		$html = '<form id="fileupload" action="'.$this->getOptions()["url"].'" method="POST" enctype="multipart/form-data">
+	        <!-- Redirect browsers with JavaScript disabled to the origin page -->
+	        <noscript><input type="hidden" name="redirect" value="'.$this->getOptions()["url"].'"></noscript>
+	        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+	        <div class="row fileupload-buttonbar">
+	            <div class="col-lg-7">
+	                <!-- The fileinput-button span is used to style the file input field as button -->
+	                <span class="btn btn-success fileinput-button">
+	                    <i class="glyphicon glyphicon-plus"></i>
+	                    <span>Add files...</span>
+	                    <input type="file" name="files[]" multiple>
+	                </span>
+	                <button type="submit" class="btn btn-primary start">
+	                    <i class="glyphicon glyphicon-upload"></i>
+	                    <span>Start upload</span>
+	                </button>
+	                <button type="reset" class="btn btn-warning cancel">
+	                    <i class="glyphicon glyphicon-ban-circle"></i>
+	                    <span>Cancel upload</span>
+	                </button>
+	                <button type="button" class="btn btn-danger delete">
+	                    <i class="glyphicon glyphicon-trash"></i>
+	                    <span>Delete</span>
+	                </button>
+	                <input type="checkbox" class="toggle">
+	                <!-- The global file processing state -->
+	                <span class="fileupload-process"></span>
+	            </div>
+	            <!-- The global progress state -->
+	            <div class="col-lg-5 fileupload-progress fade">
+	                <!-- The global progress bar -->
+	                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+	                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+	                </div>
+	                <!-- The extended global progress state -->
+	                <div class="progress-extended">&nbsp;</div>
+	            </div>
+	        </div>
+	        <!-- The table listing the files available for upload/download -->
+	        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+	    </form>';
+		
+		/*
 		$html = '<!-- The file upload form used as target for the file upload widget -->
 		    <form id="fileupload" action="'.$this->getOptions()["url"].'" method="POST" enctype="multipart/form-data">
 		        <!-- Redirect browsers with JavaScript disabled to the origin page -->
@@ -225,6 +295,8 @@ class PluginBootstrapFileUploader extends Plugin implements iPlugin{
 		        <!-- The table listing the files available for upload/download -->
 		        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
 		    </form>';
+		
+		*/
 		
 		return $html;
 		
