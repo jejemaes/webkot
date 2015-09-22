@@ -6,7 +6,8 @@ require_once("config/frontend.inc.php");
 date_default_timezone_set(TIMEZONE);
 error_reporting(DEBUG_MODE);
 
-
+// autoload
+include __DIR__ . '/vendor/autoload.php';
 
 //######## SYSTEM FUNCTIONS ##########
 include("system/functions.inc.php");

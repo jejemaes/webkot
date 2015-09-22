@@ -155,7 +155,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						}
 						$user = new User($data);
 					
-					if (isset ( $_POST ['user-input-username'] ) && ! empty ( $_POST ['user-input-username'] ) && isset ( $_POST ['user-input-password'] ) && ! empty ( $_POST ['user-input-password'] ) && isset ( $_POST ['user-input-mail'] ) && ! empty ( $_POST ['user-input-mail'] ) && isset ( $_POST ['user-input-password-confirm'] ) && ! empty ( $_POST ['user-input-password-confirm'] ) && isset ( $_POST ["recaptcha_response_field"] ) && (! empty ( $_POST ["recaptcha_response_field"] ))) {
+					if (isset ( $_POST ['user-input-username'] ) && ! empty ( $_POST ['user-input-username'] ) && isset ( $_POST ['user-input-password'] ) && ! empty ( $_POST ['user-input-password'] ) && isset ( $_POST ['user-input-mail'] ) && ! empty ( $_POST ['user-input-mail'] ) && isset ( $_POST ['user-input-password-confirm'] ) && ! empty ( $_POST ['user-input-password-confirm'] )) {
 						
 						if (! preg_match ( "#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST ['user-input-mail'] )) {
 							$message->setType ( 3 );
@@ -181,11 +181,18 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						}
 						
 						// check the CAPTCHA
-						$resp = recaptcha_check_answer ( CAPTCHA_PRIVATE_KEY, $_SERVER ["REMOTE_ADDR"], $_POST ["recaptcha_challenge_field"], $_POST ["recaptcha_response_field"] );
-						
-						if (! $resp->is_valid) {
+						if(isset($_POST['g-recaptcha-response'])){
+							$recaptcha = new \ReCaptcha\ReCaptcha(CAPTCHA_PRIVATE_KEY);
+							// Make the call to verify the response and also pass the user's IP address
+							$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+							
+							if (!$resp->isSuccess()){
+								$message->setType ( 3 );
+								$message->addMessage ( "Le Captcha est <b>mauvais</b>." );
+							}
+						}else{
 							$message->setType ( 3 );
-							$message->addMessage ( "Le Captcha est <b>mauvais</b>." );
+							$message->addMessage ( "Le Captcha est <b>manquant</b>." );
 						}
 						
 						// PROCESS if ok
