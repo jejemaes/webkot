@@ -2,6 +2,7 @@
     "require": {
     	"google/recaptcha": "~1.1",
         "slim/slim": "2.*",
-        "slimcontroller/slimcontroller": "0.4.3"
+        "slimcontroller/slimcontroller": "0.4.3",
+        "php-activerecord/php-activerecord": "~1.1"
     }
 }

@@ -79,7 +79,7 @@ abstract class SlimController
             $this->paramPrefix = $paramPrefix;
             $prefixLength      = strlen($this->paramPrefix);
             if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.') {
-                $this->paramPrefix .= '.';
+                $this->paramPrefix .= '?';
             }
         }
         if ($app->config('controller.cleanup_params')) {
