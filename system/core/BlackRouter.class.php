@@ -135,5 +135,9 @@ class BlackRouter {
 		$this->_slim->hook('slim.before.dispatch', $closure);
 	}
 	
+	public function addRenderData(array $data){
+		$this->_slim->view->appendData($data);
+	}
+	
 	
 }

@@ -46,7 +46,7 @@ function App() {
 $app = App();
 
 include 'module/blog/init.php';
-
+include 'module/website/init.php';
 
 $matched_routes = $Router->hasRoute();
 if(count($matched_routes)){

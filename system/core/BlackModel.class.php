@@ -17,7 +17,12 @@ class BlackModel extends \ActiveRecord\Model{
 	public static function create($attributes, $validate=true) {
 		//TODO 
 		self::_check_access_right();
-		$record = parent::create($attributes, $validate);
+		$class_name = get_called_class();
+		$record = new $class_name($attributes);
+		foreach($attributes as $name => $value){
+			$record->assign_attribute($name, $value);
+		}
+		$record->save($validate);
 		//TODO : generate the env
 		return $record;
 		
@@ -40,6 +45,13 @@ class BlackModel extends \ActiveRecord\Model{
 	public static function _check_access_right(){
 		// throw an AccessError if required
 		// TODO : how to get session_user_id since static method
+	}
+	
+	// Patch
+	public function set_attributes(array $attributes){
+		foreach($attributes as $name => $value){
+			$this->assign_attribute($name, $value);
+		}
 	}
 	
 }

@@ -21,6 +21,7 @@ class BlackControllerView extends \Slim\View {
 		$this->_engine = QWebEngine::getEngine($loader);
 	}
 	
+	
 	protected function render($template, $data = array()){
 		$data = array_merge($this->data->all(), (array) $data);
 		return $this->_engine->render($template, $data);
