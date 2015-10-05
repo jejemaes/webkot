@@ -389,8 +389,8 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 	function render_tag_foreach($element, $template_attributes, $generated_attributes, $qwebcontext){
 		$expr = $template_attributes["foreach"];
 		$enum = $this->eval_object($expr, $qwebcontext);
-
-		if($enum == NULL){
+		
+		if(!is_array($enum)){
 			$template = $qwebcontext['__template__'];
 			throw new QWebException(sprintf("foreach enumerator %s is not defined while rendering template %s", $expr, $template));
 		}

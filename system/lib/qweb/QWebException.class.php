@@ -6,7 +6,7 @@
  */
 namespace system\lib\qweb;
 
-class QWebException extends Exception{
+class QWebException extends \Exception{
 
 }
 
