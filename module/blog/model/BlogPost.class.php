@@ -1,6 +1,15 @@
 <?php
+/**
+ * Maes Jerome
+ * BlogPost.class.php, created at Sep 28, 2015
+ *
+ */
+namespace module\website\model;
 
-class BlogPost {
+use system\core\BlackModel as BlackModel;
+
+
+class BlogPost extends BlackModel {
 
    private $_id;
    private $_author;
