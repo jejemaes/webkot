@@ -10,6 +10,14 @@ namespace system\core;
 class BlackController extends \SlimController\SlimController{
 
 	protected $renderTemplateSuffix = NULL; // don't add suffix to template name
-
+	
+	public $session;
+	
+	
+	public function __construct(\Slim\Slim &$app){
+		parent::__construct($app);
+		
+		$this->session = $app->session;
+	}
 
 }

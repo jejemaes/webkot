@@ -21,7 +21,7 @@ class BlackRouter {
 	}
 	
 	private function __construct(){
-		$this->_slim = new \SlimController\Slim(array(
+		$this->_slim = new \system\lib\slim\Slim(array(
 			'debug' => true,
 			'templates.path' => '',
 			'controller.class_prefix' => '',
@@ -29,7 +29,11 @@ class BlackRouter {
 			'controller.template_suffix' => NULL,
 			'controller.param_prefix' => NULL,
 			'view' => 'system\core\BlackControllerView',
+			'session.name' => 'sid',
+			'session.autorefresh' => false,
+			'session.lifetime' => '1 month',
 		));
+		
 	}
 	
 
@@ -46,24 +50,16 @@ class BlackRouter {
 	 * @param array $conditions : key-array of type/regex condition for the route params. Use the SlimFramework format (@see http://docs.slimframework.com/routing/conditions/)
 	 * @return Ambigous <\Slim\Route, \Slim\Route>
 	 */
-	public function addRoute($path, $class_and_method, $meth = 'GET|POST', $auth='public', $conditions=array()){
+	public function addRoute($path, $class_and_method, $meth = 'GET|POST', $auth='public', $conditions=array(), $route_name=false){
 		// TODO : maybe remove or improve !
 		$path = str_replace(' ', '%20', __BASE_PATH_URL) . $path;
-	
-		// authenticate callable (slim middleware)
-		$self = $this;
-		$authenticateRoute = function ($auth='public', $self) {
-			return function () use ($auth, $self) {
-				$is_authenticate = $self->_authenticate($auth);
-				if (!$is_authenticate) {
-					$self->_slim->redirect('/login');
-				}
-			};
-		};
-	
+		
 		// create route
-		$route = $this->_slim->addControllerRoute($path, $class_and_method, array($authenticateRoute($auth, $this)));
-	
+		$route = $this->_slim->addRoute($path, $class_and_method, $auth);
+		if($route_name){
+			$route->setName($route_name);
+		}
+		
 		// add methods
 		$meth = preg_split("/[|]/", $meth);
 		foreach ($meth as $m){
@@ -85,36 +81,11 @@ class BlackRouter {
 	public function dispatch(){
 		return $this->_slim->run();
 	}
-
 	
-	//###########################
-	//#### AUTHENTIFICATION #####
-	//###########################
-	
-	/**
-	 * authentification dispatching
-	 * @param unknown $auth
-	 * @throws ProgrammingException
-	 */
-	public function _authenticate($auth){
-		$method_name = '_authenticate' . ucfirst($auth);
-		if(method_exists($this, $method_name)){
-			return $this->$method_name();
-		}
-		throw new \Exception('AUTH ERROR : no ' . $method_name . ' definied for type authentification ' . $auth);
+	public function urlFor($name, $params=array()){
+		return substr(__HOST_URL, 0, strlen(__BASE_URL)-1) . $this->_slim->router->urlFor($name, $params);
 	}
 	
-	
-	public function _authenticatePublic(){
-		// TODO
-		return true;
-	}
-	
-	public function _authenticateUser(){
-		// TODO
-		return true;
-	}
-
 
 	//###########################
 	//########## OTHER ##########
