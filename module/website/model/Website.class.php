@@ -15,6 +15,7 @@ class Website {
 		global $Router;
 		$menus = Menu::get_root_menus();
 		$Router->addRenderData(array(
+				'router' => $Router,
 				'menus' => $menus,
 				'url' => function($relative){
 					$pos = strpos($relative, 'http');

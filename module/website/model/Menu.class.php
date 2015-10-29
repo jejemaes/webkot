@@ -21,7 +21,7 @@ class Menu extends BlackModel {
 	);
 
 	static $belongs_to = array(
-			array('parent_id', 'class_name' => '\module\website\model\Menu', 'foreign_key' => 'id')
+			array('parent', 'class_name' => '\module\website\model\Menu', 'foreign_key' => 'parent_id')
 	);
 	
 	static $has_many = array(
