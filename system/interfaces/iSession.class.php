@@ -17,6 +17,6 @@ interface iSession{
 	
 	public function alive();
 
-	public function user();
+	public function authenticate($user_id, $login, $crypted_password);
 
 }

@@ -26,12 +26,19 @@ class SlimSession implements iSession {
 		
 	}
 	
-	public function alive(){
-		return empty($_SESSION);
+	public function __toString(){
+		return 'Session(login='.$this->get('login').' uid='.$this->get('uid').');';
 	}
 	
-	public function user(){
-		return $this->get('user', NULL);
+	public function authenticate($user_id, $login, $crypted_password){
+		$this->set('uid', $user_id);
+		$this->set('login', $login);
+		$this->set('password', $crypted_password);
+		session_write_close();
+	}
+	
+	public function alive(){
+		return empty($_SESSION);
 	}
 	
     /**

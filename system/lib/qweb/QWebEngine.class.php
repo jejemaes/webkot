@@ -109,7 +109,7 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 			$xml_doc = $loader($name);
 			$this->load_document($xml_doc, $qwebcontext);
 		}
-		if($qwebcontext['template'][$name]){
+		if(array_key_exists($name, $qwebcontext['template'])){
 			return $qwebcontext['template'][$name];
 		}
 		// TODO raise exception : template not found by loader
@@ -129,16 +129,15 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 
 	// EVAL FUNCTIONS
 
-	function _eval($expr, $qwebcontext){
-		extract($qwebcontext['data']);
-		return eval("return $expr;");
-		/*
-		 try:
-		return qwebcontext.safe_eval(expr)
-		except Exception:
-		template = qwebcontext.get('__template__')
-		raise_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
-		*/
+	function _eval($expr, $qwebcontext, $default=FALSE){
+		try {
+			extract($qwebcontext['data']);
+			return eval("return $expr;");
+		} catch (\ErrorException $e) {
+			// Do nothing. This catches case where variable is not defined, and should be 
+			// interpreted as False, or empty string, ... like in python
+		}
+		return $default;
 	}
 
 	function eval_object($expr, $qwebcontext){

@@ -66,6 +66,14 @@ class SlimSessionMiddleware extends \Slim\Middleware
      */
     protected function startSession()
     {
+    	
+    	
+    	if(!session_id()){
+    		session_start();
+    	}
+    	
+    	return;
+    	
         if (session_id()) {
             return;
         }
@@ -80,6 +88,7 @@ class SlimSessionMiddleware extends \Slim\Middleware
             $settings['secure'],
             $settings['httponly']
         );
+        
         session_name($name);
         session_cache_limiter(false);
         session_start();

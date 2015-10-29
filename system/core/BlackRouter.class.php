@@ -27,7 +27,7 @@ class BlackRouter {
 			'controller.class_prefix' => '',
 			'controller.method_suffix' => '',
 			'controller.template_suffix' => NULL,
-			'controller.param_prefix' => NULL,
+			'controller.param_prefix' => '',
 			'view' => 'system\core\BlackControllerView',
 			'session.name' => 'sid',
 			'session.autorefresh' => false,
