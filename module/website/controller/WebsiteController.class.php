@@ -13,7 +13,7 @@ use \module\website\model\Page as WebsitePage;
 class WebsiteController extends BlackController{
 
 	public function indexAction(){
-		$this->render('website.home', array());
+		$this->render('website.home', array('slideshow' => True));
 	}
 
 	public function pageAction($page_slug){

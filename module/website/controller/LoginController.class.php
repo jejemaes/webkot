@@ -7,26 +7,31 @@
 namespace module\website\controller;
 
 use system\core\BlackController as BlackController;
-use system\core\ResUser as User;
+use system\res\ResUser as User;
 
 class LoginController extends BlackController{
 
 	public function loginAction(){
-		
 		$error = False;
 		$login = $this->request()->params('login');
 		$password = $this->request()->params('password');
 		
 		$referrer = $this->request()->getReferrer();
-		$redirect = $this->request()->params('redirect', $referrer ? $referrer : __BASE_URL);
+		$redirect = $this->request()->params('redirect');
+		if(!$redirect){
+			$redirect = $referrer ? $referrer : __BASE_URL;
+		}
+		
+		// if user already logged, and want to see login form page, redirect to homepage
+		if($this->request()->isGet() && $this->session()->user){
+			$this->redirect('/');
+		}
 		
 		if($this->request()->isPost()){ // login with the receive data
 			if(!empty($login) && !empty($password)){
 				$user = User::login($login, $password);
 				if($user){
 					$this->session()->authenticate($user->id, $user->login, $user->password);
-					//echo $this->session();
-					//exit;
 					$this->redirect($redirect);
 				}else{
 					$error = "Wrong login/password";
@@ -40,13 +45,14 @@ class LoginController extends BlackController{
 				'login' => $login,
 				'password' => $password,
 				'redirect' => $redirect, 
-				'error' =>$error
+				'error' => $error
 		));
 	}
 	
 	
 	public function logoutAction(){
-		$this->render('website.home', array());
+		$this->session()->destroy();
+		echo 'destroyed';
 	}
 
 }

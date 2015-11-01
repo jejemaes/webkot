@@ -22,7 +22,7 @@ class BlogPost extends BlackModel {
 	);
 	
 	static $belongs_to = array(
-			array('user', 'class_name' => '\system\core\ResUser', 'foreign_key' => 'user_id')
+			array('user', 'class_name' => '\system\res\ResUser', 'foreign_key' => 'user_id')
 	);
 	
 	static $has_many = array(

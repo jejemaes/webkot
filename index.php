@@ -17,7 +17,8 @@ $baseUrl = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https://
 $baseUrl .= isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : getenv('HTTP_HOST'); // checking adding the host name to the website address
 define('__HOST_URL', $baseUrl);
 $WebBaseUrl = $baseUrl . isset($_SERVER['SCRIPT_NAME']) ? dirname($_SERVER['SCRIPT_NAME']) : dirname(getenv('SCRIPT_NAME')); // adding the directory name to the created url and then returning it.
-define('__BASE_URL', $WebBaseUrl . '/');
+//define('__BASE_URL', $WebBaseUrl . '/');
+define('__BASE_URL', 'http://localhost/Web%20Developpement/Workspace/webkot4/');
 
 //####### include the system ########
 include 'vendor/autoload.php';
