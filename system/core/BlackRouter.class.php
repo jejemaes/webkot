@@ -21,7 +21,7 @@ class BlackRouter {
 	}
 	
 	private function __construct(){
-		$this->_slim = new \system\lib\slim\Slim(array(
+		$this->_slim = new \system\http\Slim(array(
 			'debug' => true,
 			'templates.path' => '',
 			'controller.class_prefix' => '',

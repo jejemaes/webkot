@@ -332,13 +332,13 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 			if($name == "t"){
 				return $inner;
 			}
-			if(strlen($inner) && !in_array($name, array('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'))){
+			if($inner){
 				return sprintf("<%s%s>%s</%s>", $name, $generated_attributes, $inner, $name);
 			}
-			if(!strlen($inner) && in_array($name, array('script', 'style'))){
-				return sprintf("<%s%s>%s</%s>", $name, $generated_attributes, $inner, $name);
+			if(in_array($name, array('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'))){
+				return sprintf("<%s%s/>", $name, $generated_attributes);
 			}
-			return sprintf("<%s%s/>", $name, $generated_attributes);
+			return sprintf("<%s%s></%s>", $name, $generated_attributes, $name);
 		}
 		return '';	
 	}

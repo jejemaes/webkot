@@ -13,6 +13,7 @@ define('_DIR_MEDIA', __SITE_PATH . 'media/');
 
 // autoload for classes
 include _DIR_INCLUDE . 'autoload.inc.php';
+include _DIR_INCLUDE . 'url.inc.php';
 
 // imports
 use system\core\BlackRouter as BlackRouter;
@@ -53,4 +54,5 @@ if(count($matched_routes)){
 	$Router->dispatch();
 	exit;
 }
+exit;
 
