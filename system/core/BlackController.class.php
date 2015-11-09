@@ -27,7 +27,7 @@ class BlackController extends \SlimController\SlimController{
 	 * @see \SlimController\SlimController::redirect()
 	 */
 	public function redirect($url, $status=302){
-		if(substr($url, 0, 3) !== 'http'){
+		if(substr($url, 0, 4) !== 'http'){
 			$url = url_from_path($url);
 		}
 		return $this->app->redirect($url, $status);

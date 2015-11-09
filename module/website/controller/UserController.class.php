@@ -9,7 +9,7 @@ namespace module\website\controller;
 use system\core\BlackController as BlackController;
 use system\res\ResUser as User;
 
-class UserController extends BlackController{
+class UserController extends WebsiteController{
 		
 	public static $user_per_page = 30;
 	
@@ -32,7 +32,7 @@ class UserController extends BlackController{
 			$pager[$i] = url_from_path(sprintf("/user/list/%s", $i));
 		}
 		
-		$this->render('website.user_list', array(
+		return $this->render('website.user_list', array(
 				'users' => $users,
 				'pager' => $pager,
 				'page' => $page,
@@ -53,7 +53,7 @@ class UserController extends BlackController{
 			$this->forbidden("The user profile is not public.");
 		}
 		
-		$this->render('website.user_profile', array(
+		return $this->render('website.user_profile', array(
 				'user' => $user,
 				'website_title' => 'Utilisateur',
 		));

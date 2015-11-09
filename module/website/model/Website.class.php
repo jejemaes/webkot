@@ -29,31 +29,6 @@ class Website {
 		
 	}
 	
-	public static function hook_prerender(){
-		global $Router;
-		$menus = Menu::get_root_menus();
-		$Router->addRenderData(array(
-				'slideshow' => false,
-				'session' => Session::getInstance(),
-				'router' => $Router,
-				'menus' => $menus,
-				'url' => function($relative){
-					$pos = strpos($relative, 'http');
-					if($pos === false){
-						// remove the first '/'
-						if($relative[0] === '/'){
-							$relative = substr($relative, 1, strlen($relative)); 
-						}
-						// make absolute url
-						return __BASE_URL . $relative;
-					}
-					return $relative;
-				},
-				'website' => static::getInstance(),
-		));
-	}
-	
-	
 	public function get($key, $default){
 		return IrConfig::get_param('website.'.$key, $default);
 	}

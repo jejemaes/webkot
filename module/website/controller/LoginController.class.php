@@ -9,7 +9,7 @@ namespace module\website\controller;
 use system\core\BlackController as BlackController;
 use system\res\ResUser as User;
 
-class LoginController extends BlackController{
+class LoginController extends WebsiteController{
 
 	public function loginAction(){
 		$error = False;
@@ -18,13 +18,14 @@ class LoginController extends BlackController{
 		
 		$referrer = $this->request()->getReferrer();
 		$redirect = $this->request()->params('redirect');
+		
 		if(!$redirect){
 			$redirect = $referrer ? $referrer : __BASE_URL;
 		}
 		
 		// if user already logged, and want to see login form page, redirect to homepage
 		if($this->request()->isGet() && $this->session()->user){
-			$this->redirect('/');
+			return $this->redirect('/');
 		}
 		
 		if($this->request()->isPost()){ // login with the receive data
@@ -32,7 +33,7 @@ class LoginController extends BlackController{
 				$user = User::login($login, $password);
 				if($user){
 					$this->session()->authenticate($user->id, $user->login, $user->password);
-					$this->redirect($redirect);
+					return $this->redirect($redirect);
 				}else{
 					$error = "Wrong login/password";
 				}
@@ -41,7 +42,7 @@ class LoginController extends BlackController{
 			}
 		}
 		// otherwise, display login form
-		$this->render('website.login', array(
+		return $this->render('website.login', array(
 				'login' => $login,
 				'password' => $password,
 				'redirect' => $redirect, 

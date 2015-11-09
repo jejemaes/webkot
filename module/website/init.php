@@ -25,6 +25,3 @@ $user_controller = 'module\website\controller\UserController';
 $Router->addRoute('/user/list(/:page)', $user_controller . ':indexAction', 'GET', 'public', array('page' => '[1-9]*'), 'website_user_list');
 $Router->addRoute('/user/:user_id/', $user_controller . ':profileAction', 'GET', 'public', array('user_id' => '[1-9]*'), 'website_user_profile');
 
-
-// Hooks
-$Router->addHook('\module\website\model\Website:hook_prerender');
