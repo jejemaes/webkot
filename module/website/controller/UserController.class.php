@@ -59,4 +59,52 @@ class UserController extends WebsiteController{
 		));
 	}
 	
+	
+	public function userSubscriptionAction(){
+		$error = false;
+		
+		$required_params = ['username', 'password', 'confirm_password', 'email'];
+		$optional_params = ['firstname', 'lastname', 'study', 'school', 'city', 'profile_public'];
+		
+		$data = $this->params(array_merge($required_params, $optional_params));
+		
+		if($this->request()->isPost()){
+			if($this->checkMandatoryParams($required_params)){
+				
+				$error = "";
+				if(strlen($data['username']) < 4 || strlen($data['password']) < 4){
+					$error .= "Les champs 'Username' et 'password' doivent contenir au moins 4 caractres \n";
+				}
+				if($data['password'] !== $data['confirm_password']){
+					$error .= "Les champs 'password' et 'confirm password' ne sont pas identiques \n";
+				}
+				if(!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $data['email'])){
+					$error .= "L'adresse mail ne respecte pas le format suivant xxxxxx@xxxxx.xx \n";
+				}
+				if(!preg_match("/^[A-Za-z]{1}[A-Za-z0-9._-]{5,31}$/", $data['username'])){
+					$error .= "Votre username contient des caractres interdits : il ne doit contenir que des chiffres et des lettres \n";
+				}
+				
+				if(!$error){
+					$user = User::create(array(
+							'login' => $data['username'],
+							'password' => $data['password'],
+							'mail' => $data['email'],
+							'name' => $data['lastname'],
+							'firstname' => $data['firstname'],
+							'school' => $data['school'],
+							'section' => $data['study'],
+							'address' => $data['city'],
+							'viewdet' => $this->param('profile_public', false) ? 1 : 0,
+					));
+					return $this->redirect('/login');
+				}
+				
+			}else{
+				$data['error'] = "Des champs requis sont vides !";
+			}
+		}
+		return $this->render('website.user_subscription', $data);
+	}
+	
 }

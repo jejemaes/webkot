@@ -38,5 +38,15 @@ class BlackController extends \SlimController\SlimController{
 		echo "FORBIDDEN" . $message;
 		return;
 	}
+	
+	public function checkMandatoryParams(array $names){
+		$params = $this->params($names);
+		foreach($params as $p){
+			if(!$p){
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

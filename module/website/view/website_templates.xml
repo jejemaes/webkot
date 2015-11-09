@@ -281,6 +281,7 @@
 			  <input type="hidden" class="form-control" id="redirect" name="redirect" t-att-value="$redirect"/>
 			  <button type="submit" class="btn btn-sm btn-default">Login</button>
 			</form>
+			Pas encore inscrit ? <a t-att-href="$router->urlFor('website_user_register')">cliquez ici</a>
 		</t>
 	</template>
 	
