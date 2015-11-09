@@ -55,6 +55,7 @@ class WebsiteController extends BlackController{
 				return $relative;
 			},
 			'website' => Website::getInstance(),
+			'website_url' => __BASE_URL,
 		);
 		$data = array_merge($default, $data);
 		return parent::render($template, $data);

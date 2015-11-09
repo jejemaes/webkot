@@ -20,7 +20,7 @@
 							      <div class="col-md-12">
 							        <h4><strong><a t-att-href="$router->urlFor('blog_post_page', array('post_id' => $post->id))"><t t-esc="$post->title"/></a></strong></h4>
 							      	<p>
-							          <i class="icon-user"></i> by <a href="#"><t t-esc="$post->user->login"/></a> 
+							          <i class="icon-user"></i> by <a t-att-href="$router->urlFor('website_user_profile',array('user_id' => $post->user->id))"><t t-esc="$post->user->login"/></a> 
 							          | <i class="icon-calendar"></i><t t-esc="$post->date"/>
 							          <t t-if="count($post->comments)">
 							          	| <i class="icon-comment"></i> <a href="#"><t t-esc="count($post->comments)"/> Comments</a>
@@ -61,7 +61,7 @@
 			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			        <h4><t t-esc="$post->title"/></h4>
 			        <p>
-			        	<i class="fa fa-user"><a href="#"><t t-esc="$post->user->login"/></a></i>
+			        	<i class="fa fa-user"><a t-att-href="$router->urlFor('website_user_profile',array('user_id' => $post->user->id))"><t t-esc="$post->user->login"/></a></i>
 			        	| <i class="fa fa-calendar"><t t-esc="$post->date"/></i> 
 			        	| <i class="fa fa-comment"><a href="#blog-comments"><t t-esc="count($post->comments)"/> commentaire</a></i>
 			        </p>
@@ -73,7 +73,7 @@
 			            	<h4>Commentaires</h4>
 			            	<t t-foreach="$post->comments" t-as="$comment">
 			            		<div>
-			            			<b><a href="#"><t t-esc="$comment->user->login"/></a></b>, 
+			            			<b><a t-att-href="$router->urlFor('website_user_profile',array('user_id' => $post->user->id))"><t t-esc="$comment->user->login"/></a></b>, 
 			            			<i><t t-esc="$comment->create_date"/></i>
 			            			<p><t t-esc="$comment->comment"/></p>
 			            		</div>
