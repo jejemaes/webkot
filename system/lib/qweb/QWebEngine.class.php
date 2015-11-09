@@ -298,7 +298,7 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 	function render_element($element, $template_attributes, $generated_attributes, $qwebcontext, $inner=false){
 		$g_inner = false;
 		if($inner){
-			$g_inner = strlen($inner) != strlen(utf8_decode($inner)) ? utf8_encode($inner) : $inner;
+			$g_inner = $inner; //strlen($inner) != strlen(utf8_decode($inner)) ? utf8_encode($inner) : $inner;
 			$g_inner = array($g_inner);
 		}else{
 			$g_inner = $element->textContent ? array() : array(utf8_encode($element->textContent));
