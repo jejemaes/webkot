@@ -15,7 +15,7 @@ interface iSession{
 	
 	public static function destroy();
 	
-	public function alive();
+	public function is_empty();
 
 	public function authenticate($user_id, $login, $crypted_password);
 

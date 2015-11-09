@@ -53,7 +53,10 @@ class LoginController extends WebsiteController{
 	
 	public function logoutAction(){
 		$this->session()->destroy();
-		echo 'destroyed';
+		// redirect
+		$referrer = $this->request()->getReferrer();
+		$redirect = $referrer ? $referrer : __BASE_URL;
+		return $this->redirect($redirect);
 	}
 
 }

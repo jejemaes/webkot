@@ -36,7 +36,7 @@ class Session implements iSession {
 		$this->set('password', $crypted_password);
 	}
 	
-	public function alive(){
+	public function is_empty(){
 		return !empty($_SESSION);
 	}
 	
