@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
+
+	<template id="website.assets_frontend" name="Assets Frontends">	
+		<!-- Base assets -->
+		<link t-att-href="$url('assets/bootstrap/css/bootstrap.min.css')" rel="stylesheet"/>
+		<link t-att-href="$url('assets/font-awesome/css/font-awesome.min.css')" rel="stylesheet"/>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+		<script src="http://getbootstrap.com/dist/js/bootstrap.min.js" type="text/javascript" ></script>
+		    
+		<!-- Custom styles for this template -->
+		<link t-att-href="$url('module/website/assets/css/website.css')" rel="stylesheet"/>
+		<link t-att-href="$url('module/website/assets/css/carousel.css')" rel="stylesheet"/>
+	</template>
 	
 	<template id="website.layout" name="Website Main Layout">		
 		&lt;!DOCTYPE html&gt;
@@ -16,17 +29,13 @@
 		    	</t>
 		    </title>
 		    <!-- Bootstrap core CSS -->
-		    <link t-att-href="$url('assets/bootstrap/css/bootstrap.min.css')" rel="stylesheet"/>
-		    <link t-att-href="$url('module/website/assets/css/website.css')" rel="stylesheet"/>
+		    <t t-call="website.assets_frontend"/>
 		
 		    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		    <!--[if lt IE 9]>
 		      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		    <![endif]-->
-		
-		    <!-- Custom styles for this template -->
-		    <link t-att-href="$url('module/website/assets/css/carousel.css')" rel="stylesheet"/>
 		  </head>
 		
 		  <body>
@@ -115,12 +124,7 @@
 		    <footer>
 		    	<t t-call="website.footer"/>
 		    </footer>
-		
-		    <!-- Bootstrap core JavaScript
-		    ================================================== -->
-		    <!-- Placed at the end of the document so the pages load faster -->
-		    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
-		    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js" type="text/javascript" ></script>
+		    		    
 		  </body>
 		</html>
 	</template>
