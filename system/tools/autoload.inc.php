@@ -29,6 +29,19 @@ function classLoader($class_name){
 	}
 }
 
+
+function toolsLoader($class_name){
+	$directories = explode("\\", $class_name);
+	if(count($directories) >= 2){
+		if($directories[0] == 'system' && $directories[1] == 'tools'){
+			$directories = array_slice($directories, 2);
+			$path = _DIR_TOOLS . implode($directories, DIRECTORY_SEPARATOR);
+			$file = $path . '.inc.php';
+			$found = _include_file($file);
+		}
+	}
+}
+
 function _include_file($filename){
 	if (!file_exists($filename)){
 		return false;
@@ -38,3 +51,4 @@ function _include_file($filename){
 }
 
 spl_autoload_register('classLoader');
+spl_autoload_register('toolsLoader');

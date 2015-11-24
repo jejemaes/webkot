@@ -4,7 +4,7 @@
  * url.inc.php, created at Oct 29, 2015
  *
  */
-
+namespace system\tools\url;
 
 function url_from_path($path){
 	$base_url = __BASE_URL;
@@ -13,3 +13,4 @@ function url_from_path($path){
 	}
 	return $base_url . $path;
 }
+
