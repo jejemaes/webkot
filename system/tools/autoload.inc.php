@@ -36,7 +36,7 @@ function toolsLoader($class_name){
 		if($directories[0] == 'system' && $directories[1] == 'tools'){
 			$directories = array_slice($directories, 2);
 			$path = _DIR_TOOLS . implode($directories, DIRECTORY_SEPARATOR);
-			$file = $path . '.inc.php';
+			$file = $path . '.class.php';
 			$found = _include_file($file);
 		}
 	}
