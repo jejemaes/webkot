@@ -41,8 +41,13 @@ class IrModule extends BlackModel{
 						foreach($xml->children() as $child) {
 							$xmlid = $child['id'];
 							$tag_name = $child->getName();
+							// template
 							if($tag_name == 'template'){
 								$this->_update_view_template($xmlid, $child);
+							}
+							// view
+							if($tag_name == 'view'){
+								$this->_update_view_view($xmlid, $child);
 							}
 						}
 					}
@@ -52,13 +57,49 @@ class IrModule extends BlackModel{
 		}
 	}
 	
+	/**
+	 * Parse XML 'view' tag, and update or create it in the database as ir_view (view).
+	 * @param unknown $xmlid
+	 * @param unknown $node
+	 * @return Ambigous <NULL, unknown>
+	 */
+	public function _update_view_view($xmlid, $node){
+		$template = XMLID::xml_id_to_object($xmlid);
+		$values = array(
+				'name' => $this->_get_attribute($node, 'name', $xmlid),
+				'type' => $this->_get_attribute($node, 'type', 'form'),
+				'model' => $this->_get_attribute($node, 'model', NULL),
+				'active' => $this->_get_attribute($node, 'active', true),
+				'sequence' => $this->_get_attribute($node, 'sequence', 10),
+				'arch' => $this->_get_arch_view($xmlid, $node)
+		);
+		if(is_null($template)){
+			$template = BlackView::create($values);
+			$values = array(
+				'xml_id' => $xmlid,
+				'res_model' => BlackView::$table_name,
+				'res_id' => $template->id
+			);
+			XMLID::create($values);
+		}else{
+			// update the existing one
+			$template->update_attributes($values);
+		}
+		return $template;
+	}
 	
+	/**
+	 * Parse XML 'template' tag, and update or create it in the database as ir_view (template).
+	 * @param unknown $xmlid
+	 * @param unknown $node
+	 * @return Ambigous <NULL, unknown>
+	 */
 	public function _update_view_template($xmlid, $node){
 		$template = XMLID::xml_id_to_object($xmlid);
 		$values = array(
 				'name' => $this->_get_attribute($node, 'name', $xmlid),
 				'type' => 'template',
-				'active' => $this->_get_attribute($node, 'active', false),
+				'active' => $this->_get_attribute($node, 'active', true),
 				'sequence' => $this->_get_attribute($node, 'sequence', 10),
 				'arch' => $this->_get_arch_template($xmlid, $node)
 		);
@@ -75,6 +116,18 @@ class IrModule extends BlackModel{
 			$template->update_attributes($values);
 		}
 		return $template;
+	}
+	
+	private function _get_arch_view($xmlid, $node){
+		$arch = '';
+		foreach($node->children() as $child) {
+			$arch .= $child->asXML();
+		}
+		$t = '<?xml version="1.0" encoding="UTF-8"?>
+				<view name="'.$xmlid.'">
+    				'.$arch.'
+				</view>';
+		return $t;
 	}
 	
 	private function _get_arch_template($xmlid, $node){

@@ -33,13 +33,14 @@ class FormView extends View{
 		$default = array(
 			'method' => 'POST',
 			'title' => '',
-			'action' => '#',	
+			'action' => '#',
+			'css_class' => '',	
 		);
 		$options = array_merge($default, $options);
 		
 		$form = new Form;
 		$form = $form->init($options['action'], $options['method'], array(
-			'class'=>'form-horizontal'
+			'class'=> $options['css_class'] . ' form-horizontal'
 		));
 		
 		$elements = $this->get_dom()->getElementsByTagName("field");
@@ -58,7 +59,8 @@ class FormView extends View{
 				            'placeholder'   => $field_label,
 				            'value'			=> $field_default_value,
 				            'name'			=> $field_name,
-				            'id'            => $field_name
+				            'id'            => $field_name,
+				            'data-type'		=> strtolower($field_type),
 				        ))
 				    );
 					break;
@@ -81,7 +83,8 @@ class FormView extends View{
 								'placeholder'   => $field_label,
 								'value'			=> $field_default_value,
 								'name'			=> $field_name,
-								'id'            => $field_name
+								'id'            => $field_name,
+								'data-type'		=> strtolower($field_type),
 						))
 					);
 					break;
@@ -102,6 +105,20 @@ class FormView extends View{
 				// relational
 				case 'many2one':
 					$form->group($field_label,
+					new Select(
+						array($field_default_value[0] => $field_default_value[1]),
+						array($field_default_value[0]),
+						array(
+								'placeholder'   => $field_label,
+								'value'			=> $field_default_value[1],
+								'name'			=> $field_name,
+								'id'            => $field_name,
+								'data-res-model'=> $this->get_properties()[$field_name]['model'],
+								'data-res-id'	=> $field_default_value[0],
+								'data-type'		=> 'many2one',
+						)
+					)
+					/*
 							new Text(array(
 									'placeholder'   => $field_label,
 									'value'			=> $field_default_value[1],
@@ -109,7 +126,9 @@ class FormView extends View{
 									'id'            => $field_name,
 									'data-res-model'=> $this->get_properties()[$field_name]['model'],
 									'data-res-id'	=> $field_default_value[0],
+									'data-type'		=> 'many2one',
 							))
+							*/
 					);
 					break;
 				default:

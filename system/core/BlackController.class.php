@@ -8,6 +8,7 @@
 namespace system\core;
 
 use \system\core\BlackRouter as BlackRouter;
+use \system\tools\Url as Url;
 
 class BlackController extends \SlimController\SlimController{
 
@@ -28,7 +29,7 @@ class BlackController extends \SlimController\SlimController{
 	 */
 	public function redirect($url, $status=302){
 		if(substr($url, 0, 4) !== 'http'){
-			$url = url_from_path($url);
+			$url = Url::url_from_path($url);
 		}
 		return $this->app->redirect($url, $status);
 	}
@@ -47,6 +48,13 @@ class BlackController extends \SlimController\SlimController{
 			}
 		}
 		return true;
+	}
+	
+	
+	public function json_response($data=array()){
+		$this->app->response()->header('Content-Type', 'application/json');
+		$body = utf8_decode(json_encode($data, JSON_UNESCAPED_UNICODE));
+		$this->app->response()->body($body);
 	}
 
 }
