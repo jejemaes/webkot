@@ -9,6 +9,7 @@ class SlimSessionMiddleware extends \Slim\Middleware
 	 * @var array
 	 */
 	protected $settings;
+	protected $app;
 
 	/**
 	 * Constructor
@@ -30,7 +31,8 @@ class SlimSessionMiddleware extends \Slim\Middleware
 		if (is_string($this->settings['expires'])) {
 			$this->settings['expires'] = strtotime($this->settings['expires']);
 		}
-
+		
+		$this->app = Slim::getInstance();
 	
 		//ini_set('session.use_cookies', 0);
 		session_cache_limiter(false);

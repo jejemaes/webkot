@@ -47,14 +47,11 @@ function App() {
 $app = App();
 
 
-foreach (['blog', 'admin', 'website'] as $m){
+foreach (['web', 'blog', 'admin', 'website'] as $m){
     include 'module/' . $m . '/init.php';
 }
-
-$matched_routes = $Router->hasRoute();
-if(count($matched_routes)){
-	$Router->dispatch();
-	exit;
-}
+	
+$Router->dispatch();
+	
 exit;
 

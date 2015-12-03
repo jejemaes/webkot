@@ -54,20 +54,43 @@ class BlackRouter {
 		// TODO : maybe remove or improve !
 		$path = str_replace(' ', '%20', __BASE_PATH_URL) . $path;
 		
-		// create route
-		$route = $this->_slim->addRoute($path, $class_and_method, $auth);
-		if($route_name){
-			$route->setName($route_name);
-		}
+		//default values 
+		$default = array(
+				'auth' => 'public',
+				'type' => 'http',
+				'method' => 'GET',
+				'conditions' => array(),
+				'name' => false,
+				'class_route' => $class_and_method,
+				'middlewares' => array()
+		);
 		
-		// add methods
+		// add route per method
+		$routes = array();
 		$meth = preg_split("/[|]/", $meth);
 		foreach ($meth as $m){
-			$route = $route->via(strtoupper($m));
+			$params = array(
+				'name' => $route_name,
+				'auth' => $auth,
+				'type' => 'http',
+				'method' => $meth,
+				'conditions' => $conditions,
+				'class_route' => $class_and_method,
+				'middlewares' => array(/*function() {
+					var_dump("THIS ROUTE IS ONLY POST");
+				}*/),
+			);
+			$routes[$m] = array_merge($default, $params);;
 		}
+		
+		return $this->_slim->addRoutes(array($path => $routes));
+	}
 	
-		// add conditions
-		return $route->conditions($conditions);
+	
+	public function addAdminRoute($path, $class_and_method, $meth = 'GET|POST', $auth='user', $conditions=array(), $route_name=false){
+		$auth = 'user';
+		$path = ADMIN_PATH . $path;
+		return $this->addRoute($path, $class_and_method, $meth, $auth, $conditions, $route_name);
 	}
 	
 	public function hasRoute(){
