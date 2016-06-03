@@ -195,7 +195,6 @@ class ModuleManager{
 				$stmt->execute(array());
 				if($stmt->errorCode() != 0){
 					$error = $stmt->errorInfo();
-					var_dump($error);
 					throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des modules.");
 				}
 				$mod = array();

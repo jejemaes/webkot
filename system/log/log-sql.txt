@@ -378,3 +378,231 @@ TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4de
 #1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/functions.inc.php(316): ModuleManager->getUserRoleCapabilities('Visitor')
 #2 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(70): system_session_login()
 #3 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 16:44
+CODE : 42
+MESSAGE : Table 'webkot4-dev.user' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 591
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 16:44
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 591
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:02
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 591
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:05
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/RoleManager.class.php
+LINE : 106
+QUERY : SELECT id as id, role as role, min(level) as level FROM privilege ORDER BY level ASC
+DESCRIPTION : Impossible d'obtenir le min role
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(246): RoleManager->getMinRole()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:06
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/RoleManager.class.php
+LINE : 106
+QUERY : SELECT id as id, role as role, min(level) as level FROM privilege ORDER BY level ASC
+DESCRIPTION : Impossible d'obtenir le min role
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(246): RoleManager->getMinRole()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:07
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/RoleManager.class.php
+LINE : 106
+QUERY : SELECT id as id, role as role, min(level) as level FROM privilege ORDER BY level ASC
+DESCRIPTION : Impossible d'obtenir le min role
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(246): RoleManager->getMinRole()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:08
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/RoleManager.class.php
+LINE : 107
+QUERY : SELECT id as id, role as role, min(level) as level FROM privilege ORDER BY level ASC
+DESCRIPTION : Impossible d'obtenir le min role
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(246): RoleManager->getMinRole()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:08
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 591
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:08
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 591
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:09
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 592
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:09
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 593
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:11
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 594
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible d'obtenir la liste des User public
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:12
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 594
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible to check the user existance
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:12
+CODE : 42
+MESSAGE : Unknown column 'username' in 'where clause'
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 595
+QUERY : SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1
+DESCRIPTION : Impossible to check the user existance
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(259): UserManager->exists('jeromeinfo', 'a99ffb755e38c6a...')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:13
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User par son username
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(261): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:13
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.login as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User par son username
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(261): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:14
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.login as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User par son username
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(261): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:16
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 105
+QUERY : SELECT U.id as id, U.login as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User par son username
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(261): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}
+
+#################### SQLException ##################
+DATE : 2016-05-28 17:17
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/UserManager.class.php
+LINE : 106
+QUERY : SELECT U.id as id, U.login as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.username = :user LIMIT 1
+DESCRIPTION : Impossible d'obtenir un le profil d'un User par son username
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(261): UserManager->getUserByLogin('jeromeinfo')
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(76): system_session_login()
+#2 {main}

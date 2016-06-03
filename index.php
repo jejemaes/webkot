@@ -1,5 +1,19 @@
 <?php
 
+
+//######## define the site path and the base url constant ######
+$site_path = realpath(dirname(__FILE__));
+define ('__SITE_PATH', $site_path . '/');
+
+define('__BASE_PATH_URL', isset($_SERVER['SCRIPT_NAME']) ? dirname($_SERVER['SCRIPT_NAME']) : dirname(getenv('SCRIPT_NAME')));
+
+$baseUrl = ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https://' : 'http://'; // checking if the https is enabled
+$baseUrl .= isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : getenv('HTTP_HOST'); // checking adding the host name to the website address
+define('__HOST_URL', $baseUrl);
+$WebBaseUrl = $baseUrl . isset($_SERVER['SCRIPT_NAME']) ? dirname($_SERVER['SCRIPT_NAME']) : dirname(getenv('SCRIPT_NAME')); // adding the directory name to the created url and then returning it.
+define('__BASE_URL', $baseUrl . $WebBaseUrl . '/');
+
+
 // Include config & autres class utiles
 require_once("config/configuration.php");
 require_once("config/frontend.inc.php");
@@ -114,6 +128,11 @@ if($omanager->getOption('site-closed')){
 		exit();
 	}
 }
+
+
+
+// ------ init
+include 'system/init.php';
 
 
 //###### MODULE 

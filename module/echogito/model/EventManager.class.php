@@ -49,7 +49,6 @@ class EventManager {
 			$sql = "INSERT INTO echogito_event (name, description, start_time, location, facebookid, isapproved, categoryid, organizer) VALUES (:name, :descri, :starttime, :location, :facebookid, :isapproved, :categoryid, :organizer)";
 			$stmt = $this->_db->prepare($sql);
 			$stmt->execute(array( 'name' => $name, 'descri' => $descri, 'starttime' => $starttime, 'location' => $location, 'facebookid' => $facebookid, 'isapproved' => $isapproved, 'categoryid' => $catid, "organizer" => $organizer));
-			var_dump($stmt->errorInfo());
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
 				throw new SQLException($error[2], $error[0], $sql, "Impossible d'ajouter un Event.");

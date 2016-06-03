@@ -1,5 +1,6 @@
 <?php
 
+
 class SQLException extends Exception{
 
     /* The SQL associated with this exception */ 

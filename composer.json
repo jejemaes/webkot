@@ -1,0 +1,13 @@
+{
+    "name": "webkot/webkot5",
+    "description": "Webkot website",
+    "authors": [
+        {
+            "name": "Jerome Maes",
+            "email": "jerome.2611@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "3.4.2"
+    }
+}
