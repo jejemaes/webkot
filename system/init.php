@@ -29,6 +29,7 @@ $env->register('system\core\BlackView');
 $env->register('system\core\IrExternalIdentifier');
 $env->register('system\core\IrConfigParameter');
 $env->register('system\core\IrModule');
+$env->register('system\core\User');
 
 $modules = array('base', 'website');
 load_modules($modules);

@@ -6,6 +6,7 @@
  */
 namespace module\base\controller;
 use system\core\BlackController as BlackController;
+use system\http\Session as Session;
 
 
 class BaseController extends BlackController{
@@ -16,8 +17,13 @@ class BaseController extends BlackController{
 		$context = parent::_render_context();
 		$context = array_merge($context, [
 			'url' => function($path){
+				if(substr($path, 0, 1) == '/'){
+					$path = substr($path, 1);
+				}
 				return __BASE_URL . $path;
-			}
+			},
+			'session' => Session::getInstance(),
+			'session_flash_messages' => $this->session->fetchMessages(),
 		]);
 		return $context;
 	}

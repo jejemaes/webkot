@@ -82,9 +82,10 @@ set_exception_handler(array("ExceptionHandler", "handleUncaughtException"));
 
 
 // control the User Session
+/*
 system_session_logout();
 system_session_login();
-
+*/
 
 // Initialize the logger
 $logger = new Logger(LOGGING_FILE, false);

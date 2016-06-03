@@ -41,6 +41,8 @@ class Router {
 			return new HttpErrorHandler($container->get('settings')['displayErrorDetails']);
 		};
 		$this->app = new App($container);
+		// middlewares
+		$this->app->add(new SessionMiddleware());
 		return $this;
 	}
 	

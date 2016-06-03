@@ -9,33 +9,44 @@
  * Convention : setters & getters begin with a capital letter (important for hydratate)
  * 				same attribute names as in the DB
  */
+namespace system\core;
+use \PDO;
+use \NullObjectException;
+
  
-class User {
+function encode_password($pass){
+	return md5($pass);
+}
+
+
+class User extends BlackModel{
 	
-	private $_id;
-	private $_username;
-	private $_password;
-	private $_mail;
-	private $_name;
-	private $_firstname;
-	private $_school;
-	private $_section;
-	private $_address;
-	private $_isAdmin;
-	private $_isWebkot;
-	private $_mailwatch; // ask for an email when new activity
-	private $_lastLogin;
-	private $_subscription;
-	private $_viewdet;// public profil or not
-	private $_facebookid;
+	static $table_name = 'user';
 	
-	private $_role;
-	private $_level;
+	public $id;
+	public $login;
+	public $password;
+	public $mail;
+	public $name;
+	public $firstname;
+	public $school;
+	public $section;
+	public $address;
+	public $isAdmin;
+	public $isWebkot;
+	public $mailwatch; // ask for an email when new activity
+	public $lastLogin;
+	public $subscription;
+	public $viewdet;// public profil or not
+	public $facebookid;
 	
-	private $_nbrcomment;
+	public $role;
+	public $level;
+	
+	public $nbrcomment;
 	
 	// indicate if modification
-	private $_ismodified = false;
+	public $ismodified = false;
 	
 	
 	
@@ -62,6 +73,83 @@ class User {
         }
 	}
 	
+	
+	/**
+	 * Check if a login exists, with the pass (encrypted of md5)
+	 * @param string $login : the username
+	 * @param string $pass : password in md5
+	 * @return boolean $b : true if there is a row identfied by 'login' in the DB
+	 */
+	public static function exists($login, $pass){
+		try{
+			$sql = "SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1";
+			$stmt = $this->_db->prepare($sql);
+			$stmt->execute(array( 'user' => $login, 'pass' => $pass ));
+			if($stmt->errorCode() != 0){
+				return False;
+			}
+			$nb = (int) $stmt->rowCount();
+			return ($nb != 0);
+		}catch(PDOException $e){
+			return False;
+		}
+	}
+	
+	/**
+	 * Check if a login exists, with the pass (encrypted of md5)
+	 * @param string $login : the username
+	 * @param string $pass : password in md5
+	 * @return boolean $b : true if there is a row identfied by 'login' in the DB
+	 */
+	public static function login($login, $pass){
+		try{
+			$pass = encode_password($pass);
+			$sql = "SELECT * FROM user WHERE login = :user and password = :pass LIMIT 1";
+			$stmt = \Database::getInstance()->prepare($sql);
+			$stmt->execute(array( 'user' => $login, 'pass' => $pass ));
+			if($stmt->errorCode() != 0){
+				return False;
+			}
+			$data = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($data == null){
+				throw new NullObjectException();
+			}
+			return new User($data);
+		}catch(PDOException $e){
+			return False;
+		}
+	}
+	
+	/**
+	 * get a specified User Object, by its Username
+	 * @param int $username : the username of the User Object
+	 * @return User $user : the User Object
+	 * @throws SQLException : this exception is raised if the Query is refused
+	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
+	 * @throws NullObjectException : this exception is raised when the specified Object didn't exist
+	 */
+	public static function getUserByLogin($username){
+		try{
+			$sql = "SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.login = :user LIMIT 1";
+			$stmt = $this->_db->prepare($sql);
+			$stmt->execute(array( 'user' => $username ));
+			if($stmt->errorCode() != 0){
+				$error = $stmt->errorInfo();
+				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir un le profil d'un User par son username");
+			}
+			$data = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($data == null){
+				throw new NullObjectException();
+			}
+			$user = new User($data);
+			return $user;
+		}catch(PDOException $e){
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir un le profil d'un User par son username");
+		}
+	}
+	
+	
+	
 	/**
 	 * Create the string of the object
 	 * @return : string describing the object
@@ -76,198 +164,200 @@ class User {
 	public function setId($id){
 		$id = (int) $id;
      	if ($id > 0){
-          $this->_id = $id;
-          $this->_ismodified = true;
+          $this->id = $id;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setUsername($value){
 		if (is_string($value)){
-          $this->_username = $value;
-          $this->_ismodified = true;
+          $this->username = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setPassword($value){
      	if (is_string($value)){
-          $this->_password = $value;
-          $this->_ismodified = true;
+          $this->password = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setName($value){
 		if (is_string($value)){
-          $this->_name = $value;
-          $this->_ismodified = true;
+          $this->name = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setMail($value){
      	if (is_string($value)){
-          $this->_mail = $value;
-          $this->_ismodified = true;
+          $this->mail = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setFirstname($value){
-          $this->_firstname = $value;
+          $this->firstname = $value;
  	}
  	
  	public function setSchool($value){
      	if (is_string($value)){
-          $this->_school = $value;
-          $this->_ismodified = true;
+          $this->school = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setSection($value){
      	if (is_string($value)){
-          $this->_section = $value;
-          $this->_ismodified = true;
+          $this->section = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setAddress($value){
      	if (is_string($value)){
-          $this->_address = $value;
-          $this->_ismodified = true;
+          $this->address = $value;
+          $this->ismodified = true;
 		}
  	}
  	
  	public function setIsAdmin($value){
  		$value = (int) $value;
-        $this->_isAdmin = $value;
-        $this->_ismodified = true;
+        $this->isAdmin = $value;
+        $this->ismodified = true;
  	}
  	
  	public function setIswebkot($value){
  		$value = (int) $value;
-        $this->_isWebkot = $value;
-        $this->_ismodified = true;
+        $this->isWebkot = $value;
+        $this->ismodified = true;
      }
  	
  	public function setMailwatch($value){
  		$value = (int) $value;
-        $this->_mailwatch = $value;
-        $this->_ismodified = true;
+        $this->mailwatch = $value;
+        $this->ismodified = true;
  	}
  	
  	public function setLastLogin($Value){
-		$this->_lastLogin = $Value;
-		$this->_ismodified = true;
+		$this->lastLogin = $Value;
+		$this->ismodified = true;
 	}
  	
  	public function setSubscription($Value){
-		$this->_subscription = $Value;
-		$this->_ismodified = true;
+		$this->subscription = $Value;
+		$this->ismodified = true;
 	}
 	
 	public function setViewdet($value){
 		$value = (int) $value;
-     	$this->_viewdet = $value;
-		$this->_ismodified = true;
+     	$this->viewdet = $value;
+		$this->ismodified = true;
  	}
  	
  	public function setNbrcomment($value){
- 		$this->_nbrcomment = $value;
+ 		$this->nbrcomment = $value;
  	}
 	
 	
 	
 	public function getId(){
-		return $this->_id;
+		return $this->id;
 	}
 	
 	public function getUsername(){
-		return $this->_username;
+		return $this->username;
 	}
 	
 	public function getPassword(){
-		return $this->_password;
+		return $this->password;
 	}
 	
 	public function getMail(){
-		return $this->_mail;
+		return $this->mail;
 	}
 	
 	public function getName(){
-		return $this->_name;
+		return $this->name;
 	}
 	
 	public function getFirstname(){
-		return $this->_firstname;
+		return $this->firstname;
 	}
 	
 	public function getSchool(){
-		return $this->_school;
+		return $this->school;
 	}
 	
 	public function getSection(){
-		return $this->_section;
+		return $this->section;
 	}
 	
 	public function getAddress(){
-		return $this->_address;
+		return $this->address;
 	}
 	
 	public function getIsAdmin(){
-		return $this->_isAdmin;
+		return $this->isAdmin;
 	}
 	
 	public function getIsWebkot(){
-		return $this->_isWebkot;
+		return $this->isWebkot;
 	}
 	
 	public function getMailwatch(){
-		return $this->_mailwatch;
+		return $this->mailwatch;
 	}
 	
 	public function getLastLogin(){
-		return $this->_lastLogin;
+		return $this->lastLogin;
 	}
 	
 	public function getSubscription(){
-		return $this->_subscription;
+		return $this->subscription;
 	}
 	
 	public function getViewdet(){
-		return $this->_viewdet;
+		return $this->viewdet;
 	}
 	
 	public function getNbrcomment(){
-		return $this->_nbrcomment;
+		return $this->nbrcomment;
 	}
 	
 	
 	
 
 
-	public function setFacebookid( $_facebookid ){
-		$this->_facebookid = $_facebookid;
+	public function setFacebookid( $facebookid ){
+		$this->facebookid = $facebookid;
 	}
 	
 	public function getFacebookid(){
-		return $this->_facebookid;
+		return $this->facebookid;
 	}
 	
 	
 
 
-	public function setRole( $_role ){
-		$this->_role = $_role;
+	public function setRole( $role ){
+		$this->role = $role;
 	}
 	
-	public function setLevel( $_level ){
-		$this->_level = $_level;
+	public function setLevel( $level ){
+		$this->level = $level;
 	}
 	
 	public function getRole(){
-		return $this->_role;
+		return $this->role;
 	}
 	
 	public function getLevel(){
-		return $this->_level;
+		return $this->level;
 	}
+	
+
 	
 }
 ?>

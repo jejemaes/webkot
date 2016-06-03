@@ -6,7 +6,10 @@
  * Class Description : Management of the User Object (with the DB)
  *
  */
- 
+namespace system\core;
+use Database;
+use \DatabaseException;
+
 
  class UserManager{
  	
@@ -650,7 +653,7 @@
     }
  	
  	
- 	 /** add a User in th DB
+ 	/** add a User in th DB
      * @param array $data : key-array containing all the information to complete the user Object
      * @return boolean $b : true if the User was added, false otherwise
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made

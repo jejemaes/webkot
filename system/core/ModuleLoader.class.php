@@ -32,12 +32,12 @@ abstract class ModuleLoader implements iModuleLoader{
 		return self::_register_route($path, array('GET'), $callable, $name, $auth);
 	}
 	
-	public static function route_post($path, $callable, $name, $auth){
+	public static function route_post($path, $callable, $name, $auth='public'){
 		return self::_register_route($path, array('POST'), $callable, $name, $auth);
 	}
 	
-	public static function route_any($path, $callable, $name, $auth){
-		return self::_register_route($path, array('GET', 'POST'), $callable, $name, $auth);
+	public static function route_any($path, $callable, $name, $auth='public'){
+		return self::_register_route($path, ['GET', 'POST'], $callable, $name, $auth);
 	}
 	
 	private static function _register_route($path, $methods, $callable, $name, $auth='public'){

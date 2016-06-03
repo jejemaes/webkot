@@ -7,6 +7,7 @@
 namespace system\http;
 use \Slim\Interfaces\ContainerInterface as ContainerInterface;
 use \system\core\Environment as Env;
+use \system\http\Session as Session;
 
 
 abstract class AbstractController{
@@ -15,6 +16,7 @@ abstract class AbstractController{
 	
 	public $request;
 	public $response;
+	public $session;
 	public $env;
 	
 	// Constructor
@@ -22,6 +24,7 @@ abstract class AbstractController{
 		$this->ci = $ci;
 		$this->request = $ci->request;
 		$this->response = $ci->response;
+		$this->session = Session::getInstance();
 		$this->env = Env::get();
 	}
 	
@@ -53,4 +56,16 @@ abstract class AbstractController{
 		return [];
 	}
 	
+	/**
+	 * Redirect to given url.
+	 * @param string $url
+	 * @param int $status
+	 */
+	public function redirect($url, $status=302){
+		return $this->response->withRedirect($url)->withStatus($status); 
+	}
+	
+	public function get_referer(){
+		return $_SERVER['HTTP_REFERER'];
+	}
 }
