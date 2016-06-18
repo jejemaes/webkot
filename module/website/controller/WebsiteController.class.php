@@ -15,9 +15,10 @@ class WebsiteController extends BaseController{
 	
 	public function _render_context(){
 		$context = parent::_render_context();
+		$menus = $this->env['website_menu'];
 		$context = array_merge($context, [
 			'website' => Website::getInstance(),
-			'menus' => [],
+			'menus' => $menus::get_root_menus(),
 			'website_url' => __BASE_URL,
 			'website_title' => False,
 		]);
@@ -34,14 +35,17 @@ class WebsiteController extends BaseController{
 	 * @return Ambigous <unknown, string>
 	 */
 	private function _pager_url($page, $url, array $url_args=array()){
+		if(substr($url, -1) == '/'){
+			$url = substr($url, 0, -1);
+		}
 		$_url = $url;
 		if($page > 1){
 			$_url = sprintf('%s/page/%s', $url, $page);
 		}
 		if($url_args){
-			$_url = sprintf('%s?%s', $url, http_build_query($url_args));
+			$_url = sprintf('%s?%s', $_url, http_build_query($url_args));
 		}
-		return $_url;
+		return __BASE_URL . $_url;
 	}
 	
 	/**
@@ -74,8 +78,8 @@ class WebsiteController extends BaseController{
 		$page_list = array();
 		foreach (range($pmin, $pmax) as $number) {
 			$page_list[] = array(
-					'url' => $this->_pager_url($number, $url),
-					'num' => $number
+				'url' => $this->_pager_url($number, $url),
+				'num' => $number
 			);
 		}
 	

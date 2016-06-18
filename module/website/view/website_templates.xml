@@ -188,21 +188,21 @@
 	</template>
 
 	<template id="website.pager" name="Website Pager">
-		<ul class="pagination">
-			<li t-if="$page &gt; 1">
-		      <a t-att-href="$pager[$page-1]" aria-label="Previous">
+		<ul class="pagination" t-if="$pager">
+			<li t-if="$pager['page']['num'] &gt; 1">
+		      <a t-att-href="$pager['page_previous']['url']" aria-label="Previous">
 		        <span aria-hidden="true">Prev</span>
 		      </a>
 		    </li>
-       		<t t-foreach="array_keys($pager)" t-as="$p">
-       			<li t-att-class="$page === $p ? 'active'  : ''">
-       				<a t-att-href="$pager[$p]">
-       					<t t-esc="$p"/>
+       		<t t-foreach="$pager['pages']" t-as="$p">
+       			<li t-att-class="$pager['page']['num'] == $p['num'] ? 'active'  : ''">
+       				<a t-att-href="$p['url']">
+       					<t t-esc="$p['num']"/>
        				</a>
        			</li>
        		</t>
-       		<li t-if="$page &lt; $total_page-1">
-		      <a t-att-href="$pager[$page+1]" aria-label="Next">
+       		<li t-if="$pager['page']['num'] &lt;= $pager['page_count']-1">
+		      <a t-att-href="$pager['page_next']['url']" aria-label="Next">
 		        <span aria-hidden="true">Next</span>
 		      </a>
 		    </li>

@@ -11,7 +11,7 @@ class HomeController extends WebsiteController{
 
 	// Routes
 
-	public function indexAction(){
+	public function homeAction(){
 		return $this->render('website.home', array('slideshow' => True));
 	}
 	

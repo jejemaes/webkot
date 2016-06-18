@@ -6,9 +6,9 @@
  */
 namespace system\http;
 use \Slim\Handlers\AbstractError as AbstractError;
+use Slim\Handlers\Error;
 
-
-class HttpErrorHandler extends AbstractError {
+class HttpErrorHandler extends Error {
 	
  //TODO customize
  

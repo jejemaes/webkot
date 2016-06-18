@@ -133,7 +133,7 @@ class BlackModel{
 			}
 			$result = array();
 			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-				$result[] = static::record_object($data);
+			 	$result[] = static::record_object($data);
 			}
 			if($limit == 1 && count($result)){
 				return $result[0];

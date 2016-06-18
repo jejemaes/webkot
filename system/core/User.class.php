@@ -83,7 +83,7 @@ class User extends BlackModel{
 	public static function exists($login, $pass){
 		try{
 			$sql = "SELECT * FROM user WHERE username = :user and password = :pass LIMIT 1";
-			$stmt = $this->_db->prepare($sql);
+			$stmt = \Database::getInstance()->prepare($sql);
 			$stmt->execute(array( 'user' => $login, 'pass' => $pass ));
 			if($stmt->errorCode() != 0){
 				return False;
@@ -131,7 +131,7 @@ class User extends BlackModel{
 	public static function getUserByLogin($username){
 		try{
 			$sql = "SELECT U.id as id, U.username as username, U.password as password, U.mail as mail, U.name as name, U.firstname as firstname, U.school as school, U.section as section, U.address as address, U.lastlogin as lastlogin, U.subscription as subscription, U.mailwatch as mailwatch, U.viewdet as viewdet, U.isadmin as isadmin, U.iswebkot as iswebkot, P.level as level, P.role as role, U.facebookid as facebookid FROM user U, privilege P WHERE U.level = P.id AND U.login = :user LIMIT 1";
-			$stmt = $this->_db->prepare($sql);
+			$stmt = \Database::getInstance()->prepare($sql);
 			$stmt->execute(array( 'user' => $username ));
 			if($stmt->errorCode() != 0){
 				$error = $stmt->errorInfo();
@@ -148,6 +148,49 @@ class User extends BlackModel{
 		}
 	}
 	
+	
+	public static function count_public_user(){
+		try{
+			$sql = 'SELECT count(*) as nbr FROM user U WHERE viewdet = "1"';
+			$stmt = \Database::getInstance()->prepare($sql);
+			$stmt->execute();
+			if($stmt->errorCode() != 0){
+				$error = $stmt->errorInfo();
+				throw new SQLException($error[2], $error[0], $sql, "Error where getting public user count");
+			}
+			$data = (int) $stmt->fetchColumn();
+			return $data;
+		}catch(PDOException $e){
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Error where getting public user count");
+		}
+	}
+	
+	/**
+	 * Obtain a list of the User order by the id and with a public profil. The lenght of the list is $nbr and it start from the $limit of element
+	 * @param $offset : the number where start the list
+	 * @param $limit : the lenght of the list
+	 * @return array $users : array of User Objects
+	 * @throws SQLException : this exception is raised if the Query is refused
+	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
+	 */
+	public static function get_public_users($offset, $limit){
+		try{
+			$sql = 'SELECT * FROM user U WHERE viewdet = "1" ORDER BY id DESC LIMIT ' . $offset . ",".$limit;
+			$stmt = \Database::getInstance()->prepare($sql);
+			$stmt->execute();
+			if($stmt->errorCode() != 0){
+				$error = $stmt->errorInfo();
+				throw new \SQLException($error[2], $error[0], $sql, "Error when fetching public user list");
+			}
+			$users = array();
+			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
+				$users[] = new User($data);
+			}
+			return $users;
+		}catch(PDOException $e){
+			throw new DatabaseException($e->getCode(), $e->getMessage(), "Error when fetching public user list");
+		}
+	}
 	
 	
 	/**
@@ -174,6 +217,12 @@ class User extends BlackModel{
           $this->username = $value;
           $this->ismodified = true;
 		}
+ 	}
+ 	
+ 	public function setLogin($value){
+ 		if (is_string($value)){
+ 			$this->login = $value;
+ 		}
  	}
  	
  	public function setPassword($value){
