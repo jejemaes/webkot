@@ -20,7 +20,7 @@
 						<tbody> 
 							<t t-foreach="$user_list" t-as="$user">
 								<tr> 
-									<td><t t-esc="$user->id"/></td> 
+									<td><a t-att-href="$url_route('website_user_profile', ['id' => $user->id])"><t t-esc="$user->id"/></a></td> 
 									<td><t t-esc="$user->login"/></td> 
 									<td><t t-esc="$user->firstname"/></td> 
 									<td><t t-esc="$user->name"/></td> 
@@ -81,6 +81,97 @@
 		                  	</table>       
 	               		</div>
 	              	</div>
+				</div>
+			</div>
+		</t>
+	</template>
+	
+	
+	<template id="website.user_singup" name="Website Signup User Page">		
+		<t t-call="website.layout">
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="page-header">Inscription</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+				
+					<form class="form-horizontal" role="form" method="post">
+						<div class="alert alert-danger" role="alert" t-if="$error">
+							<p><t t-raw="$error"/></p>
+						</div>
+		                <div class="form-group">
+		                    <label for="login" class="col-sm-3 control-label">Login</label>
+		                    <div class="col-sm-9">
+		                        <input type="text" id="login" name="login" placeholder="Login" class="form-control" t-att-value="$login" required="required"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="email" class="col-sm-3 control-label">Email</label>
+		                    <div class="col-sm-9">
+		                        <input type="email" id="email" name="email" placeholder="Email" class="form-control" t-att-value="$email" required="required"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="password" class="col-sm-3 control-label">Mot de Passe</label>
+		                    <div class="col-sm-9">
+		                        <input type="password" id="password" name="password" placeholder="Mot de passe" class="form-control" required="required"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="confirm_password" class="col-sm-3 control-label">Confirmez votre mot de passe</label>
+		                    <div class="col-sm-9">
+		                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Meme mot de passe" class="form-control" required="required"/>
+		                    </div>
+		                </div>
+		                
+		                <div class="form-group">
+		                    <label for="firstname" class="col-sm-3 control-label">Prenom</label>
+		                    <div class="col-sm-9">
+		                        <input type="text" id="firstname" name="firstname" placeholder="Prenom" class="form-control" t-att-value="$firstname"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="lastname" class="col-sm-3 control-label">Nom</label>
+		                    <div class="col-sm-9">
+		                        <input type="text" id="lastname" name="lastname" placeholder="Nom" class="form-control" t-att-value="$lastname"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="city" class="col-sm-3 control-label">Adresse</label>
+		                    <div class="col-sm-9">
+		                        <input type="text" id="city" name="city" placeholder="Ville" class="form-control" t-att-value="$city"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="school" class="col-sm-3 control-label">Ecole</label>
+		                    <div class="col-sm-9">
+		                        <input type="text" id="school" name="school" placeholder="Universite" class="form-control" t-att-value="$school"/>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="study" class="col-sm-3 control-label">Etude</label>
+		                    <div class="col-sm-9">
+		                        <input type="text" id="study" name="study" placeholder="Info" class="form-control" t-att-value="$study"/>
+		                    </div>
+		                </div>
+		               
+		                <div class="form-group">
+		                    <div class="col-sm-9 col-sm-offset-3">
+		                        <div class="checkbox">
+		                            <label>
+		                                <input id="profile_public" name="profile_public" type="checkbox"/> Mon profil est publique
+		                            </label>
+		                        </div>
+		                    </div>
+		                </div> <!-- /.form-group -->
+		                <div class="form-group">
+		                    <div class="col-sm-9 col-sm-offset-3">
+		                        <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+		                    </div>
+		                </div>
+		            </form> <!-- /form -->
 				</div>
 			</div>
 		</t>

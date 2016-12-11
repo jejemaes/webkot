@@ -84,7 +84,8 @@ class Router {
 	 * @param array $data
 	 * @param array $queryParams
 	 */
-	public function url_for($name, array $data=[], array $queryParams = []){
-		return $this->app->router->pathFor($name, $data, $queryParams);
+	public function url_for($name, array $data=[], array $queryParams=[]){
+		$url_path = $this->app->getContainer()->router->pathFor($name, $data, $queryParams);
+		return $url_path;
 	}
 }

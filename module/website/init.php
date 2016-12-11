@@ -28,6 +28,7 @@ class ModuleLoader extends AbstractLoader{
 		// User routes
 		$controller_class = 'module\website\controller\UserController';
 		self::route_get('/user[/page/{page:[0-9]+}]', $controller_class . ':indexAction', 'website_user_list');
-		self::route_get('/user/profile/{userid:[0-9]+}', $controller_class . ':profileAction', 'website_user_profile');
+		self::route_get('/user/profile/{id:[0-9]+}', $controller_class . ':profileAction', 'website_user_profile');
+		self::route_any('/user/signup', $controller_class . ':signupAction', 'website_user_signup');
 	}
 }

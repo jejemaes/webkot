@@ -7,6 +7,7 @@
 namespace module\base\controller;
 use system\core\BlackController as BlackController;
 use system\http\Session as Session;
+use system\http\Router as Router;
 
 
 class BaseController extends BlackController{
@@ -21,6 +22,9 @@ class BaseController extends BlackController{
 					$path = substr($path, 1);
 				}
 				return __BASE_URL . $path;
+			},
+			'url_route' => function($route_name, array $args=[], array $query=[]){
+				return Router::get()->url_for($route_name, $args, $query);
 			},
 			'session' => Session::getInstance(),
 			'session_flash_messages' => $this->session->fetchMessages(),
