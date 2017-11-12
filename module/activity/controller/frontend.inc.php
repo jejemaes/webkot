@@ -3,6 +3,8 @@
 $view = new ActivityView($template,$module);
 
 
+echo 'fafafafFRONTEDN';
+
 if(isset($_GET['p']) && !empty($_GET['p'])){
 	switch($_GET['p']){
 		case "activity":

@@ -378,3 +378,15 @@ TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4de
 #1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/system/functions.inc.php(316): ModuleManager->getUserRoleCapabilities('Visitor')
 #2 /Users/jeromemaes/Programmation/Web Developpement/Workspace/webkot4dev5/index.php(70): system_session_login()
 #3 {main}
+
+#################### SQLException ##################
+DATE : 2017-11-12 19:40
+CODE : 42
+MESSAGE : Table 'webkot4-dev.privilege' doesn't exist
+FILE : /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/lib/RoleManager.class.php
+LINE : 106
+QUERY : SELECT id as id, role as role, min(level) as level FROM privilege ORDER BY level ASC
+DESCRIPTION : Impossible d'obtenir le min role
+TRACE : #0 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/system/functions.inc.php(246): RoleManager->getMinRole()
+#1 /Users/jeromemaes/Programmation/Web Developpement/Workspace/jejemaes-webkot/index.php(72): system_session_login()
+#2 {main}

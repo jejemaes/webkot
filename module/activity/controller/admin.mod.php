@@ -2,6 +2,7 @@
 
 
 $view = new ActivityAdminView($template, $module);
+echo 'cacaKKK', $view;
 
 if(isset($_GET['action']) && !empty($_GET['action'])){
 	
