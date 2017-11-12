@@ -199,9 +199,9 @@ class Template extends AbstractTemplate implements iTemplate{
 			$html .= "\n".'<!-- Additionnal JS Code Footer -->'."\n";
 			$html .= $this->renderArray($this->getJsFooterTags());
 			
-			$html .= "<script type=\"text/javascript\">
+			$html .= "<script>// Activates the Carousel
 			$('.template-carousel').carousel({
-			  interval: 3500
+			  interval: 5000
 			});
 			$('.template-tooltip').tooltip({'trigger': 'hover'});
 		</script>";

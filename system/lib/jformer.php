@@ -4273,10 +4273,7 @@ class JFormComponentCaptcha extends JFormComponent {
 //            $textArea->update($this->initialValue);
 //        }
 		
-        $captcha = '<div class="g-recaptcha" data-sitekey="'.CAPTCHA_PUBLIC_KEY.'"></div>
-            <script type="text/javascript"
-                    src="https://www.google.com/recaptcha/api.js?hl=<?php echo $lang; ?>">
-            </script>';
+        $captcha = recaptcha_get_html(CAPTCHA_PUBLIC_KEY);
         $div->insert($captcha);
 
         // Add any description (optional)

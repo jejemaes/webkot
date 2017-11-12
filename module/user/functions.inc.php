@@ -101,9 +101,6 @@ function user_form_register($action,$user, $text = null){
 					 array('value' => 'agree', 'label' => 'J\'autorise les autres a voir mon profil','checked'=>$detv),
 				)
 				),
-				new JFormComponentCaptcha('user-input-captcha','Captcha :', array(
-						'validationOptions' => array('required'),
-				)),
 	
 		));
 		

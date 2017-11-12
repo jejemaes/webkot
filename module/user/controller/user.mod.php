@@ -155,7 +155,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						}
 						$user = new User($data);
 					
-					if (isset ( $_POST ['user-input-username'] ) && ! empty ( $_POST ['user-input-username'] ) && isset ( $_POST ['user-input-password'] ) && ! empty ( $_POST ['user-input-password'] ) && isset ( $_POST ['user-input-mail'] ) && ! empty ( $_POST ['user-input-mail'] ) && isset ( $_POST ['user-input-password-confirm'] ) && ! empty ( $_POST ['user-input-password-confirm'] )) {
+					if (isset ( $_POST ['user-input-username'] ) && ! empty ( $_POST ['user-input-username'] ) && isset ( $_POST ['user-input-password'] ) && ! empty ( $_POST ['user-input-password'] ) && isset ( $_POST ['user-input-mail'] ) && ! empty ( $_POST ['user-input-mail'] ) && isset ( $_POST ['user-input-password-confirm'] ) && ! empty ( $_POST ['user-input-password-confirm'] ) && isset ( $_POST ["recaptcha_response_field"] ) && (! empty ( $_POST ["recaptcha_response_field"] ))) {
 						
 						if (! preg_match ( "#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST ['user-input-mail'] )) {
 							$message->setType ( 3 );
@@ -178,6 +178,14 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						if ((strlen ( $_POST ['user-input-password'] ) < 4) || (strlen ( $_POST ['user-input-username'] ) < 4)) {
 							$message->setType ( 3 );
 							$message->addMessage ( "Votre login et/ou mot de passe sont <b>trop court(s)</b>." );
+						}
+						
+						// check the CAPTCHA
+						$resp = recaptcha_check_answer ( CAPTCHA_PRIVATE_KEY, $_SERVER ["REMOTE_ADDR"], $_POST ["recaptcha_challenge_field"], $_POST ["recaptcha_response_field"] );
+						
+						if (! $resp->is_valid) {
+							$message->setType ( 3 );
+							$message->addMessage ( "Le Captcha est <b>mauvais</b>." );
 						}
 						
 						// PROCESS if ok
@@ -415,14 +423,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					}else{
 						$user = $manager->getUserByLogin($_GET['profile']);
 					}
-					
-					$profile = SessionManager::getInstance()->getUserprofile();
-					$isMyProfile = false;
-					if($profile){
-						$isMyProfile = ($profile->getId() == $user->getId() ? true : false);
-					}
-					
-					$view->UserProfilePage($user,$isMyProfile);
+					$view->UserProfilePage($user);
 				}catch(DatabaseException $dbe){
 					$logger->logwarn("Connection impossible a la Base de donnees.");
  					$view->error(new Error("Erreur de BD", "Connection impossible a la Base de donnees"));

@@ -67,13 +67,12 @@ class Template extends AbstractTemplate implements iTemplate{
     				  	<script src="'.DIR_TEMPLATE.'coffee/js/bootstrap.min.js"></script>';
     			*/
 
-			$html .= ' <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,700|Ubuntu:500" type="text/css" />
+			$html .= '<link rel="shortcut icon" href="http://b.tf-cdn.com/-ccd1c372/i/favicon.ico" />
+  					  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,700|Ubuntu:500" type="text/css" />
+  					  <link rel="stylesheet" href="http://c.tf-cdn.com/-044f4cce/css/tf.min.css.gz" type="text/css" />
 					<link href="'.DIR_TEMPLATE.'coffee/css/bootstrap_2.3.2_form.css" rel="stylesheet">
-						<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 							<link href="'.DIR_TEMPLATE.'coffee/css/bootstrap.min.css" rel="stylesheet">
-									<link rel="stylesheet" href="'.DIR_TEMPLATE.'coffee/css/style.css" type="text/css" />
-    					
-											<!-- Bootstrap core JS -->
+						<!-- Bootstrap core JS -->
     					<script src="'.DIR_TEMPLATE.'coffee/js/jquery.js"></script>
     				  	<script src="'.DIR_TEMPLATE.'coffee/js/bootstrap.min.js"></script>';
 			
@@ -207,13 +206,6 @@ class Template extends AbstractTemplate implements iTemplate{
 		
 			$html .= "\n".'<!-- Additionnal JS Code Footer -->'."\n";
 			$html .= $this->renderArray($this->getJsFooterTags());
-			$html .= "<script type=\"text/javascript\">
-			$('.template-carousel').carousel({
-			  interval: 3500
-			});
-			$('.template-tooltip').tooltip({'trigger': 'hover'});
-		</script>";
-				
 		$html .= '</body>';
 		
 		$html .= '</html>';
@@ -375,7 +367,7 @@ class Template extends AbstractTemplate implements iTemplate{
 			if($i != 0){	
 				$str = $widget->__toString();
 				$code .= '<aside>
-								<div class="template-widget-sitebar">
+								<div class="wellF">
 									<div class="SiteBarBoxContainerHead"><h4>'.$widget->getName().'</h4></div>
 									<div class="SiteBarBoxContainer">
 											'.$str.'
@@ -405,8 +397,8 @@ class Template extends AbstractTemplate implements iTemplate{
 				$str = $widget->__toString();
 				$code .= '<div class="col-lg-'.$n.' col-md-'.$n.' col-sm-12 col-xs-12">
 								<div class="template-widget-bottom">
-									<div><h4>'.$widget->getName().'</h4></div>
-									<div>
+									<div class="SiteBarBoxContainerHead"><h4>'.$widget->getName().'</h4></div>
+									<div class="SiteBarBoxContainer">
 											'.$str.'
 									</div>
 								</div>
@@ -436,52 +428,8 @@ class Template extends AbstractTemplate implements iTemplate{
 		return "";
 	}
 	
+	
 	private function getHtmlSlides(){
-		$html = "";
-		$slides = $this->getSlides();
-		if(count($slides) > 0){
-			$html .= '<div id="template-carousel" class="carousel template-carousel slide">';
-			$html .= '<ol class="carousel-indicators">';
-			for($i=0 ; $i<count($slides) ; $i++){
-				$class = "";
-				if($i == 0){
-					$class = ' class="active"';
-				}
-				$html .= '<li data-target="#accueil-carousel" data-slide-to="'.($i+1).'" '.$class.'></li>';
-			}
-			$html .= '</ol>';
-	
-			$html .= '<!-- Wrapper for slides --><div class="carousel-inner">';
-			for($i=0 ; $i<count($slides) ; $i++){
-				$slide = $slides[$i];
-				$class = "";
-				if($i == 0){
-					$class = ' active';
-				}
-				$html .= '<div class="item '.$class.'">';
-				$html .= '<div class="fill" style="background-image:url(\'' . $slide->getPathimg().'\');"></div>';
-				$html .= '<div class="carousel-caption">';
-				$html .= '<h1>' . $slide->getTitle() . '</h1>';
-				$html .= '<p>' . $slide->getDescription() . '</p>';
-				$html .= '</div>';
-				$html .= '</div>';
-			}
-			$html .= '</div>';
-	
-			$html .= '<!-- Controls -->
-	        <a class="left carousel-control" href="#accueil-carousel" data-slide="prev">
-	          <span class="icon-prev"></span>
-	        </a>
-	        <a class="right carousel-control" href="#accueil-carousel" data-slide="next">
-	          <span class="icon-next"></span>
-	        </a>';
-	
-			$html .= '</div>';
-		}
-	
-		return $html;
-	}
-	private function getHtmlSlidesLKK(){
 		$html = "";
 		$slides = $this->getSlides();
 		if(count($slides) > 0){

@@ -2,7 +2,7 @@
 
 define('ECHOGITO_JS_ACTIVE',true);
 define('ECHOGITO_JS_CLASS_CALL_ANCHOR', 'echogito-js-anchor');
-define('ECHOGITO_ACTIVE', true);
+define('ECHOGITO_ACTIVE', false);
 
 class EchogitoModuleLoader implements iModuleLoader{
 

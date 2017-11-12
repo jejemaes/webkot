@@ -51,6 +51,7 @@ function accueil_utils_get_random_picture(Activity $activity){
 	$count = count($activity->getPictures());
 	$found= false;
 	$time = 0;
+    if ($count){
 	while(!$found && $time < 3){
 		$i = rand(0,($count-1));
 		$pictures = $activity->getPictures();
@@ -61,6 +62,7 @@ function accueil_utils_get_random_picture(Activity $activity){
 			$time++;
 		}
 	}
+    }
 	$pictures = $activity->getPictures();
 	return $pictures[0];
 }
