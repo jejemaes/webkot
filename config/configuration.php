@@ -7,7 +7,10 @@ define('DB_LOGIN','webkot4.1');
 define('DB_PASS','coubertin');
 define('DB_HOST','localhost');
 define('DB_NAME','webkot4.1-dev');
-//define('DB_NAME','migration');
+
+// Environement
+define('ENV_TEST', true);
+define('ENV_LOCAL', true);
 
 // Date constant : a academic year start on the 15 July
 define('BEGINYEAR_MONTH', '07');
