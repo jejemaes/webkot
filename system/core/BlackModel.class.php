@@ -21,8 +21,6 @@ class BlackModel {
 	 * @param array $data : the data from the file, in a key-array
 	 */
 	public function __construct(array $donnees = array()){
-		$this->pictures = array();
-		$this->authors = array();
 		$this->hydrate($donnees);
 	}
 	

@@ -87,8 +87,8 @@ class ActivityModuleLoader implements iModuleLoader{
 	}
 	
 	public static function getAdminController($relativePath){
-		system_include_file($relativePath . 'controller/ActivityController.class.php');
-		system_include_file($relativePath . 'controller/PictureController.class.php');
+		system_include_file($relativePath . 'controller/ActivityAdminController.class.php');
+		system_include_file($relativePath . 'controller/PictureAdminController.class.php');
 		return $relativePath . 'controller/backend.inc.php';
 	}
 	

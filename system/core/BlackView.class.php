@@ -27,7 +27,6 @@ class BlackView extends BlackModel{
 	/**
 	 * get the inherited views of the given view_id
 	 * @param integer $view_id : identifier of the view (master view)
-	 * @return Ambigous <\ActiveRecord\mixed, NULL, unknown, \ActiveRecord\Model, multitype:>
 	*/
 	public static function get_inherited_view($view_id){
 		$results = array();
