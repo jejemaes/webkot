@@ -1,4 +1,7 @@
 <?php
+namespace module\page\model;
+
+use system\core\BlackModel as BlackModel;
 
 class PageManager {
 
@@ -62,65 +65,7 @@ class PageManager {
 			return false;
 		}
 	}
-	
 
-	/**
-	 * get a specified Page
-	 * @param string $id : the identifier of the Page
-	 * @return Page $page : the specified Page
-	 * @throws SQLException : this exception is raised if the Query is refused
-	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
-	 * @throws NullObjectException : this exception is raised when the specified Object didn't exist
-	 */
-	public function getPage($id){
-		try {
-			$sql = "SELECT * FROM page WHERE id = :id LIMIT 1";
-			$stmt = $this->_db->prepare($sql);
-			$stmt->execute(array( 'id' => $id));
-			if($stmt->errorCode() != 0){
-				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir une Page specifiee");
-			}
-			$data = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($data == null){
-				throw new NullObjectException();
-			}
-			$page = new Page($data);
-			return $page;
-		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir une Page specifiee");
-		}
-	}
-	
-	
-	/**
-	 * get all the list of Page Objects
-	 * @return array $list : array of Page Objects
-	 * @throws SQLException : this exception is raised if the Query is refused
-	 * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
-	 */
-	public function getListPage(){
-		try{
-			$sql = "SELECT * FROM page";
-			$stmt = $this->_db->prepare($sql);
-			$stmt->execute();
-			if($stmt->errorCode() != 0){
-				$error = $stmt->errorInfo();
-				throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des pages");
-			}
-			$list = array();
-			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-				$list[] = new Page($data);
-			}
-			return $list;
-		}catch(PDOException $e){
-			throw new DatabaseException($e->getCode(), $e->getMessage(), "Impossible d'obtenir la liste des pages");
-		}
-	}
-	
-	
-	
-	
 	/**
 	 * update a Post
 	 * @param string $id : the identifier of the Post

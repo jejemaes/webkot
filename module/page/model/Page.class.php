@@ -1,76 +1,29 @@
 <?php
+namespace module\page\model;
 
-class Page{
-	
-	private $_id;
-	private $_title;
-	private $_content;
-	private $_isactive;
-	private $_file;
-	
-	
-	
-	/**
-	 * Constructor
-	 */
-	public function __construct(array $data = array()){
-		$this->hydrate($data);
-	}
-	
-	/**
-	 *
-	 * @param array $data : the data from the DB
-	 */
-	public function hydrate(array $donnees){
-		foreach ($donnees as $key => $value){
-			$method = 'set'.ucfirst($key);
-			if (method_exists($this, $method)){
-				$this->$method($value);
-			}
-		}
-	}
-	
-	
+use system\core\BlackModel as BlackModel;
 
 
-	public function setId( $_id ){
-		$this->_id = $_id;
+class Page extends BlackModel {
+	
+	static $name = 'Website Page';
+	static $rec_name = 'title';
+	static $table_name = 'page';
+	
+	static $attr_accessible = array(
+		'id' => array('label'=> 'Id', 'type' => 'integer', 'required' => true),
+		'title' => array('label'=> 'title', 'type' => 'string', 'length' => 32, 'required' => true),
+		'content' => array('label'=> 'Content', 'type' => 'html'),
+		'isactive' => array('label'=> 'Active', 'type' => 'boolean'),
+		'file' => array('label'=> 'DEPRECATED', 'type' => 'string', 'length' => 128)
+	);
+	
+	public static function getListPage(){
+		return static::find('all', array('conditions' => array(), 'order' => 'id ASC'));
 	}
 	
-	public function setTitle( $_title ){
-		$this->_title = $_title;
-	}
-	
-	public function setContent( $_content ){
-		$this->_content = $_content;
-	}
-	
-	public function setIsactive( $_isactive ){
-		$this->_isactive = $_isactive;
-	}
-	
-	public function setFile( $_file ){
-		$this->_file = $_file;
-	}
-	
-	public function getId(){
-		return $this->_id;
-	}
-	
-	public function getTitle(){
-		return $this->_title;
-	}
-	
-	public function getContent(){
-		return $this->_content;
-	}
-	
-	public function getIsactive(){
-		return $this->_isactive;
-	}
-	
-	public function getFile(){
-		return $this->_file;
+	public static function getPage($slug){
+		return static::find('first', array('conditions' => array('id = ?', $slug)));
 	}
 	
 }
