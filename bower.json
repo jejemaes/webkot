@@ -1,0 +1,19 @@
+{
+  "name": "BlackCMS",
+  "description": "BlackCMS required client librairies",
+  "dependencies": {
+    "font-awesome": "latest",
+    "bootstrap": "3.3.6",
+    "bootstrap-datetimepicker": "0.0.11",
+    "jquery": "1.10.2",
+    "metisMenu": "1.1.3",
+    "backbone": "1.2.3",
+    "underscore": "1.8.3",
+    "select2": "4.0.1",
+    "select2-bootstrap-theme": "0.1"
+  },
+  "authors": [
+    "Maes Jerome"
+  ],
+  "private": true
+}
