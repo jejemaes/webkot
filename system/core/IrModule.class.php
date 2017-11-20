@@ -20,11 +20,13 @@ class IrModule extends BlackModel{
 			'active' => array('label' => 'Active', 'type' => 'boolean', 'default' => False)
 	);
 	
-
 	public static function get_module($tech_name){
 		return self::find('first', array('conditions' => array('directory = ?', $tech_name)));
 	}
 	
+	public static function get_active_module(){
+		return self::find('all', array('conditions' => array('active = ?', 1)));
+	}
 	
 	public function do_update(){
 		$this->update_view();

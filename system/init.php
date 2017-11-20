@@ -25,6 +25,7 @@ use system\core\BlackApp as BlackApp;
 use system\core\Logger as Logger;
 
 use system\core\IrExternalIdentifier as XMLID;
+use system\core\IrModule as Module;
 
 // instanciate the global variable (router, logger, ...)
 global $Logger;
@@ -50,9 +51,9 @@ function App() {
 }
 $app = App();
 
-
-foreach (['user', 'web', 'blog', 'admin', 'website'] as $m){
-    include 'module/' . $m . '/init.php';
+// Load active modules
+foreach (Module::get_active_module() as $m){
+    include 'module/' . $m->directory . '/init.php';
 }
 	
 $Router->dispatch();
