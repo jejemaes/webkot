@@ -3,11 +3,15 @@
 
 
 // DB config for "webkot"
-define('DB_LOGIN','webkot4');
+define('DB_LOGIN','webkot5');
 define('DB_PASS','coubertin');
 define('DB_HOST','localhost');
-define('DB_NAME','webkot4-dev');
-//define('DB_NAME','migration');
+//define('DB_NAME','webkot4.1-dev');
+define('DB_NAME','webkot5-test1');
+
+
+// Other
+define('ADMIN_PATH', 'admin');
 
 // Date constant : a academic year start on the 15 July
 define('BEGINYEAR_MONTH', '07');

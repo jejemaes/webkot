@@ -180,6 +180,21 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 							$message->addMessage ( "Votre login et/ou mot de passe sont <b>trop court(s)</b>." );
 						}
 						
+						// check the CAPTCHA
+						if(isset($_POST['g-recaptcha-response'])){
+							$recaptcha = new \ReCaptcha\ReCaptcha(CAPTCHA_PRIVATE_KEY);
+							// Make the call to verify the response and also pass the user's IP address
+							$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+							
+							if (!$resp->isSuccess()){
+								$message->setType ( 3 );
+								$message->addMessage ( "Le Captcha est <b>mauvais</b>." );
+							}
+						}else{
+							$message->setType ( 3 );
+							$message->addMessage ( "Le Captcha est <b>manquant</b>." );
+						}
+						
 						// PROCESS if ok
 						if ($message->isEmpty ()) {
 							try {

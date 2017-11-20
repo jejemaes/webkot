@@ -1,100 +1,53 @@
 <?php
+/**
+ * Maes Jerome
+ * BlogPost.class.php, created at Oct 7, 2015
+ *
+ */
+namespace module\blog\model;
 
-class BlogPost {
-
-   private $_id;
-   private $_author;
-   private $_title;
-   private $_content;
-   private $_date;
-   
-   private $_nbrcomment;
-   private $comments;
-   
-   
-	/**
-	 * Constructor
-	 */
-	public function __construct(array $donnees){
-		$this->hydrate($donnees);
-    }
-    
-  
-    
-    /**
-	 * Fill the attribute with the data from the DB
-	 * @param array $data : the data
-	 */
-	public function hydrate(array $data){       
-    	foreach ($data as $key => $value){
-    		$method = 'set'.ucfirst($key);             
-        	if (method_exists($this, $method)){
-            	$this->$method($value);
-            }
-        }
-	}
-	   
-	    
-	
-	public function setId( $_id ){
-		$this->_id = $_id;
-	}
-	
-	public function setAuthor( $_author ){
-		$this->_author = $_author;
-	}
-	
-	public function setTitle( $_title ){
-		$this->_title = $_title;
-	}
-	
-	public function setContent( $_content ){
-		$this->_content = $_content;
-	}
-	
-	public function setDate( $_date ){
-		$this->_date = $_date;
-	}
-	
-	public function setNbrcomment( $value ){
-		$this->_nbrcomment = $value;
-	}
-	
-	public function getId(){
-	 	return $this->_id;
-	}
-	
-	public function getAuthor(){
-	 	return $this->_author;
-	}
-	
-	public function getTitle(){
-	 	return $this->_title;
-	}
-	
-	public function getContent(){
-	 	return $this->_content;
-	}
-	
-	public function getDate(){
-	 	return $this->_date;
-	}
-	
-	public function getNbrcomment(){
-	 	return $this->_nbrcomment;
-	}
-	
+use system\core\BlackModel as BlackModel;
 
 
-	public function setComments( $comments )
-	{
-		$this->comments = $comments;
+class BlogPost extends BlackModel {
+	
+	static $name = 'Blog Post';
+	static $rec_name = 'title';
+	static $table_name = 'blog_post';
+	
+	static $attr_accessible = array(
+			'id' => array('label'=> 'Id', 'type' => 'integer', 'required' => true),
+			'title' => array('label'=> 'Title', 'type' => 'string', 'length' => 128, 'required' => true),
+			'content' => array('label'=> 'Content', 'type' => 'text'),
+			'date' => array('label'=> 'Date', 'type' => 'datetime'),
+			'published' => array('label' => 'Published', 'type' => 'boolean'),
+			'user_id' => array('label'=> 'Author', 'type' => 'integer', 'required' => true),
+	);
+	
+	static $belongs_to = array(
+			array('user', 'class_name' => '\system\res\ResUser', 'foreign_key' => 'user_id')
+	);
+	
+	static $has_many = array(
+			array('comments', 'class_name' => '\module\blog\model\BlogComment', 'foreign_key' => 'post_id'),
+			array('tags_rel', 'class_name' => '\module\blog\model\BlogTagRel', 'foreign_key' => 'blog_post_id'),
+			array('tags', 'through' => 'tags_rel', 'class_name' => '\module\blog\model\BlogTag')
+	);
+	
+	
+	public static function get_published_post($limit = 15, $offset = 0){
+		return self::find('all', array('conditions' => array('published = ?', '1'), 'order' => 'date ASC', 'limit' => $limit, 'offset' => $offset));
 	}
 	
-	public function getComments()
-	{
-		return $this->comments;
+	public static function get_post($post_id){
+		return self::find('first',  array('conditions' => array('id = ?', $post_id)));
 	}
-    
+	
+	public function get_short_content(){
+		$content = $this->read_attribute('content');
+		if(strlen($content) >= 200){
+			return substr($content, 0, 200) . '...';
+		}
+		return $content;
+	}
 }
-?>

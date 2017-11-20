@@ -113,14 +113,10 @@ class AccueilView extends View implements iView{
 	            <p>'.$activity->getDescription().'</p>
 	            <a class="btn btn-primary pull-right" href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'">Voir <i class="fa fa-angle-right"></i></a>
 	            <div class="clearfix"></div>
-	          </div>';
-              if ($picture){
-	            $HTML .='<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-	                <a href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'">
-                        <img class="img-responsive accueil-img-hover" src="'.URLUtils::builtServerUrl('activity', array('action' => 'getimage', 'type' => 'medium', 'id' => $picture->getId())).'">
-                    </a>';
-              }
-	          $HTML .= '</div>
+	          </div>
+	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+	            <a href="'.URLUtils::generateURL('activity', array("p" => "activity", "id" => $activity->getId())).'"><img class="img-responsive accueil-img-hover" src="'.URLUtils::builtServerUrl('activity', array('action' => 'getimage', 'type' => 'medium', 'id' => $picture->getId())).'"></a>
+	          </div>
 	        </div><!-- /.row -->
 	      </div><!-- /.container -->
 	    </div><!-- /.section-colored -->';
@@ -181,7 +177,7 @@ class AccueilView extends View implements iView{
 		}
 		
 		
-        if($video && $video->getId()){    	
+        if($video->getId()){    	
 			$HTML .= '<div class="accueil-section">
 	      <div class="container">
 	        <div class="row">

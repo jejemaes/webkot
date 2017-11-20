@@ -12,7 +12,7 @@ class PluginBootstrapDatePicker extends Plugin implements iPlugin{
 	public function load(){
 		//js Code Footer
 		$jsCodeF = "<script>
-			$('#".$this->getOptions()['text-input-id']."').datepicker();
+			$('#".$this->getOptions()['text-input-id']."').datepicker({'weekStart':1});
 		</script>";
 		$this->getOptions()["template"]->addJSFooter($jsCodeF);
 		

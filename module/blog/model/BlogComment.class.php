@@ -1,80 +1,29 @@
 <?php
+/**
+ * Maes Jerome
+ * BlogComment.class.php, created at Oct 7, 2015
+ *
+ */
+namespace module\blog\model;
 
-class BlogComment {
+use system\core\BlackModel as BlackModel;
 
-   private $_id;
-   private $_postid;
-   private $_user;
-   private $_comment;
-   private $_date; 
-   
-     
-	/**
-	 * Constructor
-	 */
-	public function __construct(array $donnees){
-		$this->hydrate($donnees);
-    }
-    
-  
-    
-    /**
-	 * Fill the attribute with the data from the DB
-	 * @param array $data : the data
-	 */
-	public function hydrate(array $data){       
-    	foreach ($data as $key => $value){
-    		$method = 'set'.ucfirst($key);             
-        	if (method_exists($this, $method)){
-            	$this->$method($value);
-            }
-        }
-	}
-	   
-   
-	    
-	
-	public function setId( $_id ){
-		$this->_id = $_id;
-	}
-	
-	public function setPostid( $_postid ){
-		$this->_postid = $_postid;
-	}
-	
-	public function setUser( $_user ){
-		$this->_user = $_user;
-	}
-	
-	public function setComment( $_comment ){
-		$this->_comment = $_comment;
-	}
-	
-	public function setDate( $_date ){
-		$this->_date = $_date;
-	}
-	
-	public function getId(){
-	 	return $this->_id;
-	}
-	
-	public function getPostid(){
-	 	return $this->_postid;
-	}
-	
-	public function getUser(){
-	 	return $this->_user;
-	}
-	
-	public function getComment(){
-	 	return $this->_comment;
-	}
-	
-	public function getDate(){
-	 	return $this->_date;
-	}
-	
 
+class BlogComment extends BlackModel{
+	
+	static $table_name = 'blog_comment';
+	
+	static $attr_accessible = array(
+			'id' => array('label'=> 'Id', 'type' => 'integer', 'required' => true),
+			'comment' => array('label'=> 'Address', 'type' => 'string', 'length' => 128),
+			'create_date' => array('label'=> 'Create Date', 'type' => 'datetime'),
+			'user_id' => array('label'=> 'Author', 'type' => 'integer', 'required' => true),
+	);
+	
+	static $belongs_to = array(
+			array('user', 'class_name' => '\system\res\ResUser', 'foreign_key' => 'user_id'),
+			array('post', 'class_name' => '\module\blog\model\BlogPost', 'foreign_key' => 'post_id')
+	);
 
 }
 ?>
