@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+
+	<view id="admin.user_form" model="res_user" type="form" name="User Form View">
+		<form>
+			<group>
+				<group>
+					<field name="login"/>
+					<field name="password"/>
+					<field name="mail"/>
+				</group>
+				<group>
+					<field name="name"/>
+					<field name="firstname"/>
+					<field name="section"/>
+					<field name="school"/>
+					<field name="address"/>
+				</group>
+			</group>
+			<group>
+				<field name="lastlogin"/>
+			</group>
+		</form>
+	</view>
+
+	<view id="admin.user_tree" model="res_user" type="tree" name="User List View">
+		<tree>
+			<field name="id"/>
+			<field name="login"/>
+			<field name="mail"/>
+			<field name="name"/>
+			<field name="firstname"/>
+		</tree>
+	</view>
+
+</data>
