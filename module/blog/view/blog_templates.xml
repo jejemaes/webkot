@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<template id="blog.index" name="Blog Post list Page">
+		<t t-call="website.layout">
+			<div class="row">
+				<h1>
+					Blog <small>Liste des articles</small>
+				</h1>
+			</div>
+			<div class="row">
+				 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				 	<t t-if="count($blog_posts) == 0">
+						<p>There is no blog posts for now ...</p>
+					</t>
+					<t t-if="count($blog_posts) > 0">
+						<t t-foreach="$blog_posts" t-as="$post">
+							<div class="row">
+							  <div class="col-md-8">
+							    <div class="row">
+							      <div class="col-md-12">
+							        <h4><strong><a t-att-href="$router->urlFor('blog_post_page', array('post_id' => $post->id))"><t t-esc="$post->title"/></a></strong></h4>
+							      	<p>
+							          <i class="icon-user"></i> by <a t-att-href="$router->urlFor('website_user_profile',array('user_id' => $post->user->id))"><t t-esc="$post->user->login"/></a> 
+							          | <i class="icon-calendar"></i><t t-esc="$post->date"/>
+							          <t t-if="count($post->comments)">
+							          	| <i class="icon-comment"></i> <a href="#"><t t-esc="count($post->comments)"/> Comments</a>
+							          </t>
+							        </p>
+							      </div>
+							    </div>
+							    <div class="row">
+							      <div class="col-md-2">
+							        <a href="#" class="thumbnail">
+							            <img src="http://placehold.it/260x180" alt=""/>
+							        </a>
+							      </div>
+							      <div class="col-md-10">      
+							        <p>
+							        	<t t-raw="$post->short_content"/>
+							        </p>
+							        <p><a class="btn" href="#">Lire plus</a></p>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+						</t>
+					</t>
+				 </div>
+			</div>	
+		</t>
+	</template>
+	
+	<template id="blog.post_page" name="Blog Post Page">
+		<t t-call="website.layout">
+			<div class="row">
+				<h1>
+					Blog <small><t t-esc="$post->title"/></small>
+				</h1>
+			</div>
+			<div class="row">
+			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			        <h4><t t-esc="$post->title"/></h4>
+			        <p>
+			        	<i class="fa fa-user"><a t-att-href="$router->urlFor('website_user_profile',array('user_id' => $post->user->id))"><t t-esc="$post->user->login"/></a></i>
+			        	| <i class="fa fa-calendar"><t t-esc="$post->date"/></i> 
+			        	| <i class="fa fa-comment"><a href="#blog-comments"><t t-esc="count($post->comments)"/> commentaire</a></i>
+			        	<t t-if="$post->tags">
+			        	| <i class="fa fa-tags"></i> Tags :
+			        		<t t-foreach="$post->tags" t-as="$tag">
+			        			<span class="label label-info"><t t-esc="$tag->name"/></span>
+			        		</t>
+			        	</t>
+			        </p>
+			        <div>
+			            <t t-raw="$post->content"/>
+			        </div>
+			        <div>
+			            <div id="blog-comments" t-if="count($post->comments)">
+			            	<h4>Commentaires</h4>
+			            	<t t-foreach="$post->comments" t-as="$comment">
+			            		<div>
+			            			<b><a t-att-href="$router->urlFor('website_user_profile',array('user_id' => $post->user->id))"><t t-esc="$comment->user->login"/></a></b>, 
+			            			<i><t t-esc="$comment->create_date"/></i>
+			            			<p><t t-esc="$comment->comment"/></p>
+			            		</div>
+			            	</t>
+			            </div>
+			            <div t-if="$session->user" class="well">
+		            		<h4>Laisser un commentaire</h4>
+							<form role="form" method="POST" t-att-action="$router->urlFor('blog_post_comment', array('post_id' => $post->id))">
+							    <div class="form-group">
+							        <textarea class="form-control" id="comment" name="comment" rows="3"/>
+							    </div>
+							    <button class="btn btn-primary" type="submit">
+							        Envoyer
+							    </button>
+							</form>
+						</div>
+			        </div>
+			    </div>
+			</div>
+		</t>
+	</template>
+
+</data>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+
+	<view id="blog.blog_post_form" model="blog_post" type="form" name="Blog Post Form View">
+		<form>
+			<field name="title"/>
+			<field name="user"/>
+			<field name="published"/>
+			<field name="date"/>
+			<field name="content" widget="html" label="0"/>
+		</form>
+	</view>
+
+	<view id="blog.blog_post_tree" model="blog_post" type="tree" name="Blog Post List View">
+		<tree>
+			<field name="id"/>
+			<field name="title"/>
+			<field name="user"/>
+			<field name="published"/>
+		</tree>
+	</view>
+
+</data>
