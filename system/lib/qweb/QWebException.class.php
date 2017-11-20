@@ -9,7 +9,3 @@ namespace system\lib\qweb;
 class QWebException extends \Exception{
 
 }
-
-class QWebTemplateNotFound extends QWebException{
-
-}

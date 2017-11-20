@@ -15,6 +15,10 @@ define('_DIR_MEDIA', __SITE_PATH . 'media/');
 // autoload for classes
 include _DIR_TOOLS . 'autoload.inc.php';
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // imports
 use system\core\BlackRouter as BlackRouter;
 use system\core\BlackApp as BlackApp;
@@ -47,7 +51,7 @@ function App() {
 $app = App();
 
 
-foreach (['web', 'blog', 'admin', 'website'] as $m){
+foreach (['user', 'web', 'blog', 'admin', 'website'] as $m){
     include 'module/' . $m . '/init.php';
 }
 	

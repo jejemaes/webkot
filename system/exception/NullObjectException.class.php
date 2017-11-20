@@ -1,6 +1,9 @@
 <?php
 
-class NullObjectException extends Exception{
+namespace system\exception;
+
+
+class NullObjectException extends \Exception{
 
     function __construct($message = "Votre requete a return&eacute; NULL."){ 
         parent::__construct($message); 

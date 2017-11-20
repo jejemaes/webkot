@@ -8,6 +8,7 @@ namespace system\core;
 use system\core\BlackModel as BlackModel;
 use system\core\IrExternalIdentifier as XMLID;
 use \DOMDocument as DOMDocument;
+use system\exception\NullObjectException as NullObjectException;
 
 use system\lib\qweb\QWebEngine;
 use system\lib\ViewBuilder\FormView as FormView;
@@ -47,6 +48,9 @@ class BlackView extends BlackModel{
 	
 	public static function get_view($xml_id){
 		$base_view = XMLID::xml_id_to_object($xml_id);
+		if(!$base_view){
+			throw new \Exception('View not found: ' . $xml_id);
+		}
 		return self::apply_inheritance_arch($base_view);
 	}
 
@@ -57,7 +61,7 @@ class BlackView extends BlackModel{
 	 * @return string : the inherited view arch
 	 */
 	public static function apply_inheritance_arch($base_view, $saveXML=True){
-		$inherited_views = $base_view->get_inherited_view($base_view->id);
+		$inherited_views = self::get_inherited_view($base_view->id);
 	
 		$base_arch_dom = new DOMDocument();
 		$base_arch_dom->loadXML($base_view->arch, LIBXML_NOWARNING);

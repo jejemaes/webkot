@@ -103,7 +103,8 @@ class BlackRouter {
 	}
 	
 	public function urlFor($name, $params=array()){
-		return substr(__HOST_URL, 0, strlen(__BASE_URL)-1) . $this->_slim->router->urlFor($name, $params);
+		//return substr(__HOST_URL, 0, strlen(__BASE_URL)-1)
+		return __HOST_URL . __BASE_PATH_URL . $this->_slim->router->urlFor($name, $params);
 	}
 	
 

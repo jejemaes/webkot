@@ -6,7 +6,7 @@
  */
 namespace system\http;
 
-use \system\res\ResUser as User;
+use \module\user\model\User as User;
 use \system\exceptions\SessionExpiredException as SessionExpiredException;
 
 

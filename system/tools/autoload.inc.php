@@ -37,6 +37,27 @@ function toolsLoader($class_name){
 	}
 }
 
+
+function exceptionLoader($class_name){
+	$directories = explode("\\", $class_name);
+	if(count($directories) >= 2){
+		if($directories[0] == 'system' && $directories[1] == 'exception'){
+			$directories = array_slice($directories, 2);
+			$path = _DIR_EXCEPTION . implode($directories, DIRECTORY_SEPARATOR);
+			$file = $path . '.class.php';
+			$found = _include_file($file);
+		}
+	}
+}
+
+
+function generalLoader($class_name){
+	$directories = explode("\\", $class_name);
+	$root = implode($directories, DIRECTORY_SEPARATOR);
+	$file = __SITE_PATH . $root . '.class.php';
+	_include_file($file);	
+}
+
 function _include_file($filename){
 	if (!file_exists($filename)){
 		return false;
@@ -47,3 +68,6 @@ function _include_file($filename){
 
 spl_autoload_register('classLoader');
 spl_autoload_register('toolsLoader');
+spl_autoload_register('exceptionLoader');
+spl_autoload_register('generalLoader');
+

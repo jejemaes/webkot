@@ -6,6 +6,9 @@
  */
 namespace system\lib\qweb;
 
+use \system\lib\qweb\QWebLoader as QWebLoader;
+use \system\lib\qweb\QWebContext as QWebContext;
+use \system\lib\qweb\QWebTemplateNotFound as QWebTemplateNotFound;
 use \DOMDocument as DOMDocument;
 
 function startsWith($haystack, $needle) {
