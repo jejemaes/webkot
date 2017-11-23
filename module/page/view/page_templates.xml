@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-
+	
+	<template id="page.website_footer" name="Page Footer for Website" inherit_id="website.footer">
+		<xpath expr="//div[contains(@class, 'wk_footer_widget2')]/ul" position="inside">
+			<li>Liste des pages</li>
+		</xpath>
+	</template>
+	
 	<template id="page.page_container" name="Page Structure">	   
 		<t t-call="website.layout">
 			<div class="row">

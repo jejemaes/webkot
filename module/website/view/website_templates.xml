@@ -153,7 +153,12 @@
 	<template id="website.footer" name="Website Footer">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-12">
+				<div class="col-lg-4 wk_footer_widget1">
+				</div>
+				<div class="col-lg-4 wk_footer_widget2">
+					<ul></ul>
+				</div>
+				<div class="col-lg-4 wk_footer_widget3">
 			 		<p class="pull-right"><a href="#">Back to top</a></p>
 			    	<p>2014 Company, Inc. <a href="#">Privacy</a>  <a href="#">Terms</a></p>
 				</div>
@@ -226,19 +231,6 @@
 		      <hr class="featurette-divider"/>
 		      <!-- /END THE FEATURETTES -->
 		  </t>
-	</template>
-	
-	
-	<template id="website.page" name="Website Page">
-		<t t-call="website.layout">
-      		<!-- Three columns of text below the carousel -->
-		     <div class="row">
-		        <div class="col-lg-12">
-		        	<h2><t t-esc="$page->name"/></h2>
-		        	<t t-raw="$page->content"/>
-		    	</div><!-- /.col-lg-4 -->
-			</div><!-- /.row -->
-		</t>
 	</template>
 	
 	<template id="website.login" name="Website Login Page">
