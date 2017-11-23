@@ -8,6 +8,8 @@ namespace system\core;
 use system\core\BlackModel;
 use system\core\IrExternalIdentifier as XMLID;
 use system\core\BlackView as BlackView;
+use system\exception\NullObjectException as NullObjectException;
+
 
 class IrModule extends BlackModel{
 
@@ -98,12 +100,25 @@ class IrModule extends BlackModel{
 	 */
 	public function _update_view_template($xmlid, $node){
 		$template = XMLID::xml_id_to_object($xmlid);
+		
+		$inherit_id = NULL;
+		$inherit_xmlid = $this->_get_attribute($node, 'inherit_id', NULL);
+		if($inherit_xmlid){
+			$inherit_template = XMLID::xml_id_to_object($inherit_xmlid);
+			if(!$inherit_template){
+				throw new \Exception('No template ' . $inherit_xmlid . ' found to be inherited by ' . $xmlid);
+			}
+			// TODO JEM: check each xpath to be present in parent view
+			$inherit_id = $inherit_template->id;
+		}
+		
 		$values = array(
 				'name' => $this->_get_attribute($node, 'name', $xmlid),
 				'type' => 'template',
 				'active' => $this->_get_attribute($node, 'active', true),
 				'sequence' => $this->_get_attribute($node, 'sequence', 10),
-				'arch' => $this->_get_arch_template($xmlid, $node)
+				'arch' => $this->_get_arch_template($xmlid, $node),
+				'inherit_id' => $inherit_id,
 		);
 		if(is_null($template)){
 			$template = BlackView::create($values);

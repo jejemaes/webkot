@@ -8,6 +8,7 @@ namespace system\core;
 use system\core\BlackModel as BlackModel;
 use system\core\IrExternalIdentifier as XMLID;
 use \DOMDocument as DOMDocument;
+use \DOMXPath as DOMXPath;
 use system\exception\NullObjectException as NullObjectException;
 
 use system\lib\qweb\QWebEngine;
