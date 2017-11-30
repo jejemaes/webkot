@@ -1,5 +1,7 @@
 <?php
  
+namespace system\lib;
+
 class Database{
 	/**
 	 * Instance de la classe PDO
@@ -29,7 +31,7 @@ class Database{
 	 */
 	private function __construct(){
 		try{
-			$this->PDOInstance = new PDO('mysql:dbname='.DB_NAME.';host='.DB_HOST,DB_LOGIN,DB_PASS);    
+			$this->PDOInstance = new \PDO('mysql:dbname='.DB_NAME.';host='.DB_HOST,DB_LOGIN,DB_PASS);    
 			$this->PDOInstance->exec('SET NAMES utf8');// = new PDO('mysql:dbname=webkot4dev4;host=localhost;port=3306','webkot4dev4','webkot4dev4');    
 		}catch(PDOException $e){
         	throw new DatabaseException($e->getCode(), $e->getMessage(), "MySQL ne reponds pas (PDOException). Impossible d'instancier la connection a la base de donnees.");
