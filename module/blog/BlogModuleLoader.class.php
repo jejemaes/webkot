@@ -19,7 +19,7 @@ class BlogModuleLoader implements iModuleLoader{
 	}
 
 	public static function getController($relativePath){
-		return $relativePath . 'controller/frontend.inc.php';
+		
 	}
 
 	public static function loadModule($relativePath){

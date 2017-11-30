@@ -31,8 +31,8 @@ class BlogController extends WebsiteController{
 	
 	public function blogCommentAction($post_id){
 		$comment = Comment::create(array(
-			'user_id' => $this->session()->uid,
-			'post_id' => $post_id,
+			'userid' => $this->session()->uid,
+			'postid' => $post_id,
 			'comment' => $this->request()->params('comment'),
 		));
 		$comment->save();
