@@ -18,7 +18,7 @@ class WebkotModuleLoader implements iModuleLoader{
 	}
 
 	public static function getController($relativePath){
-		return $relativePath . 'controller/webkot.mod.php';
+		
 	}
 
 	public static function loadModule($relativePath){

@@ -9,6 +9,13 @@
  * 				Use PreparedStatement
  */
  
+namespace module\webkot\model;
+
+use \SQLException as SQLException;
+use \PDOException as PDOException;
+use \DatabaseException as DatabaseException;
+use \PDO as PDO;
+
  
 class WebkotteurManager {
 	
@@ -36,7 +43,7 @@ class WebkotteurManager {
 	 * Constructor
 	 */
    	public function __construct(){
-		$this->_db = Database::getInstance();
+		$this->_db = \system\lib\Database::getInstance();
 		$this->_apc = ((extension_loaded('apc') && ini_get('apc.enabled')) && APC_ACTIVE ? true : false);
 		if($this->_apc){
 			$this->apc_webkot_old_team = APC_PREFIX . 'webkot-old-team';

@@ -1,24 +1,31 @@
 <?php
 
+namespace module\webkot\model;
+
+use \SQLException as SQLException;
+use \PDOException as PDOException;
+use \DatabaseException as DatabaseException;
+
+
 class Webkotteur {
 
-   	private $_id;
-	private $_name;
-	private $_firstname;
-	private $_nickname;
-	private $_age;
-	private $_function;
-	private $_img;
-	private $_mail;
-	private $_studies;
-	private $_userid;
-	private $_valuetolike;
+   	public $id;
+	public $name;
+	public $firstname;
+	public $nickname;
+	public $age;
+	public $function;
+	public $img;
+	public $mail;
+	public $studies;
+	public $userid;
+	public $valuetolike;
 	
 	// only for membership profil
-	private $_place;
+	public $place;
 	
 	// used only for the old team
-	private $_year; 
+	public $year; 
 	
 	/**
 	 * Constructor 
@@ -48,107 +55,107 @@ class Webkotteur {
 	}
 	
 	public function getId(){
-		return $this->_id;
+		return $this->id;
 	}
  	
  	public function getName(){
-		return $this->_name;
+		return $this->name;
 	}
 	
 	public function getFirstname(){
-		return $this->_firstname;
+		return $this->firstname;
 	}
 	
 	public function getNickname(){
-		return $this->_nickname;
+		return $this->nickname;
 	}
 	
 	public function getAge(){
-		return $this->_age;
+		return $this->age;
 	}
 	
 	public function getFunction(){
-		return $this->_function;
+		return $this->function;
 	}
 	
 	public function getImg(){
-		return $this->_img;
+		return $this->img;
 	}
 	
 	public function getMail(){
-		return $this->_mail;
+		return $this->mail;
 	}
 	
 	public function getYear(){
-		return $this->_year;
+		return $this->year;
 	}
 
 	public function getStudies(){
-		return $this->_studies;
+		return $this->studies;
 	}
 	
 	public function getUserid(){
-		return $this->_userid;
+		return $this->userid;
 	}
 	
 	public function getValuetolike(){
-		return $this->_valuetolike;
+		return $this->valuetolike;
 	}
 	
 	public function getPlace(){
-		return $this->_place;
+		return $this->place;
 	}
 	
 	public function setId($value){
-		 $this->_id = $value;
+		 $this->id = $value;
 	}
  	
  	public function setName($value){
-		 $this->_name = $value;
+		 $this->name = $value;
 	}
 	
 	public function setFirstname($value){
-		 $this->_firstname = $value;
+		 $this->firstname = $value;
 	}
 	
 	public function setNickname($value){
-		 $this->_nickname = $value;
+		 $this->nickname = $value;
 	}
 	
 	public function setAge($value){
-		 $this->_age = $value;
+		 $this->age = $value;
 	}
 	
 	public function setFunction($value){
-		 $this->_function = $value;
+		 $this->function = $value;
 	}
 	
 	public function setImg($value){
-		 $this->_img = $value;
+		 $this->img = $value;
 	}
 	
 	public function setMail($value){
-		 $this->_mail = $value;
+		 $this->mail = $value;
 	}
 
 	public function setStudies($value){
-		 $this->_studies = $value;
+		 $this->studies = $value;
 	}
 	
 	public function setYear($value){
-		 $this->_year = $value;
+		 $this->year = $value;
 	}
 	
 	public function setUserid($value){
-		 $this->_userid = $value;
+		 $this->userid = $value;
 	}
 	
 	public function setValuetolike($value){
-		 $this->_valuetolike = $value;
+		 $this->valuetolike = $value;
 	}
 	
 	public function setPlace($value){
-		 $this->_place = $value;
+		 $this->place = $value;
 	}
 	
 }

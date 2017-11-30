@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	
+	<template id="webkot.index_page" name="Webkot Page">	   
+		<t t-call="website.layout">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">Le Webkot  <small>  L'équipe actuelle</small></h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h4>C'est quoi ?</h4>
+							<div style="margin-left:20px;">
+								<p>
+									<strong>Un serveur...</strong>Nous hébergeons gratuitement tout site 
+									estudiantin namurois qui en fait la demande. Ce serveur nous permet de mettre à 
+									disposition et gérer toutes les adresses @age-namur.be et @webkot.be. Nous proposons 
+									également aux étudiants, principalement en informatique, qui auraient besoin de 
+									travailler sur des projets informatiques de groupe, un service SVN.
+								</p>
+								<p>
+									<strong>Un site web...</strong>Notre site c'est l'album photo des étudiants namurois. Il constitue 
+									la deuxième partie du projet avec des paparazzis en herbe qui circulent dans toutes les 
+									activités du campus!
+								</p>
+							</div>
+							<h4>Nous contacter ?</h4>
+							<div style="margin-left:20px;">
+								<p>	
+									<strong>Partie serveur : admin@webkot.be</strong><br/>espace ftp, bases de données, boites mail, 
+									mailinglist, comptes subversion...
+								</p>
+								<p>
+									<strong>Partie site : webkot@age-namur.be</strong><br/>faire censurer des photos, faire rapporter 
+									un bug du site, ou demander la couverture d'une soirée en particulier
+								</p>
+							</div>
+							<h4>Qui sommes-nous ?</h4>
+							<div>
+								<t t-call="webkot.team">
+									<t t-set="$members" t-value="$team"/>
+								</t>
+							</div>
+        				</div>
+        			</div>
+				</div><!-- /.col-lg-9 -->
+				<div class="col-lg-3">
+					<aside>
+						<div class="well">
+							<div >
+								<h4>Les Vieux</h4>
+							</div>
+							<ul>
+							<t t-foreach="$team_years" t-as="$year">
+								<li><a t-att-href="$router->urlFor('webkot_teams_page') . '#team' . $year">La Team <t t-esc="$year"/></a></li>
+							</t>
+							</ul>
+						</div>
+						<div class="well">
+							<div >
+								<h4>Pub</h4>
+							</div>
+							<div>
+								Voilà, le site du Webkot est tout neuf, tout frais, et toujours à VOTRE service ! Faites nous part de vos commentaires et autres remarques concernant le nouveau site de votre Kàp favoris. Si vous avez d'autres idées à mettre en ligne, nous sommes plus que preneur !
+							</div>
+						</div>
+					</aside>
+				</div>
+			</div><!-- /.row -->			
+		</t>
+	</template>
+	
+	<template id="webkot.teams_page" name="Webkot Teams: les vieux">	   
+		<t t-call="website.layout">
+			<div class="row">
+				<h1>
+					Les Vieux du Webkot
+				</h1>
+			</div>
+			<t t-foreach="$teams" t-as="$year">
+			  	<t t-call="webkot.team">
+					<t t-set="$members" t-value="$teams[$year]"/>
+					<t t-set="$team_year" t-value="$year"/>
+			  	</t>
+			</t>
+		</t>
+	</template>
+	
+	<template id="webkot.member" name="Webkot Member">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+				<img class="img-rounded img-responsive" t-att-src="$member->img" alt="portrait"/>
+			</div>
+			<div class="col-lg-7 col-md-7 col-sm-7 col-xs-6"> 
+				<blockquote>
+	        		<p>
+	        			<t t-esc="$member->firstname"/> 
+	        			<t t-if="$member->nickname">
+	        				"<t t-esc="$member->nickname"/>"
+	        			</t>
+	        			<t t-if="$member->lastname"> 
+	        				<t t-esc="$member->lastname"/>
+	        			</t>
+	        		</p>
+	        		<small>
+	        			<cite> <t t-esc="$member->mail"/> <i class="fa fa-envelope"></i></cite>
+	        		</small>
+	        	</blockquote>
+	        	<p>	
+	        		<t t-if="$member->age"><b>Age:</b> <t t-esc="$member->age"/><br/></t>
+	        		<t t-if="$member->studies"><b>Etudes:</b> <t t-esc="$member->studies"/><br/></t>
+	        		<t t-if="$member->function"><b>Fonction:</b> <t t-esc="$member->function"/><br/></t>
+	        	</p>
+	        </div>
+	    </div>    
+	</template>
+	
+	<template id="webkot.team" name="Webkot Team">
+		<div class="row">
+			<t t-if="$team_year">
+				<a t-if="$team_year" t-att-id="'team' . $team_year"/>
+				<h4>La Team <t t-esc="$team_year"/></h4>
+			</t>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<t t-foreach="$members" t-as="$member">
+					<t t-call="webkot.member"/>
+					<t t-if="$member_odd">
+						<div class="clearfix"></div>
+					</t>
+				</t>
+			</div>
+		</div>
+	</template>
+	
+</data>

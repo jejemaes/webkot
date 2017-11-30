@@ -424,6 +424,7 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 			if($size != NULL){
 				$copy_qwebcontext['data'][sprintf('%s_last', $varname)] = (bool)($index + 1 == $size);
 			}
+
 			if($index % 2){
 				$copy_qwebcontext['data'][sprintf('%s_parity', $varname)] = 'odd';
 				$copy_qwebcontext['data'][sprintf('%s_odd', $varname)] = True;
