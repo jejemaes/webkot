@@ -144,7 +144,7 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 	}
 
 	function eval_object($expr, $qwebcontext){
-		return $this->_eval($expr, $qwebcontext);
+		return $this->_eval($expr, $qwebcontext, NULL);
 	}
 
 	function eval_str($expr, $qwebcontext){
@@ -454,12 +454,13 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 	}
 
 	function render_tag_set($element, $template_attributes, $generated_attributes, $qwebcontext){
+		$set_varname = str_replace("$", "", $template_attributes["set"]);
 		if(array_key_exists("value", $template_attributes)){
-			$qwebcontext[$template_attributes["set"]] = $this->eval_object($template_attributes["value"], $qwebcontext);
+			$qwebcontext['data'][$set_varname] = $this->eval_object($template_attributes["value"], $qwebcontext);
 		}elseif(array_key_exists("valuef", $template_attributes)){
-			$qwebcontext[$template_attributes["set"]] = $this->eval_format($template_attributes["valuef"], $qwebcontext);
+			$qwebcontext['data'][$set_varname] = $this->eval_format($template_attributes["valuef"], $qwebcontext);
 		}else{
-			$qwebcontext[$template_attributes["set"]] = $this->render_element($element, $template_attributes, $generated_attributes, $qwebcontext);
+			$qwebcontext['data'][$set_varname] = $this->render_element($element, $template_attributes, $generated_attributes, $qwebcontext);
 		}
 		return "";
 	}
