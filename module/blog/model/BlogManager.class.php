@@ -1,7 +1,5 @@
 <?php
 
-
-
 class BlogManager {
 	
 	protected static $_instance;

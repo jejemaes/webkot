@@ -3,7 +3,7 @@
 	
 	<template id="page.website_footer" name="Page Footer for Website" inherit_id="website.footer">
 		<xpath expr="//div[contains(@class, 'wk_footer_widget2')]/ul" position="inside">
-			<li>Liste des pages</li>
+			<li><a t-att-href="$router->urlFor('page_list')">Liste des pages</a></li>
 		</xpath>
 	</template>
 	

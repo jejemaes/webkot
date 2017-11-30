@@ -22,6 +22,7 @@ class BlackView extends BlackModel{
 	static $attr_accessible = array(
 		'id' => array('label'=> 'Id', 'type' => 'integer', 'required' => true),
 		'name' => array('label'=> 'Name', 'type' => 'string', 'length' => 128, 'required' => true),
+		'model' => array('label'=> 'Model', 'type' => 'string', 'length' => 128, 'required' => false),		
 		'type' => array('label'=> 'Type', 'selection' => array('form' => 'Form', 'tree' => 'List', 'template' => 'Template Qweb', 'bundle' => 'Assets Bundle'), 'default' => 'template', 'required' => true),
 		'arch' => array('label'=> 'Architecture', 'type' => 'text'),
 		'sequence' => array('label'=> 'Sequence', 'type' => 'integer', 'default' => 10),

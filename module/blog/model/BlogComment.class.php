@@ -21,8 +21,8 @@ class BlogComment extends BlackModel{
 	);
 	
 	static $belongs_to = array(
-			array('user', 'class_name' => '\system\res\ResUser', 'foreign_key' => 'user_id'),
-			array('post', 'class_name' => '\module\blog\model\BlogPost', 'foreign_key' => 'post_id')
+			array('user', 'class_name' => '\module\user\model\User', 'foreign_key' => 'userid'),
+			array('post', 'class_name' => '\module\blog\model\BlogPost', 'foreign_key' => 'postid')
 	);
 
 }

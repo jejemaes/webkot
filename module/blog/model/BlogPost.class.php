@@ -21,15 +21,15 @@ class BlogPost extends BlackModel {
 			'content' => array('label'=> 'Content', 'type' => 'text'),
 			'date' => array('label'=> 'Date', 'type' => 'datetime'),
 			'published' => array('label' => 'Published', 'type' => 'boolean'),
-			'user_id' => array('label'=> 'Author', 'type' => 'integer', 'required' => true),
+			'userid' => array('label'=> 'Author', 'type' => 'integer', 'required' => true),
 	);
 	
 	static $belongs_to = array(
-			array('user', 'class_name' => '\system\res\ResUser', 'foreign_key' => 'user_id')
+			array('user', 'class_name' => '\module\user\model\User', 'foreign_key' => 'userid')
 	);
 	
 	static $has_many = array(
-			array('comments', 'class_name' => '\module\blog\model\BlogComment', 'foreign_key' => 'post_id'),
+			array('comments', 'class_name' => '\module\blog\model\BlogComment', 'foreign_key' => 'postid'),
 			array('tags_rel', 'class_name' => '\module\blog\model\BlogTagRel', 'foreign_key' => 'blog_post_id'),
 			array('tags', 'through' => 'tags_rel', 'class_name' => '\module\blog\model\BlogTag')
 	);
