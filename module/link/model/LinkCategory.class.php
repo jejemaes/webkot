@@ -1,10 +1,17 @@
 <?php
+/**
+ * Created on 12 avr. 2012
+ *
+ * MAES Jerome, Webkot 2011-2012
+ */
+namespace module\link\model;
+
 
 class LinkCategory {
 
-  	private $_description;
-	private $_place;
-	private $_name;
+  	public $description;
+	public $place;
+	public $id;
 	
 	/**
 	 * constructor
@@ -29,28 +36,28 @@ class LinkCategory {
 	}
 		 
 	
-	public function setDescription( $_description ){
-		$this->_description = $_description;
+	public function setDescription( $description ){
+		$this->description = $description;
 	}
 	
-	public function setPlace( $_place ){
-		$this->_place = $_place;
+	public function setPlace( $place ){
+		$this->place = $place;
 	}
 	
-	public function setName( $_name ){
-		$this->_name = $_name;
+	public function setId( $id ){
+		$this->id = $id;
 	}
 	
 	public function getDescription(){
-	 	return $this->_description;
+	 	return $this->description;
 	}
 	
 	public function getPlace(){
-	 	return $this->_place;
+	 	return $this->place;
 	}
 	
 	public function getName(){
-	 	return $this->_name;
+	 	return $this->name;
 	}
 }
 ?>

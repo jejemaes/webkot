@@ -1,13 +1,16 @@
 <?php
-
-/*
+/**
  * Created on 12 avr. 2012
  *
  * MAES Jerome, Webkot 2011-2012
- * Class Description : manager of the CategroyLink class (request to the DB, ...)
- * 
- * Using the singleton pattern
  */
+namespace module\link\model;
+
+use \SQLException as SQLException;
+use \PDOException as PDOException;
+use \DatabaseException as DatabaseException;
+use \PDO as PDO;
+use \system\lib\Database as Database;
 
  
 class LinkCategoryManager {
@@ -48,7 +51,7 @@ class LinkCategoryManager {
      */
     public function addCategory($name, $descri, $place){
         try {
-        	$sql = "INSERT INTO link_category (name, description, place) VALUES (:name, :descri, :place)";
+        	$sql = "INSERT INTO link_category (slug, description, place) VALUES (:name, :descri, :place)";
 	        $stmt = $this->_db->prepare($sql);
         	$stmt->execute(array( 'name' => $name, 'descri' => $descri, 'place' => $place));
 	        if($stmt->errorCode() != 0){
@@ -72,7 +75,7 @@ class LinkCategoryManager {
      */
     public function getCategory($name){
     	try{
-    		$sql = "SELECT * FROM link_category WHERE name = :name";
+    		$sql = "SELECT * FROM link_category WHERE slug = :name";
     		$stmt = $this->_db->prepare($sql);
     		$stmt->execute(array('name' => $name));
     		if($stmt->errorCode() != 0){
@@ -128,7 +131,7 @@ class LinkCategoryManager {
 	 */
  	public function updateCategory($name, $descri, $place){
  		try{
-	 		$sql = "UPDATE link_category SET description = :descri, place = :place  WHERE name=:name";
+	 		$sql = "UPDATE link_category SET description = :descri, place = :place  WHERE slug=:name";
  			$stmt = $this->_db->prepare($sql);
 	        $n = $stmt->execute(array('name' => $name, 'descri' => $descri, 'place' => $place));
 	        if($stmt->errorCode() != 0){
@@ -152,7 +155,7 @@ class LinkCategoryManager {
      */
     public function deleteCategory($name){
         try {
-        	$sql = "DELETE FROM link_category WHERE name = :name";
+        	$sql = "DELETE FROM link_category WHERE slug = :name";
         	$stmt = $this->_db->prepare($sql);
         	$stmt->execute(array( 'name' => $name));
         	if($stmt->errorCode() != 0){

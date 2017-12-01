@@ -1,14 +1,16 @@
 <?php
-
-/*
+/**
  * Created on 12 avr. 2012
  *
  * MAES Jerome, Webkot 2011-2012
- * Class Description : manager of the link class (request to the DB, ...)
- * 
- * Using the singleton pattern
  */
+namespace module\link\model;
 
+use \SQLException as SQLException;
+use \PDOException as PDOException;
+use \DatabaseException as DatabaseException;
+use \PDO as PDO;
+use \system\lib\Database as Database;
  
 class LinkManager {
 
@@ -96,11 +98,12 @@ class LinkManager {
      */
     public function getListLink(){
     	try{
-    		$sql = "SELECT L.id as id, C.description as category, C.place as place, L.name as name, L.url as url FROM link L, link_category C WHERE C.name = L.category ORDER BY place ASC";
+    		$sql = "SELECT L.id as id, C.id as category, C.place as place, L.name as name, L.url as url FROM link L, link_category C WHERE C.id = L.category_id ORDER BY place ASC";
     		$stmt = $this->_db->prepare($sql);
         	$stmt->execute();
         	if($stmt->errorCode() != 0){
 		        $error = $stmt->errorInfo();
+		        var_dump($error);
 	        	throw new SQLException($error[2], $error[0], $sql, "Impossible d'obtenir la liste des liens");
 	        }
         	$list = array();
@@ -146,7 +149,7 @@ class LinkManager {
 	 * Update the Link in the DB. 
 	 * @param int $id : the id of the row (link)
 	 * @param string $name : the name of the Link
-	 * @param string $cat : the identifier of the category of the Link
+	 * @param int $cat : the identifier of the category of the Link
 	 * @param string $url : the url of the Link
 	 * @return boolean $b : true if the update is a success, false otherwise
 	 * @throws SQLException : this exception is raised if the Query is refused
@@ -154,7 +157,7 @@ class LinkManager {
 	 */
  	public function updateLink($id, $name, $cat, $url){
  		try{
-	 		$sql = "UPDATE link SET name = :name, category = :cat, url = :url  WHERE id=:id";
+	 		$sql = "UPDATE link SET name = :name, category_id = :cat, url = :url  WHERE id=:id";
  			$stmt = $this->_db->prepare($sql);
 	        $n = $stmt->execute(array('name' => $name, 'cat' => $cat, 'url' => $url, 'id' => $id));
 	        if($stmt->errorCode() != 0){

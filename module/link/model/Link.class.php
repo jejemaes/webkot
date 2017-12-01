@@ -1,20 +1,18 @@
 <?php
-/*
+/**
  * Created on 12 avr. 2012
  *
  * MAES Jerome, Webkot 2011-2012
- * Class description : representing the link
- *
- * Convention : setters & getters begin with a capital letter (important for hydratate)
- * 				same attribute names as in the DB
  */
- 
+namespace module\link\model;
+
+
 class Link {
 
-	private $_id;
-	private $_category;
-	private $_url;
-	private $_name;
+	public $id;
+	public $category;
+	public $url;
+	public $name;
 	
 	/**
 	 * constructor
@@ -39,8 +37,7 @@ class Link {
 	}
 
 	public function __toString(){
-	return sprintf("<br>ID : %s  %s %s <br>", $this->getCategory(), $this->getUrl(), $this->getName());
-		
+		return sprintf("<br>ID : %s  %s %s <br>", $this->getCategory(), $this->getUrl(), $this->getName());
 	}	
 	
 	
@@ -50,36 +47,36 @@ class Link {
 	
 	 
 	
-	public function setId( $_id ){
-		$this->_id = $_id;
+	public function setId( $id ){
+		$this->id = $id;
 	}
 	
 	public function getId(){
-		return $this->_id;
+		return $this->id;
 	}
 
 	public function setCategory($value){
-		$this->_category = $value;
+		$this->category = $value;
 	}
 	
 	public function setUrl($value){
-		$this->_url = $value;
+		$this->url = $value;
 	}
 	
 	public function setName($value){
-		$this->_name = $value;
+		$this->name = $value;
 	}
 	
 	public function getCategory(){
-		return $this->_category;
+		return $this->category;
 	}
 	
 	public function getUrl(){
-		return $this->_url;
+		return $this->url;
 	}
 	
 	public function getName(){
-		return $this->_name;
+		return $this->name;
 	}
     
 
