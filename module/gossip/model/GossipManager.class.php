@@ -1,5 +1,11 @@
 <?php
+namespace module\gossip\model;
 
+use system\exception\SQLException as SQLException;
+use \PDOException as PDOException;
+use \DatabaseException as DatabaseException;
+use \PDO as PDO;
+use \system\lib\Database as Database;
 
 
 class GossipManager {
@@ -63,7 +69,7 @@ class GossipManager {
      */
     public function getGossip($gid){
     	try{  
-	    	$sql = "SELECT P.id as id, P.content as content, P.userid as userid, U.username as user, P.timestamp as timestamp, P.censure as censure FROM potins P, user U WHERE (P.userid = U.id) AND (P.id = :id) LIMIT 1";
+	    	$sql = "SELECT P.id as id, P.content as content, P.userid as userid, U.login as user, P.timestamp as timestamp, P.censure as censure FROM potins P, user U WHERE (P.userid = U.id) AND (P.id = :id) LIMIT 1";
 	       	$stmt = $this->_db->prepare($sql);
 	        $stmt->execute(array( 'id' => $gid ));
 			if($stmt->errorCode() != 0){
@@ -119,8 +125,8 @@ class GossipManager {
  	 */
  	public function getListGossip($limit, $nbr){
     	try{
-	        $sql = "SELECT P.id as id, P.content as content, P.userid as userid, U.username as user, P.timestamp as timestamp, P.censure as censure FROM potins P, user U WHERE (P.userid = U.id) ORDER BY timestamp DESC LIMIT " . $limit . ",".$nbr;
-	      	$stmt = $this->_db->prepare($sql);
+	        $sql = "SELECT P.id as id, P.content as content, P.userid as userid, U.login as user, P.timestamp as timestamp, P.censure as censure FROM potins P, user U WHERE (P.userid = U.id) ORDER BY timestamp DESC LIMIT " . $limit . ",".$nbr;
+	        $stmt = $this->_db->prepare($sql);
 	        $stmt->execute();   
 	        if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
@@ -144,13 +150,13 @@ class GossipManager {
     /**
      * get the list of the liker of a specified Gossip
      * @param int $gid : the identifier of the Gossip
-     * @return array $stmt : an array where the key (userid) id the userid, and the value (username) is the username of the liker
+     * @return array $stmt : an array where the key (userid) id the userid, and the value (login) is the login of the liker
      * @throws SQLException : this exception is raised if the Query is refused
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      */
     public function getLikerList($gid){
 	    try{
-		    $sql = 'SELECT U.id as userid, U.username as username FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type =1)';
+		    $sql = 'SELECT U.id as userid, U.login as login FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type =1)';
 		    $stmt = $this->_db->prepare($sql);
 		    $stmt->execute(array( 'id' => $gid )); 
 		    if($stmt->errorCode() != 0){
@@ -159,7 +165,7 @@ class GossipManager {
 		    }
 		    $result = array();
 		    while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-			    $result[$data['userid']] = $data['username'];
+			    $result[$data['userid']] = $data['login'];
 		    }
 		    return $result;
 	    }catch(PDOException $e){
@@ -170,13 +176,13 @@ class GossipManager {
      /**
      * get the list of the disliker of a specified Gossip
      * @param int $gid : the identifier of the Gossip
-     * @return array $stmt : an array where the key (userid) id the userid, and the value (username) is the username of the disliker
+     * @return array $stmt : an array where the key (userid) id the userid, and the value (login) is the login of the disliker
      * @throws SQLException : this exception is raised if the Query is refused
      * @throws DatabaseException : this exception is raised if the PreparedStatement can't be made
      */
     public function getDislikerList($gid){
     	try{
-	    	$sql = 'SELECT U.id as userid, U.username as username FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type = -1)';
+	    	$sql = 'SELECT U.id as userid, U.login as login FROM potins_comments P, user U WHERE (P.userid = U.id) AND (P.potinid = :id) AND (P.type = -1)';
 	    	$stmt = $this->_db->prepare($sql);
 	        $stmt->execute(array( 'id' => $gid )); 
 	        if($stmt->errorCode() != 0){
@@ -185,7 +191,7 @@ class GossipManager {
 		    }
 	        $result = array();
 	        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-	        	$result[$data['userid']] = $data['username'];
+	        	$result[$data['userid']] = $data['login'];
 	        }
 	        return $result;
     		
@@ -209,7 +215,7 @@ class GossipManager {
 	        $stmt->execute(array( 'uid' => $uid, 'gid' => $gid )); 
 	        if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-			    throw new SQLException($error[2], $error[0], $sql, "Impossible d'aimer un Potin");
+			    throw new SQLException("Vous ne pouvez pas liker et disliker un potin en meme temps.", $error[0], $error[2], $sql);
 		    }
 	        return true;       
         }catch(PDOException $e){
@@ -233,7 +239,7 @@ class GossipManager {
 		    $stmt->execute(array( 'uid' => $uid, 'gid' => $gid )); 
 		    if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-			    throw new SQLException($error[2], $error[0], $sql, "Impossible de ne plus aimer un Potin");
+			    throw new SQLException("Impossible de ne plus aimer un Potin", $error[0], $error[2], $sql);
 		    }
 		    return true;       
 	    }catch(PDOException $e){
@@ -258,7 +264,7 @@ class GossipManager {
 	        $stmt->execute(array( 'uid' => $uid, 'gid' => $gid )); 
 	        if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-			    throw new SQLException($error[2], $error[0], $sql, "Impossible de detester un Potin");
+			    throw new SQLException("Impossible de detester un Potin", $error[0], $error[2], $sql);
 		    }
 	        return true;       
         }catch(PDOException $e){
@@ -283,7 +289,7 @@ class GossipManager {
 	        $stmt->execute(array( 'uid' => $uid, 'gid' => $gid )); 
 	        if($stmt->errorCode() != 0){
 			    $error = $stmt->errorInfo();
-			    throw new SQLException($error[2], $error[0], $sql, "Impossible de ne plus detester un Potin");
+			    throw new SQLException("Impossible de ne plus detester un Potin", $error[0], $error[2], $sql);
 		    }
 	        return true;       
         }catch(PDOException $e){

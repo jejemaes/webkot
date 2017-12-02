@@ -1,16 +1,17 @@
 <?php
+namespace module\gossip\model;
 
 class Gossip {
 
-   	private $_id;
-	private $_content;
-	private $_userid;
-	private $_user; // carefull, the fiel is not the same as in the DB : Manager must get directly the username
-	private $_timestamp;
-	private $_censure;
+   	public $id;
+	public $content;
+	public $userid;
+	public $user; // carefull, the fiel is not the same as in the DB : Manager must get directly the username
+	public $timestamp;
+	public $censure;
 	
-	private $_liker;
-	private $_disliker;
+	public $liker;
+	public $disliker;
 	
 	/**
 	 * Constructeur prenant en paramtre le resulset de la requete ˆ la BD
@@ -42,7 +43,7 @@ class Gossip {
      * @return boolean $b : true if the $uid is in the LikeList of the Gossip Object, false otherwise
      */
     public function isLiker($uid){
-    	return array_key_exists($uid, $this->_liker);
+    	return array_key_exists($uid, $this->liker);
     }
     
     
@@ -52,72 +53,72 @@ class Gossip {
      * @return boolean $b : true if the $uid is in the LikeList of the Gossip Object, false otherwise
      */
     public function isDisliker($uid){
-    	return array_key_exists($uid, $this->_disliker);
+    	return array_key_exists($uid, $this->disliker);
     }
     
 	
 	public function setId($value){
-		 $this->_id = $value;
+		 $this->id = $value;
 	}
  	
  	public function setContent($value){
-		 $this->_content = $value;
+		 $this->content = $value;
 	}
 	
 	public function setUser($value){
-		 $this->_user = $value;
+		 $this->user = $value;
 	}
 	
 	public function setUserid($value){
-		 $this->_userid = $value;
+		 $this->userid = $value;
 	}
 	
 	public function setTimestamp($value){
-		 $this->_timestamp = $value;
+		 $this->timestamp = $value;
 	}
 	
 	public function setCensure($value){
-		 $this->_censure = $value;
+		 $this->censure = $value;
 	}
 	
 	public function setLiker($value){
-		 $this->_liker = $value;
+		 $this->liker = $value;
 	}
 	
 	public function setDisliker($value){
-		 $this->_disliker = $value;
+		 $this->disliker = $value;
 	}
 	
 	public function getId(){
-		return $this->_id;
+		return $this->id;
 	}
  	
  	public function getContent(){
-		return $this->_content;
+		return $this->content;
 	}
 	
 	public function getUser(){
-		return $this->_user;
+		return $this->user;
 	}
 	
 	public function getUserid(){
-		return $this->_userid;
+		return $this->userid;
 	}
 	
 	public function getTimestamp(){
-		return $this->_timestamp;
+		return $this->timestamp;
 	}
 	
 	public function getCensure(){
-		return $this->_censure;
+		return $this->censure;
 	}
 	
 	public function getLiker(){
-		return $this->_liker;
+		return $this->liker;
 	}
 	
 	public function getDisliker(){
-		return $this->_disliker;
+		return $this->disliker;
 	}
 	
 }
