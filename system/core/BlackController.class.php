@@ -24,7 +24,7 @@ class BlackController extends \SlimController\SlimController{
 	}
 	
 	public function url_for($route_name, $args = array()){
-		return $this->app->router->urlFor($route_name, $args);
+		return Url::url_from_path($this->app->router->urlFor($route_name, $args));
 	}
 	
 	/**
