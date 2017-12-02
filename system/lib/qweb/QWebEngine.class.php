@@ -153,14 +153,19 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 			return $qwebcontext[0] ?: "";
 		}
 		$val = $this->_eval($expr, $qwebcontext);
+		
+		
 		if(is_string($val)){
 			return $val;
+		}
+		if(is_numeric($val)){
+			return strval($val);
 		}
 		// bool(false) or null
 		if(!$val or $val == null){
 			return "";
 		}
-		return $val;
+		return strval($val);
 	}
 
 	function eval_bool($expr, $qwebcontext){
@@ -300,7 +305,7 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 	*/
 	function render_element($element, $template_attributes, $generated_attributes, $qwebcontext, $inner=false){
 		$g_inner = false;
-		if($inner){
+		if($inner || $inner === '0'){
 			$g_inner = $inner; //strlen($inner) != strlen(utf8_decode($inner)) ? utf8_encode($inner) : $inner;
 			$g_inner = array($g_inner);
 		}else{
@@ -317,9 +322,11 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 				}
 			}
 		}
+		
 		$name = isset($element->tagName) ? $element->tagName : FALSE ;
 		$inner = join("", $g_inner);
 		$trim = array_key_exists('trim', $template_attributes) ? $template_attributes['trim'] : false;
+		
 		if($trim == 'left'){
 			$inner = ltrim($inner);
 		}else{
@@ -331,11 +338,12 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 				}
 			}
 		}
+	
 		if($name){
 			if($name == "t"){
 				return $inner;
 			}
-			if($inner){
+			if($inner || $inner === '0'){
 				return sprintf("<%s%s>%s</%s>", $name, $generated_attributes, $inner, $name);
 			}
 			if(in_array($name, array('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'))){
@@ -383,7 +391,6 @@ class QWebEngine implements \system\interfaces\iTemplateEngine{
 		widget = self.get_widget_for(options.get('widget'))
 		inner = widget.format(template_attributes['esc'], options, qwebcontext)
 		*/
-
 		$inner = htmlspecialchars($this->eval_str($template_attributes['esc'], $qwebcontext));
 		return $this->render_element($element, $template_attributes, $generated_attributes, $qwebcontext, $inner);
 	}
