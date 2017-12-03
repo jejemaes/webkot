@@ -12,13 +12,13 @@ class SQLException extends \Exception{
 	private $_sql;
 	private $_decription;
 	 
-	function __construct($message, $code = "", $query = null, $description = null){
+	function __construct($message, $code = "", $sql_error = null, $query = null){
 		parent::__construct($message, $code);
 		if ($query != null)
 			$this->_sql = $query;
 
-		if($description != null){
-			$this->_decription = $description;
+		if($sql_error != null){
+			$this->_decription = $sql_error;
 		}
 	}
 
@@ -26,7 +26,7 @@ class SQLException extends \Exception{
 		return $this->_sql;
 	}
 
-	function getDescription(){
+	function getSqlError(){
 		return $this->_decription;
 	}
 	 
@@ -34,7 +34,7 @@ class SQLException extends \Exception{
 	public function debug() {
 		$html .= '<strong>SQL Exception</strong>';
 		$html .= '<br>DATE : ' . date('Y-m-d H:i');
-		$html .= '<br>DESCRIPTION : ' . $this->getDescription();
+		$html .= '<br>DESCRIPTION : ' . $this->getSqlError();
 		if(system_session_privilege() >= 5){
 			$html .= '<br>MESSAGE : ' . $this->getMessage();
 			$html .= '<br>CODE : ' . $this->getCode();

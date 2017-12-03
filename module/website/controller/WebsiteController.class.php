@@ -29,7 +29,13 @@ class WebsiteController extends WebController{
 		$module->do_update();
 	}
 	
+	// Tools / Utils
 	
+	protected function error_page($exception){
+		return $this->render('website.error', array('error' => $exception));
+	}
+	
+	// Rendering
 	/**
 	 * Override render method to add frontend global function
 	 * @see \SlimController\SlimController::render()

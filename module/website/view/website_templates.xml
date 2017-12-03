@@ -297,5 +297,17 @@
 		    </li>
        	</ul>
 	</template>
+	
+	<template id="website.error" name="Website Error Page">
+		 <t t-call="website.layout">
+		      <div class="row">
+		        	<div class="col-lg-12">
+		        		<div class="alert">
+  							<strong>Warning!</strong> <p><t t-esc="$error->getMessage()"/></p>
+						</div>	
+		        	</div>
+		       </div>
+		 </t>
+	</template>
 
 </data>
