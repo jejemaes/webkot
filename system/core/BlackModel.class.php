@@ -94,6 +94,9 @@ class BlackModel extends \ActiveRecord\Model{
 		return static::count();
 	}
 	
+	public function write($attributes){
+		$this->update_attributes($attributes);
+	}
 	
 	
 	
