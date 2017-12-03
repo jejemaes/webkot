@@ -17,6 +17,7 @@ use system\lib\ViewBuilder\TreeView as TreeView;
 
 class BlackView extends BlackModel{
 	
+	static $name = "Black Views";
 	static $table_name = 'ir_view';
 	
 	static $attr_accessible = array(

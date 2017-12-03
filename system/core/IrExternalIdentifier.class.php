@@ -10,6 +10,7 @@ use system\core\IrModel as IrModel;
 
 class IrExternalIdentifier extends BlackModel{
 	
+	static $name = "External Identifier";
 	static $table_name = 'ir_external_identifier';
 	
 	static $attr_accessible = array(

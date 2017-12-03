@@ -24,11 +24,6 @@ class WebsiteController extends WebController{
 		return $this->render('website.page', array('page' => $page));
 	}
 	
-	public function updateAction($module){
-		$module = IrModule::get_module($module);
-		$module->do_update();
-	}
-	
 	// Tools / Utils
 	
 	protected function error_page($exception){

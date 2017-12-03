@@ -7,7 +7,7 @@
 namespace system\http;
 
 use \module\user\model\User as User;
-use \system\exceptions\SessionExpiredException as SessionExpiredException;
+use \system\exception\SessionExpiredException as SessionExpiredException;
 
 
 class SlimAuthMiddleware extends \Slim\Middleware {

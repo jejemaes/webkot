@@ -7,12 +7,14 @@
 namespace system\core;
 use system\core\BlackModel;
 use system\core\IrExternalIdentifier as XMLID;
+use system\core\IrModel as IrModel;
 use system\core\BlackView as BlackView;
 use system\exception\NullObjectException as NullObjectException;
 
 
 class IrModule extends BlackModel{
-
+	
+	static $name = "Module";
 	static $table_name = 'ir_module';
 
 	static $attr_accessible = array(
@@ -31,10 +33,24 @@ class IrModule extends BlackModel{
 	}
 	
 	public function do_update(){
+		$this->update_model();
 		$this->update_view();
 	}
-
-	public function update_view(){
+	
+	// Models install and updates
+	
+	/**
+	 * Update model (IrModel) of current module. 
+	 */
+	private function update_model(){
+		$model_directory = _DIR_MODULE . $this->directory . '/model/';
+		$namespace = '\module\\' . $this->directory . '\model\\';
+		IrModel::register_model_directory($model_directory, $namespace);
+	}
+	
+	// Views install and updates
+	
+	private function update_view(){
 		$view_directory = _DIR_MODULE . $this->directory . '/view/';
 		if ($handle = opendir($view_directory)) {
 			while (false !== ($entry = readdir($handle))) {

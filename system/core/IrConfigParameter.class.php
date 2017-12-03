@@ -9,6 +9,7 @@ use system\core\BlackModel;
 
 class IrConfigParameter extends BlackModel{
 	
+	static $name = "Configuration Parameter";
 	static $table_name = 'ir_config_parameter';
 	
 	static $attr_accessible = array(

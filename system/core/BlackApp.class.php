@@ -19,4 +19,13 @@ class BlackApp {
 		});
 		$Logger->info("ActiveRecord Loaded and configurated !");
 	}
+	
+	/**
+	 * Register system models as IrModel
+	 */
+	public function update_core_system(){
+		// register system model
+		IrModel::register_model_directory(_DIR_SYS, '\system\core\\');
+	}
+	
 }
